@@ -1,0 +1,3 @@
+[submodule "DeepCAD"]
+	path = DeepCAD
+	url = https://github.com/rundiwu/DeepCAD.git
