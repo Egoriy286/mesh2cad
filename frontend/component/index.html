@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mesh2CAD workspace</title>
+    <title>CAD</title>
     <link rel="stylesheet" href="style.css" />
     <script type="importmap">
       { "imports": { "three": "./vendor/three.module.js" } }
@@ -11,18 +11,17 @@
   </head>
   <body>
     <header class="topbar">
-      <div class="brand">
-        <span class="brandmark">◈</span> Mesh2CAD
-        <span class="subbrand">WORKBENCH</span>
-      </div>
+      <h1 id="asset-title">Импортируйте файл</h1>
+      <span id="asset-tag" hidden></span>
       <div class="top-actions">
-        <span id="connection" class="connection">Подключение…</span
+        <span id="connection" class="connection" role="status">Подключение…</span
         ><button
           id="settings-button"
           class="icon-button"
           aria-label="Настройки модели"
+          title="Настройки"
         >
-          ⚙ <span>Настройки</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></svg>
         </button>
       </div>
     </header>
@@ -33,44 +32,22 @@
     </nav>
     <main class="workspace">
       <aside class="assets-panel panel">
-        <div class="panel-heading">
-          <h2>Проект</h2>
-          <span class="eyebrow">ЛОКАЛЬНО</span>
-        </div>
-        <button id="import" class="import-button">＋ Импортировать mesh</button
+        <button id="import" class="import-button" title="STL, OBJ, PLY, OFF, GLB">＋ Импорт</button
         ><input
           type="file"
           id="file-input"
           accept=".stl,.obj,.ply,.off,.glb"
           hidden
         />
-        <p class="muted small formats">STL · OBJ · PLY · OFF · GLB</p>
-        <div class="section-caption">
-          ГЕОМЕТРИЯ <span id="asset-count">0</span>
-        </div>
+        <span id="asset-count" hidden>0</span>
         <div id="assets" class="asset-list"></div>
         <div class="asset-bottom">
-          <span class="section-caption">БЫСТРЫЙ СТАРТ</span
-          ><button id="load-example" class="example-button">
-            <span class="example-icon">⬡</span
-            ><span
-              ><b id="example-name">Локальный пример</b
-              ><small>Локальный демо-проект</small></span
-            ><span>↗</span>
+          <button id="load-example" class="example-button" title="Локальный пример без вызова модели">
+            <span id="example-name">Пример</span>
           </button>
-          <p class="muted small">
-            Исходник и версии хранятся на этом компьютере.
-          </p>
         </div>
       </aside>
       <section class="model-panel panel">
-        <div class="model-heading">
-          <div>
-            <div class="eyebrow">РАБОЧАЯ СЦЕНА</div>
-            <h1 id="asset-title">Новый проект</h1>
-          </div>
-          <span id="asset-tag" class="tag">Нет геометрии</span>
-        </div>
         <div class="scene-toolbar">
           <div class="segmented" id="view-modes">
             <button data-mode="overlay" class="active">Наложение</button
@@ -78,19 +55,20 @@
             ><button data-mode="candidate">Версия</button>
           </div>
           <div class="scene-actions">
-            <button id="input-info" class="text-button" title="Какие данные получает модель">
-              Ввод: гибрид
+            <button id="input-info" class="text-button" title="Данные для модели" aria-label="Данные для модели">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9 8-4.5M12 12 4 7.5M12 12v9"/></svg>
             </button>
-            <button id="display-button" class="text-button">
-              Слои <span>☷</span>
+            <button id="display-button" class="text-button" aria-label="Слои" title="Слои">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/></svg>
             </button>
             <button
               id="expand-scene"
               class="text-button"
               aria-pressed="false"
+              aria-label="Развернуть сцену"
               title="Развернуть рабочую сцену"
             >
-              ⛶ Развернуть
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></svg>
             </button>
           </div>
         </div>
@@ -101,15 +79,9 @@
             aria-label="Интерактивная 3D-сцена. Мышь: вращение; правая кнопка: перемещение; колесо: масштаб. F: вписать; 1: спереди; 2: сбоку; 3: сверху; 0: изометрия."
           ></canvas>
           <div id="scene-empty" class="scene-empty">
-            <div class="empty-symbol">◈</div>
-            <h2>От mesh к параметрической модели</h2>
-            <p>
-              Импортируйте геометрию или откройте пример,<br />чтобы исследовать
-              форму и сравнивать версии.
-            </p>
+            <h2>Импортируйте файл</h2>
             <button id="empty-example" class="primary">
-              Открыть локальный пример <span>↗</span></button
-            ><small>Без ключа API и платных запросов</small>
+              Открыть пример</button>
           </div>
           <div id="scene-legend" class="scene-legend">
             <span><i class="target-dot"></i> Исходник</span
@@ -156,22 +128,23 @@
               ⛶
             </button>
           </div>
-          <div class="scene-footer">
+          <div class="scene-footer" hidden>
             <span id="geometry-info">Сцена готова к импорту</span
             ><span>ЛКМ — вращение · ПКМ — сдвиг · колесо — масштаб</span>
           </div>
         </div>
         <div class="below-scene">
           <div class="result-heading">
-            <h2>Оценка совпадения</h2>
+            <h2 class="visually-hidden">Метрики</h2>
             <div>
-              <button id="reevaluate" class="text-button">↻ Пересчитать</button
+              <button id="reevaluate" class="text-button" aria-label="Пересчитать метрики" title="Пересчитать">↻</button
               ><button
                 id="metrics-help"
                 class="text-button"
                 title="Как вычислены метрики"
+                aria-label="Параметры и методика оценки"
               >
-                ⓘ Методика
+                ⓘ
               </button>
             </div>
           </div>
@@ -207,55 +180,51 @@
             </p>
           </div>
           <div class="history-heading">
-            <h2>
-              История версий <span id="version-count" class="count">0</span>
+            <h2 class="visually-hidden">
+              Версии <span id="version-count">0</span>
             </h2>
+            <div class="selection-policy">
+              <label for="selection-policy" class="visually-hidden">Выбор версии</label
+              ><select id="selection-policy">
+                <option value="manual">Версии</option>
+                <option value="iou">Лучший IoU</option>
+                <option value="chamfer">Лучший Chamfer</option>
+              </select>
+            </div>
             <button id="predict" class="primary compact">
-              ✧ Построить CAD
+              Построить CAD
             </button>
-          </div>
-          <div class="selection-policy">
-            <label for="selection-policy">Выбор версии</label
-            ><select id="selection-policy">
-              <option value="manual">Вручную</option>
-              <option value="iou">Максимальный IoU</option>
-              <option value="chamfer">Минимальный Chamfer</option>
-            </select>
           </div>
           <div id="history" class="history"></div>
           <div class="artifact-actions">
             <button id="code-button" class="text-button">
-              〈/〉 Код CadQuery</button
-            ><button id="export-button" class="text-button">↓ Экспорт</button
-            ><span id="selected-parent" class="muted small"></span>
+              Код</button
+            ><button id="export-button" class="text-button">Экспорт</button
+            ><span id="selected-parent" hidden></span>
           </div>
         </div>
       </section>
       <aside class="chat-panel panel">
-        <div class="panel-heading">
-          <h2><span class="spark">✧</span> Ассистент</h2>
-          <span id="provider-badge" class="tag">DEMO</span>
-        </div>
+        <span id="provider-badge" hidden>DEMO</span>
         <div class="chat-context">
-          <span class="muted">Контекст</span
-          ><span id="chat-context">Выберите геометрию</span>
+          <span id="chat-context">Выберите геометрию</span>
         </div>
         <div id="messages" class="messages"></div>
         <div class="composer-area">
           <div id="job-status" class="job-status" hidden></div>
           <div class="segmented compose-modes">
             <button data-kind="explain" class="active">Объяснить</button
-            ><button data-kind="edit">Изменить модель</button>
+            ><button data-kind="edit">Изменить</button>
           </div>
           <div class="composer">
             <textarea
               id="prompt"
               rows="3"
-              placeholder="Спросите о геометрии или выбранной версии…"
+              placeholder="Сообщение…"
               aria-label="Сообщение ассистенту"
             ></textarea>
             <div class="composer-bottom">
-              <span id="composer-hint">Ctrl ↵ отправить</span
+              <span id="composer-hint" class="visually-hidden">Ctrl ↵ отправить</span
               ><button
                 id="send"
                 class="send-button"

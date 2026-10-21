@@ -15,7 +15,7 @@ import streamlit.components.v1 as components
 from streamlit.errors import StreamlitInvalidLayoutContextError
 
 st.set_page_config(
-    page_title="Mesh2CAD · Workbench",
+    page_title="CAD",
     page_icon="◈",
     layout="wide",
     initial_sidebar_state="collapsed",

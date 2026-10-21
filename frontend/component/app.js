@@ -425,7 +425,7 @@ function expandScene(expanded) {
   document.body.classList.toggle("scene-expanded", expanded);
   const button = $("expand-scene");
   button.setAttribute("aria-pressed", String(expanded));
-  button.textContent = expanded ? "⛶ Свернуть" : "⛶ Развернуть";
+  button.setAttribute("aria-label", expanded ? "Свернуть сцену" : "Развернуть сцену");
   button.title = expanded ? "Вернуть панели (Esc)" : "Развернуть рабочую сцену";
   resizeScene();
 }
@@ -458,9 +458,7 @@ canvas.onkeydown = (e) => {
 function versionLabel(c) {
   return c
     ? "v" +
-        ((state.candidates || []).findIndex((x) => x.id === c.id) + 1) +
-        " · " +
-        c.label
+        ((state.candidates || []).findIndex((x) => x.id === c.id) + 1)
     : "";
 }
 function selected() {
@@ -538,17 +536,15 @@ function render(geometry) {
   if (!checkingKeyEvent)
     $("key-status").textContent = keyLabels[settings.api_key_status] || "· не проверен";
   $("connection").textContent =
-    state.connection === "ok" ? "Локальный сервис" : "Сервис недоступен";
+    state.connection === "ok" ? "" : "Нет соединения";
+  $("connection").setAttribute("aria-label",
+    state.connection === "ok" ? "Сервис подключён" : "Нет соединения");
   $("connection").classList.toggle("error", state.connection !== "ok");
-  $("connection").title = state.connection_error || "API · 127.0.0.1:8765";
+  $("connection").title = state.connection_error || "Сервис подключён";
   if (state.examples?.length)
-    $("example-name").textContent =
-      state.examples[0].id === "block"
-        ? "Блок · локальный пример"
-        : state.examples[0].id === "cylinder"
-          ? "Цилиндр · локальный пример"
-          : state.examples[0].name;
-  $("asset-title").textContent = a?.name || "Новый проект";
+    $("example-name").textContent = "Пример";
+  $("asset-title").textContent = a?.name || "Импортируйте файл";
+  $("asset-title").title = a?.name || "Импортируйте файл";
   $("asset-tag").textContent = a
     ? (a.format || "mesh").toUpperCase() + " · TARGET"
     : "Нет геометрии";
@@ -565,12 +561,9 @@ function render(geometry) {
       const info = text("span", "");
       info.append(
         text("span", a.name, "asset-name"),
-        text(
-          "small",
-          (a.format || "mesh").toUpperCase() + " · исходная поверхность",
-        ),
       );
-      b.append(text("span", "◇", "file-icon"), info);
+      b.append(info);
+      b.title = a.name;
       b.onclick = () => action("select_asset", { id: a.id });
       $("assets").append(b);
     }
@@ -585,8 +578,9 @@ function render(geometry) {
   $("legend-version").textContent = versionLabel(c) || "Версия не выбрана";
   $("chat-context").textContent =
     versionLabel(c) || (a ? "Только исходник" : "Выберите геометрию");
-  $("input-info").textContent =
-    "Ввод: " + (inputLabels[settings.input_mode || "hybrid"] || "гибрид");
+  $("input-info").title =
+    "Данные для модели: " + (inputLabels[settings.input_mode || "hybrid"] || "гибрид");
+  $("input-info").setAttribute("aria-label", $("input-info").title);
   $("input-info").disabled = !a;
   renderInputDetails(a, c, settings);
   updateGeometry(geometry);
@@ -607,8 +601,8 @@ function render(geometry) {
     el.append(
       text("div", name, "metric-name"),
       text("strong", value),
-      text("small", c ? hint : "Нет оценки"),
     );
+    el.title = c ? hint : "Нет оценки";
     $("metrics").append(el);
   }
   $("metric-description").textContent =
@@ -646,8 +640,7 @@ function render(geometry) {
       text("span", item.id === selectedCandidate ? "◉" : "○", "version-node"),
       text(
         "span",
-        versionLabel(item) + " · " + inputLabel(item) +
-          (item.status !== "valid" ? " · ошибка" : ""),
+        versionLabel(item) + (item.status !== "valid" ? " · ошибка" : ""),
         "row-title",
       ),
       text("span", percent(item.metrics?.iou), "metric-cell"),
@@ -681,8 +674,8 @@ function render(geometry) {
       : "Внешний провайдер";
   $("model-name").textContent =
     settings.provider === "demo"
-      ? "Demo · локально, без API"
-      : settings.model || "Модель не настроена";
+      ? "Demo"
+      : (settings.model || "Модель не настроена").replace(/^openai\//, "");
   $("budget").textContent =
     "$" +
     money(budget.known_usd) +
@@ -714,34 +707,7 @@ function renderMessages() {
   container.replaceChildren();
   if (!messages.length) {
     const welcome = text("div", "", "chat-welcome");
-    welcome.append(
-      text("div", "✧", "welcome-icon"),
-      text("div", "Исследуйте форму вместе с ассистентом"),
-      text(
-        "p",
-        "Обсудите выбранную версию или опишите изменение. Ответ всегда связан с геометрией, выбранной при отправке.",
-      ),
-    );
-    for (const suggestion of [
-      "Какие особенности есть у этой детали?",
-      "Чем версия отличается от исходника?",
-      "Объясни метрики совпадения",
-    ]) {
-      const b = text("button", suggestion, "suggestion");
-      b.onclick = () => {
-        $("prompt").value = suggestion;
-        $("prompt").dispatchEvent(new Event("input"));
-        $("prompt").focus();
-      };
-      welcome.append(b);
-    }
-    welcome.append(
-      text(
-        "p",
-        "В режиме Demo ответы и изменения локальные и детерминированные.",
-        "muted small",
-      ),
-    );
+    welcome.textContent = "Спросите о модели";
     container.append(welcome);
   }
   for (const m of messages) {
@@ -753,7 +719,7 @@ function renderMessages() {
         : m.role === "assistant"
           ? "АССИСТЕНТ"
           : "СИСТЕМА",
-      "message-role",
+      "message-role visually-hidden",
     );
     article.append(role, text("div", m.content, "message-content"));
     if (m.related_candidate_id) {
@@ -762,7 +728,7 @@ function renderMessages() {
       );
       const open = text(
         "button",
-        "Открыть " + (versionLabel(related) || "созданную версию"),
+        versionLabel(related) || "Открыть версию",
         "related-version",
       );
       open.onclick = () =>
@@ -774,7 +740,7 @@ function renderMessages() {
       article.append(
         text(
           "div",
-          "Контекст: " + (versionLabel(c) || m.candidate_id),
+          versionLabel(c) || m.candidate_id,
           "message-context",
         ),
       );
@@ -809,7 +775,7 @@ function renderJobs() {
   const latest = jobs.at(-1);
   const j = active || latest;
   const area = $("job-status");
-  area.hidden = !j;
+  area.hidden = !j || (j.status === "complete" && !j.error);
   if (!j) return;
   area.replaceChildren();
   const description = text("div", stages[j.status] || j.status);
