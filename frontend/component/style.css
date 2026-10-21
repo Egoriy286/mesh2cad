@@ -861,6 +861,24 @@ form > label {
   align-items: center;
   margin-top: 17px;
 }
+.input-explanation {
+  margin-top: 14px;
+  line-height: 1.7;
+}
+.input-summary {
+  margin-block: 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  line-height: 1.8;
+}
+.input-hash {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+}
+.input-error {
+  color: #ffaaa3;
+}
 .export-links {
   display: grid;
   grid-template-columns: 1fr 1fr;

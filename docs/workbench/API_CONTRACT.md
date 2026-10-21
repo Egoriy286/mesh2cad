@@ -29,6 +29,19 @@ Local FastAPI API in `api/`; Streamlit app and viewer component in `frontend/`. 
 
 Use standard HTTP `detail` error messages, UI displays actionable error. Extra fields permitted when useful; do not break these names without coordinating.
 
+## Hybrid input extension
+
+Settings and model jobs accept `input_mode: images|hybrid`. New submissions
+default to hybrid; persisted jobs without the field retain images.
+`POST /api/jobs` also accepts `kind: prepare_input`, a local-only background
+measurement job with no reservation or candidate. The cached-only
+`GET /api/assets/{id}/evidence` returns `status: ready|preparing|unavailable`,
+`evidence`, and `summary` when available. It never initiates geometry work.
+New candidates record `input_mode`, `requested_input_mode`, `model_input_sent`,
+`provider`, `model`, `reasoning_effort`, and `input_evidence` provenance. Full
+evidence is not part of state polling. See [HYBRID.md](HYBRID.md) for limits and
+comparison procedure.
+
 ## Evaluation schema
 
 `api.evaluation.evaluate_pair(target_path, prediction_path, n_points=8192, seed=42, threshold=0.01) -> dict` is owned by root integrator. Flat values: `chamfer,iou,iou_status,precision,recall,f_score,h95,volume_relative_error,bbox_extents_error,target_watertight,prediction_watertight,n_points,seed,threshold,metric_version,target_sha256,prediction_sha256`, plus diagnostics/stats if needed. Missing metrics are null with reasons; no fabricated zero. `h95` max of both directional 95th percentiles; volume relative error only if valid volumes. All metrics unaligned in normalized target coordinates.

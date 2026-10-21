@@ -22,7 +22,7 @@ from .service import Service
 
 class JobRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
-    kind: Literal["predict", "edit", "explain", "execute", "evaluate"]
+    kind: Literal["predict", "edit", "explain", "execute", "evaluate", "prepare_input"]
     asset_id: str = Field(min_length=1, max_length=64)
     parent_id: str | None = Field(default=None, max_length=64)
     prompt: str | None = Field(default=None, max_length=12000)
@@ -30,6 +30,7 @@ class JobRequest(BaseModel):
     provider: Literal["demo", "openrouter", "codex"] | None = None
     model: str | None = Field(default=None, min_length=1, max_length=150)
     reasoning_effort: Literal["none", "minimal", "low", "medium", "high", "xhigh"] | None = None
+    input_mode: Literal["images", "hybrid"] | None = None
     max_attempts: int | None = Field(default=None, ge=1, le=3, strict=True)
     n_points: int = Field(default=8192, ge=128, le=65536, strict=True)
     seed: int = Field(default=42, ge=0, le=2**32 - 1, strict=True)
@@ -49,6 +50,7 @@ class SettingsRequest(BaseModel):
     reasoning_effort: Literal["none", "minimal", "low", "medium", "high", "xhigh"] | None = None
     api_key: str | None = Field(default=None, max_length=500)
     budget_limit_usd: float | None = Field(default=None, ge=0, le=100)
+    input_mode: Literal["images", "hybrid"] | None = None
     max_attempts: int | None = Field(default=None, ge=1, le=3, strict=True)
 
 
@@ -204,6 +206,11 @@ def create_app(data_dir=None, start_worker=True):
     def asset_image(asset_id: str):
         return artifact("assets", asset_id, "image.png", "image/png")
 
+    @app.get("/api/assets/{asset_id}/evidence")
+    def asset_evidence(asset_id: str):
+        get("assets", asset_id)
+        return service().cached_evidence(asset_id)
+
     @app.get("/api/geometry")
     def geometry(asset_id: str, candidate_id: str | None = None):
         from mesh2cad.geometry import load_mesh
@@ -278,6 +285,7 @@ def create_app(data_dir=None, start_worker=True):
                 "asset": asset,
                 "candidates": candidates,
                 "budget": service().budget(),
+                "input_modes": ["images", "hybrid"],
                 "coordinate_frame": "normalized-target",
                 "selection_policy": "manual; recommend maximum available IoU, Chamfer tie-break; fallback minimum Chamfer",
             }
@@ -288,6 +296,14 @@ def create_app(data_dir=None, start_worker=True):
                 "label": item["label"],
                 "status": item["status"],
                 "error": item["error"],
+                "input_mode": item.get("input_mode", "unknown"),
+                "model_input_sent": item.get("model_input_sent"),
+                "provider": item.get("provider"),
+                "model": item.get("model"),
+                "reasoning_effort": item.get("reasoning_effort"),
+                "evidence_schema": (item.get("input_evidence") or {}).get("schema_version"),
+                "evidence_sha256": (item.get("input_evidence") or {}).get("evidence_sha256"),
+                "target_sha256": (item.get("input_evidence") or {}).get("target_sha256"),
                 **(item["metrics"] or {}),
             }
             for item in candidates

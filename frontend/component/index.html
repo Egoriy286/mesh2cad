@@ -78,6 +78,9 @@
             ><button data-mode="candidate">Версия</button>
           </div>
           <div class="scene-actions">
+            <button id="input-info" class="text-button" title="Какие данные получает модель">
+              Ввод: гибрид
+            </button>
             <button id="display-button" class="text-button">
               Слои <span>☷</span>
             </button>
@@ -292,6 +295,17 @@
             <option value="">Загрузка моделей…</option>
           </select></label
         ><label
+          >Данные для модели<select name="input_mode">
+            <option value="hybrid">Гибрид · виды и измерения геометрии</option>
+            <option value="images">Изображения · прежний режим</option>
+          </select></label
+        >
+        <p class="muted small">
+          Гибрид добавляет сечения, параметры поверхностей и небольшую выборку
+          координат. Подготовка выполняется локально; облако точек не является
+          нативным 3D-вводом этой модели.
+        </p>
+        <label
           >Усилие рассуждения<select name="reasoning_effort">
             <option value="medium">medium</option>
             <option value="low">low</option>
@@ -328,6 +342,36 @@
         <p id="budget-detail" class="muted small"></p>
         <button class="primary" type="submit">Сохранить настройки</button>
       </form>
+    </dialog>
+    <dialog id="input-dialog">
+      <div class="dialog-heading">
+        <h2>Данные для модели</h2>
+        <button class="close-dialog" aria-label="Закрыть">×</button>
+      </div>
+      <p id="input-next-mode"></p>
+      <p id="input-selected-mode" class="muted small"></p>
+      <p class="muted small input-explanation">
+        Гибрид передаёт виды объекта и измерения исходного mesh в общей
+        нормализованной системе координат. Найденные цилиндры — гипотезы с
+        ошибкой аппроксимации. Точки передаются как числа в тексте, без 3D-энкодера.
+      </p>
+      <div id="input-summary" class="input-summary"></div>
+      <p id="input-warnings" class="muted small"></p>
+      <div class="dialog-footer">
+        <button id="prepare-input" class="primary">Подготовить локально</button>
+        <button id="cancel-preparation" class="text-button" hidden>Отменить подготовку</button>
+        <a id="download-evidence" class="text-button" target="_blank" rel="noopener" hidden>
+          ↓ JSON измерений
+        </a>
+      </div>
+      <p class="muted small input-explanation">
+        Подготовка не запускает модель и не расходует API-бюджет. Оценка CAD
+        всегда использует исходную поверхность.
+      </p>
+      <p class="muted small input-explanation">
+        «Построить CAD» начинает реконструкцию с нуля. Для изменения выбранной
+        версии используйте ассистента или редактор кода.
+      </p>
     </dialog>
     <dialog id="code-dialog">
       <div class="dialog-heading">

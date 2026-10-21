@@ -22,6 +22,27 @@ const keyLabels = {
   valid: "· подтверждён",
   invalid: "· отклонён OpenRouter (401)",
 };
+const inputLabels = {
+  hybrid: "гибрид",
+  images: "изображения",
+  none: "без вызова LLM",
+};
+function inputLabel(candidate) {
+  return inputLabels[candidate?.input_mode] || "режим не записан";
+}
+function evidenceWarning(message) {
+  if (message.startsWith("Primitive hypotheses"))
+    return "Распознанные поверхности — предварительные гипотезы.";
+  if (message.startsWith("Mesh is non-watertight"))
+    return "Поверхность незамкнута: возможны открытые сечения, объём не выводится.";
+  if (message.startsWith("Section output limits"))
+    return "Некоторые сечения передаются с уменьшенной детализацией или пропусками.";
+  if (message.startsWith("32 KiB evidence budget"))
+    return "Достигнут лимит объёма данных: часть точек контуров опущена. Полную форму отверстий по этим точкам восстановить нельзя.";
+  if (message.startsWith("Branching section"))
+    return "В сечениях есть разветвления; их топология неоднозначна.";
+  return message;
+}
 let checkingKeyEvent = null;
 let state = {},
   selectedAsset = "",
@@ -50,7 +71,9 @@ function action(actionName, data = {}) {
     data = {
       ...data,
       asset_id: selectedAsset,
-      parent_id: selectedCandidate || null,
+      parent_id: Object.hasOwn(data, "parent_id")
+        ? data.parent_id
+        : selectedCandidate || null,
     };
   const event = { id: crypto.randomUUID(), action: actionName, data };
   actionQueue.push(event);
@@ -446,6 +469,65 @@ function selected() {
 function asset() {
   return (state.assets || []).find((a) => a.id === selectedAsset);
 }
+function renderInputDetails(a, c, settings) {
+  const mode = inputLabels[settings.input_mode || "hybrid"] || "гибрид";
+  $("input-next-mode").textContent =
+    settings.provider === "demo"
+      ? "Demo: модель не вызывается. Для внешней модели выбран " + mode + "."
+      : "Следующий запрос модели: " + mode + ".";
+  $("input-selected-mode").textContent = c
+    ? "Выбранная версия: " + inputLabel(c) + ". Настройки не меняют старые версии."
+    : "Версия пока не выбрана.";
+  const active = (state.jobs || []).find((j) =>
+    j.asset_id === a?.id &&
+    ["queued", "running", "cancelling"].includes(j.status),
+  );
+  const preparation = [...(state.jobs || [])].reverse().find((j) =>
+    j.asset_id === a?.id && j.kind === "prepare_input",
+  );
+  const summary = a?.input_evidence;
+  const container = $("input-summary");
+  container.replaceChildren();
+  if (summary) {
+    container.append(text("p", "Измерения исходника готовы · " + summary.schema_version));
+    const counts = [
+      ["Сечения", summary.sections],
+      ["Плоские участки", summary.planes],
+      ["Гипотезы цилиндров", summary.cylinders],
+      ["Точки с нормалями", summary.point_samples],
+    ];
+    for (const [label, value] of counts)
+      container.append(text("p", label + ": " + (value ?? "—")));
+    container.append(text("p", "SHA256 исходника: " + summary.target_sha256, "small input-hash"));
+  } else {
+    container.append(text("p", "Измерения ещё не подготовлены. Гибридный запрос подготовит их автоматически."));
+  }
+  if (active)
+    container.append(text("p", "Задача: " + (stages[active.stage] || stages[active.status] || active.stage), "muted small"));
+  else if (preparation?.status === "failed" || preparation?.status === "interrupted")
+    container.append(text("p", "Подготовка не завершена: " + (preparation.error || preparation.status), "input-error"));
+  else if (preparation?.status === "cancelled")
+    container.append(text("p", "Подготовка отменена. Можно повторить локально.", "muted small"));
+  $("input-warnings").textContent = (summary?.warnings || []).map(evidenceWarning).join(" ");
+  $("prepare-input").disabled = !a || !!active || pending;
+  $("prepare-input").textContent = active ? "Задача выполняется…" : "Подготовить локально";
+  $("cancel-preparation").hidden = active?.kind !== "prepare_input";
+  $("cancel-preparation").disabled = active?.status === "cancelling";
+  $("cancel-preparation").dataset.jobId = active?.kind === "prepare_input" ? active.id : "";
+  $("download-evidence").hidden = !summary;
+  if (summary)
+    $("download-evidence").href = api + "/api/assets/" + encodeURIComponent(a.id) + "/evidence";
+  else $("download-evidence").removeAttribute("href");
+}
+$("input-info").onclick = () => openDialog($("input-dialog"));
+$("prepare-input").onclick = () => {
+  $("prepare-input").disabled = true;
+  action("job", { kind: "prepare_input" });
+};
+$("cancel-preparation").onclick = () => {
+  const id = $("cancel-preparation").dataset.jobId;
+  if (id) action("cancel", { id });
+};
 function render(geometry) {
   const a = asset(),
     c = selected(),
@@ -503,6 +585,10 @@ function render(geometry) {
   $("legend-version").textContent = versionLabel(c) || "Версия не выбрана";
   $("chat-context").textContent =
     versionLabel(c) || (a ? "Только исходник" : "Выберите геометрию");
+  $("input-info").textContent =
+    "Ввод: " + (inputLabels[settings.input_mode || "hybrid"] || "гибрид");
+  $("input-info").disabled = !a;
+  renderInputDetails(a, c, settings);
   updateGeometry(geometry);
   const metrics = c?.metrics || {};
   const defs = [
@@ -554,12 +640,14 @@ function render(geometry) {
       (item.status === "valid" ? "Готовая версия" : item.error || item.status) +
       " · " +
       (item.source || "") +
+      " · " + inputLabel(item) +
       (item.parent_id ? " · родитель " + item.parent_id : "");
     b.append(
       text("span", item.id === selectedCandidate ? "◉" : "○", "version-node"),
       text(
         "span",
-        versionLabel(item) + (item.status !== "valid" ? " · ошибка" : ""),
+        versionLabel(item) + " · " + inputLabel(item) +
+          (item.status !== "valid" ? " · ошибка" : ""),
         "row-title",
       ),
       text("span", percent(item.metrics?.iou), "metric-cell"),
@@ -710,6 +798,8 @@ const stages = {
   explain: "Подготовка объяснения",
   edit: "Изменение модели",
   predict: "Реконструкция",
+  prepare_input: "Локальные измерения геометрии",
+  "preparing hybrid evidence": "Подготовка измерений геометрии",
 };
 function renderJobs() {
   const jobs = state.jobs || [];
@@ -766,7 +856,9 @@ async function loadExample() {
 }
 $("load-example").onclick = loadExample;
 $("empty-example").onclick = loadExample;
-$("predict").onclick = () => action("job", { kind: "predict" });
+// New reconstructions start from the same target only, so input-mode A/B
+// comparisons do not accidentally inherit the previous run's CAD program.
+$("predict").onclick = () => action("job", { kind: "predict", parent_id: null });
 document.querySelectorAll("[data-kind]").forEach(
   (b) =>
     (b.onclick = () => {
@@ -840,6 +932,7 @@ function showSettings() {
   for (const field of [
     "provider",
     "model",
+    "input_mode",
     "reasoning_effort",
     "budget_limit_usd",
     "max_attempts",
@@ -871,7 +964,7 @@ $("settings-form").onsubmit = (e) => {
   e.preventDefault();
   const form = e.target,
     data = {};
-  for (const field of ["provider", "model", "reasoning_effort"])
+  for (const field of ["provider", "model", "reasoning_effort", "input_mode"])
     data[field] = form.elements[field].value;
   for (const field of ["budget_limit_usd", "max_attempts"])
     data[field] = Number(form.elements[field].value);

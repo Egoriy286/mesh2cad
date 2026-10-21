@@ -23,6 +23,7 @@ from .backend import (
     SUPPORTED_MODEL,
     Cancelled,
     OpenRouterHTTPError,
+    evidence_text,
     invoke,
     normalize_key,
     response_content,
@@ -75,6 +76,7 @@ class Service:
                         "reasoning_effort": "medium",
                         "budget_limit_usd": 0.5,
                         "max_attempts": 1,
+                        "input_mode": "hybrid",
                     },
                 )
                 # Import existing ledger once. Never alter historical research data.
@@ -161,6 +163,8 @@ class Service:
         result.pop("id", None)
         return {
             **result,
+            "input_mode": result.get("input_mode", "hybrid"),
+            "supported_input_modes": ["images", "hybrid"],
             "api_key_configured": bool(self.key),
             "api_key_status": self.key_status,
             "supported_providers": ["demo", "openrouter"],
@@ -194,6 +198,8 @@ class Service:
             raise ValueError(
                 "Codex is available through the existing audited CLI only; choose demo or OpenRouter"
             )
+        if values.get("input_mode", "hybrid") not in {"images", "hybrid"}:
+            raise ValueError("Unsupported input mode")
         with self.store.transaction():
             settings = self.store.get("settings", "global")
             settings.update(values)
@@ -262,6 +268,54 @@ class Service:
         return path
 
     @staticmethod
+    def evidence_summary(evidence):
+        encoded = json.dumps(evidence, sort_keys=True, separators=(",", ":"), allow_nan=False)
+        return {
+            "schema_version": evidence["schema_version"],
+            "target_sha256": evidence["target_sha256"],
+            "coordinate_frame": evidence.get("coordinate_frame"),
+            "evidence_sha256": hashlib.sha256(encoded.encode()).hexdigest(),
+            "encoded_bytes": len(encoded.encode()),
+            **{
+                name: len(evidence.get(name, []))
+                for name in ("sections", "planes", "cylinders", "point_samples")
+            },
+            "warnings": [str(value)[:200] for value in evidence.get("warnings", [])[:8]],
+        }
+
+    def cached_evidence(self, asset_id):
+        """Read a validated cache only; state polling never starts geometry work."""
+        from .backend import MAX_EVIDENCE_BYTES
+        from .hybrid import HYBRID_VERSION
+
+        try:
+            path = self.artifact_path("assets", asset_id, "hybrid-v1.json")
+            if path.stat().st_size > MAX_EVIDENCE_BYTES * 2:
+                raise ValueError("Evidence cache is oversized")
+            evidence = json.loads(path.read_text())
+            target = self.artifact_path("assets", asset_id, "target.stl")
+            if (
+                evidence.get("schema_version") != HYBRID_VERSION
+                or evidence.get("target_sha256") != hashlib.sha256(target.read_bytes()).hexdigest()
+                or evidence.get("coordinate_frame") != "normalized-target"
+            ):
+                raise ValueError("Evidence cache provenance mismatch")
+            evidence_text({"input_mode": "hybrid", "_hybrid_evidence": evidence})
+            return {
+                "status": "ready",
+                "summary": self.evidence_summary(evidence),
+                "evidence": evidence,
+            }
+        except (OSError, ValueError, TypeError, AttributeError, KeyError):
+            preparing = any(
+                item["asset_id"] == asset_id
+                and item.get("stage") == "preparing hybrid evidence"
+                and item["status"] not in TERMINAL
+                for item in self.store.all("jobs")
+            )
+            return {"status": "preparing" if preparing else "unavailable", "evidence": None}
+
+    @staticmethod
     def preview(mesh, limit=30000):
         from .preview import decimated_preview
 
@@ -293,6 +347,8 @@ class Service:
             settings = self.settings()
             job = {**settings, **{k: v for k, v in request.items() if v is not None}}
             job.pop("api_key_configured", None)
+            if job["input_mode"] not in {"images", "hybrid"}:
+                raise ValueError("Unsupported input mode")
             if job["provider"] == "codex":
                 raise ValueError("Codex workbench jobs are unsupported; use the audited CLI")
             if job["provider"] == "openrouter" and job["model"] != SUPPORTED_MODEL:
@@ -317,6 +373,8 @@ class Service:
                 result_candidate_id=None,
                 parent_id=request.get("parent_id"),
                 reservations=[],
+                model_input_sent=False,
+                input_evidence=None,
             )
             if paid:
                 for attempt in range(job["max_attempts"]):
@@ -369,7 +427,7 @@ class Service:
                     values.update(status="cancelled", stage="cancelled")
                 else:
                     values["stage"] = "cancelling"
-            job.update(values, updated_at=now())
+            job.update({k: v for k, v in values.items() if not k.startswith("_")}, updated_at=now())
             job["elapsed_seconds"] = max(
                 0,
                 (
@@ -480,6 +538,9 @@ class Service:
                 process.wait()
 
     def run(self, job):
+        # Persisted jobs predating hybrid input retain the historical image baseline.
+        job.setdefault("input_mode", "images")
+        job.setdefault("model_input_sent", False)
         job_id = job["id"]
         asset = self.store.get("assets", job["asset_id"])
         parent = self.store.get("candidates", job["parent_id"])
@@ -488,6 +549,42 @@ class Service:
         def check():
             if self.cancelled(job_id):
                 raise Cancelled()
+
+        if (
+            job["provider"] == "openrouter"
+            and job["kind"] in {"predict", "edit", "explain"}
+            and job["input_mode"] == "hybrid"
+        ) or job["kind"] == "prepare_input":
+            from .hybrid import prepare_evidence
+
+            check()
+            self.update_job(job_id, stage="preparing hybrid evidence")
+            try:
+                safe_target = self.artifact_path("assets", asset["id"], "target.stl")
+                evidence_path = safe_target.parent / "hybrid-v1.json"
+                if evidence_path.is_symlink():
+                    raise ValueError("Hybrid evidence cache is unsafe")
+                evidence = prepare_evidence(
+                    safe_target,
+                    evidence_path,
+                    cancel_check=lambda: self.cancelled(job_id),
+                    timeout=25,
+                )
+                check()
+                job["_hybrid_evidence"] = evidence
+                evidence_text({**job, "input_mode": "hybrid"})
+            except Exception as exc:
+                check()
+                raise ValueError(f"Hybrid evidence preparation failed: {exc}") from exc
+            summary = self.evidence_summary(evidence)
+            job["input_evidence"] = summary
+            self.update_job(job_id, input_evidence=summary)
+            with self.store.transaction():
+                asset["input_evidence"] = summary
+                self.store.put("assets", asset)
+            if job["kind"] == "prepare_input":
+                self.update_job(job_id, status="complete", stage="complete")
+                return
 
         attempts = job["max_attempts"] if job["kind"] in {"predict", "edit"} else 1
         candidate = None
@@ -517,6 +614,8 @@ class Service:
                         )
                     if self.key_status == "invalid":
                         raise ValueError(AUTH_ERROR)
+                    evidence_text(job)
+                    check()
                     call_id = job["reservations"][attempt]
                     with self.store.transaction():
                         # Mark before sending: recovery must never repeat an uncertain call.
@@ -528,6 +627,8 @@ class Service:
                         check()
                         call.update(status="in_flight", started_at=now())
                         self.store.put("calls", call)
+                    job["model_input_sent"] = True
+                    self.update_job(job_id, model_input_sent=True)
                     image = (
                         self.artifact_path("candidates", parent["id"], "comparison.png")
                         if parent and parent.get("comparison_url")
@@ -680,6 +781,13 @@ class Service:
                 if job["provider"] == "demo" and job["kind"] in {"predict", "edit"}
                 else job["kind"],
                 "code_sha256": hashlib.sha256(code.encode()).hexdigest(),
+                "input_mode": job["input_mode"] if job["model_input_sent"] else "none",
+                "requested_input_mode": job["input_mode"],
+                "provider": job["provider"],
+                "model": job["model"] if job["model_input_sent"] else None,
+                "reasoning_effort": job["reasoning_effort"] if job["model_input_sent"] else None,
+                "model_input_sent": job["model_input_sent"],
+                "input_evidence": job.get("input_evidence"),
             }
             with self.store.transaction():
                 self.store.put("candidates", candidate)

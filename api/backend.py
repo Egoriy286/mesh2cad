@@ -12,6 +12,9 @@ import httpx
 
 SUPPORTED_MODEL = "openai/gpt-6-luna"
 CALL_RESERVE = 0.107048
+# At most 32,768 extra UTF-8 bytes/tokens ($0.003277 at the enforced prompt
+# price); well inside the conservative $0.105 prompt allowance in CALL_RESERVE.
+MAX_EVIDENCE_BYTES = 32768
 AUTH_ERROR = (
     "OpenRouter отклонил API-ключ (401). Откройте Настройки, вставьте действующий "
     "ключ и нажмите «Проверить и применить ключ». Резерв этого запроса освобождён."
@@ -114,6 +117,25 @@ async def _request(key, payload, cancel_check):
                     pass
 
 
+def evidence_text(job):
+    """Validate before reservation enters in_flight, and again at transport boundary."""
+    if job.get("input_mode", "images") != "hybrid":
+        return ""
+    evidence = job.get("_hybrid_evidence")
+    if not isinstance(evidence, dict):
+        raise ValueError("Hybrid input evidence is unavailable; no image fallback is allowed")
+    encoded = json.dumps(evidence, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    if len(encoded.encode("utf-8")) > MAX_EVIDENCE_BYTES:
+        raise ValueError("Hybrid input evidence exceeds the 32 KiB encoded limit")
+    return (
+        "\nStructured mesh evidence in the normalized-target coordinate frame: "
+        "bounding-box center zero, longest side one; x, y, z are Cartesian axes. "
+        "Sections and points are measured observations; plane/cylinder hypotheses are "
+        "uncertain fits, not authoritative CAD topology. Preserve this frame and axis "
+        "names; do not independently align or rescale.\n" + encoded
+    )
+
+
 def invoke(key, job, asset, parent, image, cancel_check):
     explain = job["kind"] == "explain"
     system = (
@@ -131,6 +153,7 @@ def invoke(key, job, asset, parent, image, cancel_check):
         )
     if job.get("repair_error"):
         text += "\nPrevious execution error:\n" + job["repair_error"][-4000:]
+    text += evidence_text(job)
     content = [{"type": "text", "text": text}]
     if image.is_file() and not image.is_symlink():
         content.append(

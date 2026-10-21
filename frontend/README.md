@@ -11,3 +11,5 @@ Three.js 0.170.0 and OrbitControls are vendored under `component/vendor/` under 
 The scene takes priority over the scrollable metrics/history. «Развернуть» temporarily hides the surrounding panels without recreating the canvas or resetting its camera; «Свернуть» or Escape restores them.
 
 Settings offer «Проверить и применить ключ» to validate OpenRouter authorization without inference. Keys stay in API process memory. A confirmed HTTP 401 releases its local call reservation and blocks further paid submissions with the same rejected key; uncertain network/provider failures remain reserved.
+
+Settings also choose `input_mode=hybrid|images`. The scene's input dialog shows the next request mode separately from the selected immutable candidate's recorded mode. `prepare_input` submits a local background job, changes neither provider nor budget, and creates no CAD candidate. The dialog exposes cached measurement counts, warnings and JSON; it does not run geometry computation while polling. New «Построить CAD» actions explicitly clear `parent_id`; chat editing/explanation retain the selected parent. Legacy versions without provenance are labelled unknown.
