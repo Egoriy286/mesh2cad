@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mesh2CAD workspace</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three.module.js" } }
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brandmark">◈</span> Mesh2CAD
+        <span class="subbrand">WORKBENCH</span>
+      </div>
+      <div class="top-actions">
+        <span id="connection" class="connection">Подключение…</span
+        ><button
+          id="settings-button"
+          class="icon-button"
+          aria-label="Настройки модели"
+        >
+          ⚙ <span>Настройки</span>
+        </button>
+      </div>
+    </header>
+    <nav class="mobile-nav" aria-label="Рабочие панели">
+      <button data-panel="assets">Файлы</button
+      ><button data-panel="model" class="active">Модель</button
+      ><button data-panel="chat">Ассистент</button>
+    </nav>
+    <main class="workspace">
+      <aside class="assets-panel panel">
+        <div class="panel-heading">
+          <h2>Проект</h2>
+          <span class="eyebrow">ЛОКАЛЬНО</span>
+        </div>
+        <button id="import" class="import-button">＋ Импортировать mesh</button
+        ><input
+          type="file"
+          id="file-input"
+          accept=".stl,.obj,.ply,.off,.glb"
+          hidden
+        />
+        <p class="muted small formats">STL · OBJ · PLY · OFF · GLB</p>
+        <div class="section-caption">
+          ГЕОМЕТРИЯ <span id="asset-count">0</span>
+        </div>
+        <div id="assets" class="asset-list"></div>
+        <div class="asset-bottom">
+          <span class="section-caption">БЫСТРЫЙ СТАРТ</span
+          ><button id="load-example" class="example-button">
+            <span class="example-icon">⬡</span
+            ><span
+              ><b id="example-name">Локальный пример</b
+              ><small>Локальный демо-проект</small></span
+            ><span>↗</span>
+          </button>
+          <p class="muted small">
+            Исходник и версии хранятся на этом компьютере.
+          </p>
+        </div>
+      </aside>
+      <section class="model-panel panel">
+        <div class="model-heading">
+          <div>
+            <div class="eyebrow">РАБОЧАЯ СЦЕНА</div>
+            <h1 id="asset-title">Новый проект</h1>
+          </div>
+          <span id="asset-tag" class="tag">Нет геометрии</span>
+        </div>
+        <div class="scene-toolbar">
+          <div class="segmented" id="view-modes">
+            <button data-mode="overlay" class="active">Наложение</button
+            ><button data-mode="target">Исходник</button
+            ><button data-mode="candidate">Версия</button>
+          </div>
+          <button id="display-button" class="text-button">
+            Слои <span>☷</span>
+          </button>
+        </div>
+        <div class="viewport" id="viewport">
+          <canvas
+            id="scene"
+            tabindex="0"
+            aria-label="Интерактивная 3D-сцена. Мышь: вращение; правая кнопка: перемещение; колесо: масштаб. F: вписать; 1: спереди; 2: сбоку; 3: сверху; 0: изометрия."
+          ></canvas>
+          <div id="scene-empty" class="scene-empty">
+            <div class="empty-symbol">◈</div>
+            <h2>От mesh к параметрической модели</h2>
+            <p>
+              Импортируйте геометрию или откройте пример,<br />чтобы исследовать
+              форму и сравнивать версии.
+            </p>
+            <button id="empty-example" class="primary">
+              Открыть локальный пример <span>↗</span></button
+            ><small>Без ключа API и платных запросов</small>
+          </div>
+          <div id="scene-legend" class="scene-legend">
+            <span><i class="target-dot"></i> Исходник</span
+            ><span
+              ><i class="candidate-dot"></i>
+              <b id="legend-version">Версия</b></span
+            >
+          </div>
+          <div id="display-popover" class="display-popover" hidden>
+            <label
+              ><input type="checkbox" id="target-visible" checked />
+              Исходник</label
+            ><input
+              type="range"
+              id="target-opacity"
+              min="0.05"
+              max="1"
+              step="0.05"
+              value="0.35"
+              aria-label="Прозрачность исходника"
+            /><label
+              ><input type="checkbox" id="candidate-visible" checked />
+              Версия</label
+            ><input
+              type="range"
+              id="candidate-opacity"
+              min="0.05"
+              max="1"
+              step="0.05"
+              value="0.85"
+              aria-label="Прозрачность версии"
+            /><label><input type="checkbox" id="wireframe" /> Каркас</label>
+          </div>
+          <div class="camera-controls">
+            <button data-camera="iso" title="Изометрия (0)">3D</button
+            ><button data-camera="front" title="Спереди (1)">Спереди</button
+            ><button data-camera="side" title="Сбоку (2)">Сбоку</button
+            ><button data-camera="top" title="Сверху (3)">Сверху</button
+            ><button
+              data-camera="fit"
+              title="Вписать (F)"
+              aria-label="Вписать модель"
+            >
+              ⛶
+            </button>
+          </div>
+          <div class="scene-footer">
+            <span id="geometry-info">Сцена готова к импорту</span
+            ><span>ЛКМ — вращение · ПКМ — сдвиг · колесо — масштаб</span>
+          </div>
+        </div>
+        <div class="below-scene">
+          <div class="result-heading">
+            <h2>Оценка совпадения</h2>
+            <div>
+              <button id="reevaluate" class="text-button">↻ Пересчитать</button
+              ><button
+                id="metrics-help"
+                class="text-button"
+                title="Как вычислены метрики"
+              >
+                ⓘ Методика
+              </button>
+            </div>
+          </div>
+          <div id="metrics" class="metrics"></div>
+          <div id="metric-details" class="metric-details" hidden>
+            <p id="metric-description"></p>
+            <div class="evaluation-parameters">
+              <label
+                >Точки<input
+                  id="evaluation-points"
+                  type="number"
+                  value="8192"
+                  min="256"
+                  max="65536"
+                  step="256" /></label
+              ><label
+                >Seed<input
+                  id="evaluation-seed"
+                  type="number"
+                  value="42"
+                  min="0" /></label
+              ><label
+                >Порог<input
+                  id="evaluation-threshold"
+                  type="number"
+                  value="0.01"
+                  min="0.00001"
+                  step="0.001"
+              /></label>
+            </div>
+            <p class="muted small">
+              Параметры применяются кнопкой «Пересчитать» к выбранной версии.
+            </p>
+          </div>
+          <div class="history-heading">
+            <h2>
+              История версий <span id="version-count" class="count">0</span>
+            </h2>
+            <button id="predict" class="primary compact">
+              ✧ Построить CAD
+            </button>
+          </div>
+          <div class="selection-policy">
+            <label for="selection-policy">Выбор версии</label
+            ><select id="selection-policy">
+              <option value="manual">Вручную</option>
+              <option value="iou">Максимальный IoU</option>
+              <option value="chamfer">Минимальный Chamfer</option>
+            </select>
+          </div>
+          <div id="history" class="history"></div>
+          <div class="artifact-actions">
+            <button id="code-button" class="text-button">
+              〈/〉 Код CadQuery</button
+            ><button id="export-button" class="text-button">↓ Экспорт</button
+            ><span id="selected-parent" class="muted small"></span>
+          </div>
+        </div>
+      </section>
+      <aside class="chat-panel panel">
+        <div class="panel-heading">
+          <h2><span class="spark">✧</span> Ассистент</h2>
+          <span id="provider-badge" class="tag">DEMO</span>
+        </div>
+        <div class="chat-context">
+          <span class="muted">Контекст</span
+          ><span id="chat-context">Выберите геометрию</span>
+        </div>
+        <div id="messages" class="messages"></div>
+        <div class="composer-area">
+          <div id="job-status" class="job-status" hidden></div>
+          <div class="segmented compose-modes">
+            <button data-kind="explain" class="active">Объяснить</button
+            ><button data-kind="edit">Изменить модель</button>
+          </div>
+          <div class="composer">
+            <textarea
+              id="prompt"
+              rows="3"
+              placeholder="Спросите о геометрии или выбранной версии…"
+              aria-label="Сообщение ассистенту"
+            ></textarea>
+            <div class="composer-bottom">
+              <span id="composer-hint">Ctrl ↵ отправить</span
+              ><button
+                id="send"
+                class="send-button"
+                aria-label="Отправить сообщение"
+              >
+                ↑
+              </button>
+            </div>
+          </div>
+          <div class="budget-line">
+            <span id="model-name">Локальный демо-режим</span
+            ><button id="budget" class="text-button">$0.00 / $0.50</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+    <div id="notice" role="status" class="notice" hidden></div>
+    <dialog id="settings-dialog">
+      <form id="settings-form">
+        <div class="dialog-heading">
+          <h2>Модель и бюджет</h2>
+          <button type="button" class="close-dialog" aria-label="Закрыть">
+            ×
+          </button>
+        </div>
+        <p class="muted small">
+          Demo работает локально. Внешние модели используют общий сохранённый
+          бюджет.
+        </p>
+        <label
+          >Провайдер<select name="provider">
+            <option value="demo">Demo · без сети</option>
+            <option value="openrouter">OpenRouter</option>
+          </select></label
+        ><label
+          >Модель<select name="model">
+            <option value="">Загрузка моделей…</option>
+          </select></label
+        ><label
+          >Усилие рассуждения<select name="reasoning_effort">
+            <option value="medium">medium</option>
+            <option value="low">low</option>
+            <option value="high">high</option>
+          </select></label
+        >
+        <div class="form-row">
+          <label
+            >Лимит, USD<input
+              name="budget_limit_usd"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0.5" /></label
+          ><label
+            >Попытки<input
+              name="max_attempts"
+              type="number"
+              min="1"
+              max="3"
+              value="1"
+          /></label>
+        </div>
+        <label
+          >API-ключ <span id="key-status" class="muted small"></span
+          ><input
+            name="api_key"
+            type="password"
+            autocomplete="off"
+            placeholder="Оставьте пустым, чтобы не менять"
+        /></label>
+        <button id="check-key" type="button">Проверить и применить ключ</button>
+        <p class="muted small">Проверка авторизации без запуска модели и расхода токенов.</p>
+        <p id="budget-detail" class="muted small"></p>
+        <button class="primary" type="submit">Сохранить настройки</button>
+      </form>
+    </dialog>
+    <dialog id="code-dialog">
+      <div class="dialog-heading">
+        <div>
+          <h2>Код CadQuery</h2>
+          <p class="muted small">
+            Ручное изменение создаёт отдельную дочернюю версию.
+          </p>
+        </div>
+        <button class="close-dialog" aria-label="Закрыть">×</button>
+      </div>
+      <textarea
+        id="code-editor"
+        spellcheck="false"
+        aria-label="Код CadQuery"
+      ></textarea>
+      <div class="dialog-footer">
+        <a id="download-code" download class="text-button">↓ Скачать .py</a
+        ><button id="execute" class="primary">Выполнить новую версию</button>
+      </div>
+    </dialog>
+    <dialog id="export-dialog">
+      <div class="dialog-heading">
+        <h2>Экспорт выбранной версии</h2>
+        <button class="close-dialog" aria-label="Закрыть">×</button>
+      </div>
+      <p class="muted small">
+        Геометрия в нормализованных координатах исходника.
+      </p>
+      <div id="export-links" class="export-links"></div>
+    </dialog>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
