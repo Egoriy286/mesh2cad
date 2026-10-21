@@ -77,9 +77,19 @@
             ><button data-mode="target">Исходник</button
             ><button data-mode="candidate">Версия</button>
           </div>
-          <button id="display-button" class="text-button">
-            Слои <span>☷</span>
-          </button>
+          <div class="scene-actions">
+            <button id="display-button" class="text-button">
+              Слои <span>☷</span>
+            </button>
+            <button
+              id="expand-scene"
+              class="text-button"
+              aria-pressed="false"
+              title="Развернуть рабочую сцену"
+            >
+              ⛶ Развернуть
+            </button>
+          </div>
         </div>
         <div class="viewport" id="viewport">
           <canvas

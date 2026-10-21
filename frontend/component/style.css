@@ -161,7 +161,7 @@ small,
   height: calc(100vh - 59px);
   min-height: 630px;
   display: grid;
-  grid-template-columns: 216px minmax(360px, 1fr) 342px;
+  grid-template-columns: 192px minmax(360px, 1fr) 310px;
 }
 .panel {
   min-width: 0;
@@ -269,6 +269,7 @@ small,
   overflow: auto;
 }
 .model-heading {
+  flex-shrink: 0;
   padding: 20px 22px 17px;
   display: flex;
   align-items: center;
@@ -287,11 +288,18 @@ small,
   white-space: nowrap;
 }
 .scene-toolbar {
+  flex-shrink: 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   padding: 0 19px 12px;
   gap: 8px;
+}
+.scene-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 .segmented {
   display: flex;
@@ -318,7 +326,7 @@ small,
 }
 .viewport {
   position: relative;
-  min-height: 285px;
+  min-height: clamp(380px, 56vh, 760px);
   flex: 1;
   background: radial-gradient(
     ellipse at 50% 40%,
@@ -467,6 +475,7 @@ small,
   accent-color: var(--blue);
 }
 .below-scene {
+  flex-shrink: 0;
   padding: 15px 20px 10px;
   background: #17191e;
 }
@@ -875,10 +884,7 @@ form > label {
 }
 @media (min-width: 1600px) {
   .workspace {
-    grid-template-columns: 240px minmax(400px, 1fr) 380px;
-  }
-  .viewport {
-    min-height: 410px;
+    grid-template-columns: 216px minmax(400px, 1fr) 342px;
   }
 }
 @media (max-width: 1279px) {
@@ -969,9 +975,6 @@ form > label {
   .model-heading {
     padding: 20px;
   }
-  .viewport {
-    min-height: 300px;
-  }
   .history {
     max-height: 120px;
   }
@@ -1050,7 +1053,7 @@ form > label {
     font-size: 10px;
   }
   .viewport {
-    min-height: 270px;
+    min-height: max(350px, 56vh);
   }
   .scene-legend {
     left: 13px;
@@ -1148,6 +1151,38 @@ form > label {
 }
 .example-button b {
   font-weight: 500;
+}
+/* Keep the same canvas and camera when focusing the scene. */
+.scene-expanded .mobile-nav,
+.scene-expanded .assets-panel,
+.scene-expanded .chat-panel,
+.scene-expanded .model-heading,
+.scene-expanded .below-scene {
+  display: none !important;
+}
+.scene-expanded .workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  height: calc(100vh - 59px);
+  min-height: 0;
+}
+.scene-expanded .workspace .model-panel {
+  display: flex;
+  overflow: hidden;
+}
+.scene-expanded .scene-toolbar {
+  padding-top: 12px;
+}
+.scene-expanded .viewport {
+  min-height: 0;
+}
+@media (max-width: 480px) {
+  .scene-expanded .workspace {
+    height: calc(100vh - 52px);
+  }
+  .scene-actions {
+    gap: 0;
+  }
 }
 @media (max-width: 480px) {
   .result-heading .text-button {

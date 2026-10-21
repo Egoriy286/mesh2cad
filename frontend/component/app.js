@@ -70,7 +70,7 @@ function resize() {
   try {
     height = window.parent.innerHeight;
   } catch {}
-  bridge("streamlit:setFrameHeight", { height: Math.max(650, height - 2) });
+  bridge("streamlit:setFrameHeight", { height: Math.max(320, height - 2) });
   resizeScene();
 }
 window.addEventListener("resize", resize);
@@ -398,6 +398,26 @@ document
 ].forEach((id) => ($(id).oninput = applyDisplay));
 $("display-button").onclick = () =>
   ($("display-popover").hidden = !$("display-popover").hidden);
+function expandScene(expanded) {
+  document.body.classList.toggle("scene-expanded", expanded);
+  const button = $("expand-scene");
+  button.setAttribute("aria-pressed", String(expanded));
+  button.textContent = expanded ? "⛶ Свернуть" : "⛶ Развернуть";
+  button.title = expanded ? "Вернуть панели (Esc)" : "Развернуть рабочую сцену";
+  resizeScene();
+}
+$("expand-scene").onclick = () =>
+  expandScene(!document.body.classList.contains("scene-expanded"));
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    !document.querySelector("dialog[open]") &&
+    document.body.classList.contains("scene-expanded")
+  ) {
+    expandScene(false);
+    $("expand-scene").focus();
+  }
+});
 canvas.onkeydown = (e) => {
   const maps = {
     f: "fit",
