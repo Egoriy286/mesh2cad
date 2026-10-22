@@ -1,4 +1,4 @@
-"""Small JSON/artifact helpers shared by dataset and experiment management."""
+"""Small JSON/artifact helpers used by the dataset preparer."""
 
 from __future__ import annotations
 
