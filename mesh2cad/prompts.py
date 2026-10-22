@@ -23,3 +23,29 @@ Return exactly one JSON object with a single string field, "code". The code must
 """
 
 DEFAULT_REQUEST = "Reconstruct the part from the contact sheet."
+
+
+def repair_prompt(system_prompt: str, code: str) -> str:
+    """Append the current CadQuery program to the unchanged system prompt."""
+    return (
+        system_prompt.rstrip()
+        + "\n\nPrevious CadQuery program to improve:\n```python\n"
+        + code.strip()
+        + "\n```\nReturn the complete improved program in the same JSON format."
+    )
+
+
+def overlay_repair_prompt(system_prompt: str, code: str) -> str:
+    """Prompt for the improvement pass, which receives the contrast overlay."""
+    return (
+        system_prompt.rstrip()
+        + "\n\nIMPORTANT: this improvement request uses a contrast overlay scheme, "
+        "not the original RGB/depth sheet. The attached image is 1536x1024 with six "
+        "512x512 tiles in three columns and two rows: top, left, right; isometric, "
+        "bottom, front. Gray is the target surface covered by the current model; blue "
+        "is the current CadQuery model; red is the target area missing from the current "
+        "model. Improve the program so the red areas are filled and the blue model "
+        "follows the target.\n\nPrevious CadQuery program:\n```python\n"
+        + code.strip()
+        + "\n```\nReturn the complete improved program in the same JSON format."
+    )

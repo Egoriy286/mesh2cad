@@ -170,6 +170,7 @@ def main() -> int:
     directory = Path.cwd()
     result_file = directory / "worker_result.json"
     try:
+        print("[cadquery] importing runtime", flush=True)
         import cadquery as cq
 
         _install_guard(directory)
@@ -183,6 +184,7 @@ def main() -> int:
             "__name__": "__mesh2cad_generated__",
             "__builtins__": safe_builtins,
         }
+        print("[cadquery] executing generated program", flush=True)
         exec(compile(source, str(source_path), "exec"), namespace)
         result = namespace.get("r")
         if not isinstance(result, cq.Workplane):
@@ -195,17 +197,20 @@ def main() -> int:
             raise ValueError("r must contain a nonempty, valid solid")
         if not math.isfinite(shape.Volume()) or shape.Volume() <= 0:
             raise ValueError("r must have positive finite volume")
+        print("[cadquery] exporting STEP and STL", flush=True)
         cq.exporters.export(shape, str(directory / "candidate.tmp.step"))
         cq.exporters.export(shape, str(directory / "candidate.tmp.stl"), tolerance=0.001)
         (directory / "candidate.tmp.step").replace(directory / "candidate.step")
         (directory / "candidate.tmp.stl").replace(directory / "candidate.stl")
         payload = {"status": "valid", "error": None}
         return_code = 0
+        print("[cadquery] valid exports ready", flush=True)
     except BaseException:
         error = traceback.format_exc()
         (directory / "traceback.txt").write_text(error, encoding="utf-8")
         payload = {"status": "execution_error", "error": error}
         return_code = 1
+        print("[cadquery] execution failed; see traceback.txt", flush=True)
     result_file.write_text(json.dumps(payload), encoding="utf-8")
     return return_code
 

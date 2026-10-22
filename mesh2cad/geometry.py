@@ -17,6 +17,13 @@ import numpy as np
 import trimesh
 from PIL import Image
 
+from .observability import timed_stage
+
+
+class GeometryCancelled(RuntimeError):
+    """A bounded geometry batch observed cancellation or an expired deadline."""
+
+
 VIEW_SIZE = 512
 VIEWS = (
     ("top", 90.0, -90.0),
@@ -179,6 +186,95 @@ def evaluate_iou(target: trimesh.Trimesh, prediction: trimesh.Trimesh) -> dict[s
         return result
 
 
+def mesh_difference(
+    target: trimesh.Trimesh,
+    prediction: trimesh.Trimesh,
+    *,
+    threshold: float = 0.015,
+    max_edge: float = 0.03,
+    cancel_check=None,
+) -> dict[str, Any]:
+    """Split the target surface into covered and missing regions.
+
+    Missing means a subdivided target face whose center is farther than
+    ``threshold`` from the prediction surface. The returned arrays can be
+    rendered as a gray target and an opaque red "missing" overlay.
+    """
+    validate_mesh(target)
+    validate_mesh(prediction)
+    if not math.isfinite(threshold) or threshold <= 0:
+        raise ValueError("threshold must be positive and finite")
+    if not math.isfinite(max_edge) or max_edge <= 0:
+        raise ValueError("max_edge must be positive and finite")
+    detailed = target
+    # Bound subdivision *before* allocating a potentially enormous mesh.
+    for _ in range(8):
+        triangles = detailed.triangles
+        edges = triangles - np.roll(triangles, 1, axis=1)
+        long = np.linalg.norm(edges, axis=2).max(axis=1) > max_edge
+        if not long.any() or len(detailed.faces) + 3 * int(long.sum()) > 30_000:
+            break
+        vertices, faces = trimesh.remesh.subdivide(
+            detailed.vertices, detailed.faces, face_index=np.flatnonzero(long)
+        )
+        detailed = trimesh.Trimesh(vertices=vertices, faces=faces, process=False)
+        if cancel_check is not None and cancel_check():
+            raise GeometryCancelled("Surface comparison cancelled")
+    centers = np.asarray(detailed.triangles_center, dtype=np.float64)
+    try:
+        # Only triangles within the threshold cube can make a face covered.
+        # This gives the same missing/covered classification without expensive
+        # nearest-surface searches for points far away from the candidate.
+        tree = prediction.triangles_tree
+        triangles = prediction.triangles
+        distances = np.full(len(centers), np.inf)
+        for start in range(0, len(centers), 128):
+            if cancel_check is not None and cancel_check():
+                raise GeometryCancelled("Surface comparison cancelled")
+            point_ids, triangle_ids, count = [], [], 0
+
+            def flush():
+                if not point_ids:
+                    return
+                pi, ti = np.concatenate(point_ids), np.concatenate(triangle_ids)
+                nearest = trimesh.triangles.closest_point(triangles[ti], centers[pi])
+                np.minimum.at(distances, pi, np.linalg.norm(nearest - centers[pi], axis=1))
+                point_ids.clear()
+                triangle_ids.clear()
+
+            for index in range(start, min(start + 128, len(centers))):
+                point = centers[index]
+                candidates = np.fromiter(
+                    tree.intersection(np.r_[point - threshold, point + threshold]), dtype=np.int64
+                )
+                for offset in range(0, len(candidates), 50_000):
+                    ids = candidates[offset : offset + 50_000]
+                    triangle_ids.append(ids)
+                    point_ids.append(np.full(len(ids), index, dtype=np.int64))
+                    count += len(ids)
+                    if count >= 50_000:
+                        flush()
+                        count = 0
+            flush()
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("Для контрастного наложения нужен rtree. Запустите `uv sync`.") from exc
+    missing_mask = np.asarray(distances) > threshold
+    covered_mask = ~missing_mask
+    return {
+        "threshold": float(threshold),
+        "missing_faces": int(missing_mask.sum()),
+        "covered_faces": int(covered_mask.sum()),
+        "total_faces": int(len(missing_mask)),
+        "missing_ratio": float(missing_mask.mean()),
+        "max_distance": None if missing_mask.any() else float(distances.max()),
+        "distance_status": "threshold_classification",
+        "covered_vertices": detailed.vertices,
+        "covered_triangles": detailed.faces[covered_mask],
+        "missing_vertices": detailed.vertices,
+        "missing_triangles": detailed.faces[missing_mask],
+    }
+
+
 def _camera_basis(elevation: float, azimuth: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Return (forward, right, up) for an orthographic camera."""
     elevation_radians = math.radians(elevation)
@@ -209,92 +305,113 @@ def _project(vertices: np.ndarray, right: np.ndarray, up: np.ndarray, size: int)
     return u * (size - 1), (1.0 - v) * (size - 1)
 
 
-def _rasterize(
-    mesh: trimesh.Trimesh,
-    elevation: float,
-    azimuth: float,
-    size: int,
-) -> tuple[Image.Image, Image.Image]:
-    """Render one orthographic view as a paired RGB image and depth map."""
+def _raster_buffers(parts, elevation, azimuth, size, *, cancel_check=None):
+    """Rasterize bounded NumPy batches instead of allocating a grid per triangle."""
     render_size = size * _SUPERSAMPLE
     forward, right, up = _camera_basis(elevation, azimuth)
-    vertices = np.asarray(mesh.vertices, dtype=np.float64)
-    faces = np.asarray(mesh.faces, dtype=np.int64)
-    x, y = _project(vertices, right, up, render_size)
-    depth = vertices @ forward
-    depth_min, depth_max = float(depth.min()), float(depth.max())
-
-    zbuffer = np.full(render_size * render_size, np.inf, dtype=np.float64)
-    color = np.zeros((render_size * render_size, 3), dtype=np.float32)
-
-    triangles = vertices[faces]
-    normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
-    lengths = np.linalg.norm(normals, axis=1)
-    valid = lengths > 1e-12
-    normals[valid] /= lengths[valid, None]
     light = np.asarray([0.25, -0.45, 0.86], dtype=np.float64)
     light /= np.linalg.norm(light)
-    brightness = 0.55 + 0.45 * np.abs(normals @ light)
-    face_colors = np.column_stack((0.30 * brightness, 0.68 * brightness, 1.00 * brightness)).astype(
-        np.float32
+    projected, colors, validity = [], [], []
+    depth_min, depth_max = np.inf, -np.inf
+    for mesh, base_color, bias in parts:
+        vertices, faces = np.asarray(mesh.vertices), np.asarray(mesh.faces)
+        x, y = _project(vertices, right, up, render_size)
+        depth = vertices @ forward + bias
+        depth_min, depth_max = min(depth_min, depth.min()), max(depth_max, depth.max())
+        triangles = vertices[faces]
+        normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
+        lengths = np.linalg.norm(normals, axis=1)
+        valid = lengths > 1e-12
+        normals[valid] /= lengths[valid, None]
+        brightness = 0.55 + 0.45 * np.abs(normals @ light)
+        colors.append((np.asarray(base_color)[None, :] * brightness[:, None]).astype(np.float32))
+        projected.append(np.stack((x[faces], y[faces], depth[faces]), axis=1))
+        validity.append(valid)
+    projected = np.concatenate(projected)
+    face_colors = np.concatenate(colors)
+    valid = np.concatenate(validity)
+    x, y, z = projected[:, 0], projected[:, 1], projected[:, 2]
+    xmin = np.maximum(np.floor(x.min(axis=1)).astype(int), 0)
+    xmax = np.minimum(np.ceil(x.max(axis=1)).astype(int) + 1, render_size)
+    ymin = np.maximum(np.floor(y.min(axis=1)).astype(int), 0)
+    ymax = np.minimum(np.ceil(y.max(axis=1)).astype(int) + 1, render_size)
+    denominator = (y[:, 1] - y[:, 2]) * (x[:, 0] - x[:, 2]) + (x[:, 2] - x[:, 1]) * (
+        y[:, 0] - y[:, 2]
     )
+    valid &= (xmax > xmin) & (ymax > ymin) & (np.abs(denominator) >= 1e-12)
+    ids = np.flatnonzero(valid)
+    widths, heights = xmax - xmin, ymax - ymin
+    buckets = np.ceil(np.log2(widths[ids])).astype(int) * 32 + np.ceil(
+        np.log2(heights[ids])
+    ).astype(int)
+    zbuffer = np.full(render_size * render_size, np.inf)
+    empty = np.iinfo(np.int64).max
+    winners = np.full(render_size * render_size, empty, dtype=np.int64)
+    for bucket in np.unique(buckets):
+        group = ids[buckets == bucket]
+        width, height = int(widths[group].max()), int(heights[group].max())
+        batch_size = max(1, 200_000 // (width * height))
+        for offset in range(0, len(group), batch_size):
+            if cancel_check is not None and cancel_check():
+                raise GeometryCancelled("Rendering cancelled")
+            batch = group[offset : offset + batch_size]
+            gx = xmin[batch, None, None] + np.arange(width)[None, None, :] + 0.5
+            gy = ymin[batch, None, None] + np.arange(height)[None, :, None] + 0.5
 
-    for index, face in enumerate(faces):
-        if not valid[index]:
-            continue
-        x0, x1, x2 = x[face]
-        y0, y1, y2 = y[face]
-        z0, z1, z2 = depth[face]
-        xmin = max(int(np.floor(min(x0, x1, x2))), 0)
-        xmax = min(int(np.ceil(max(x0, x1, x2))) + 1, render_size)
-        ymin = max(int(np.floor(min(y0, y1, y2))), 0)
-        ymax = min(int(np.ceil(max(y0, y1, y2))) + 1, render_size)
-        if xmin >= xmax or ymin >= ymax:
-            continue
-        denominator = (y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2)
-        if abs(denominator) < 1e-12:
-            continue
-        pixel_x = np.arange(xmin, xmax) + 0.5
-        pixel_y = np.arange(ymin, ymax) + 0.5
-        grid_x, grid_y = np.meshgrid(pixel_x, pixel_y)
-        weight0 = ((y1 - y2) * (grid_x - x2) + (x2 - x1) * (grid_y - y2)) / denominator
-        weight1 = ((y2 - y0) * (grid_x - x2) + (x0 - x2) * (grid_y - y2)) / denominator
-        weight2 = 1.0 - weight0 - weight1
-        mask = (weight0 >= 0) & (weight1 >= 0) & (weight2 >= 0)
-        if not mask.any():
-            continue
-        pixel_depth = weight0 * z0 + weight1 * z1 + weight2 * z2
-        rows, columns = np.nonzero(mask)
-        flat = (rows + ymin) * render_size + (columns + xmin)
-        values = pixel_depth[mask]
-        closer = values < zbuffer[flat]
-        if not closer.any():
-            continue
-        flat = flat[closer]
-        zbuffer[flat] = values[closer]
-        color[flat] = face_colors[index]
+            def column(values):
+                return values[batch, None, None]
 
-    rgb = color.reshape(render_size, render_size, 3)
-    rgb_image = Image.fromarray(np.clip(rgb * 255.0, 0, 255).astype(np.uint8))
-    rgb_image = rgb_image.resize((size, size), Image.Resampling.LANCZOS)
+            w0 = (
+                column(y[:, 1] - y[:, 2]) * (gx - column(x[:, 2]))
+                + column(x[:, 2] - x[:, 1]) * (gy - column(y[:, 2]))
+            ) / column(denominator)
+            w1 = (
+                column(y[:, 2] - y[:, 0]) * (gx - column(x[:, 2]))
+                + column(x[:, 0] - x[:, 2]) * (gy - column(y[:, 2]))
+            ) / column(denominator)
+            w2 = 1.0 - w0 - w1
+            mask = (
+                (w0 >= 0)
+                & (w1 >= 0)
+                & (w2 >= 0)
+                & (gx < xmax[batch, None, None])
+                & (gy < ymax[batch, None, None])
+            )
+            rows, py, px = np.nonzero(mask)
+            if not len(rows):
+                continue
+            face_ids = batch[rows]
+            flat = (ymin[face_ids] + py) * render_size + xmin[face_ids] + px
+            depths = (
+                w0[mask] * z[face_ids, 0] + w1[mask] * z[face_ids, 1] + w2[mask] * z[face_ids, 2]
+            )
+            changed = np.unique(flat[depths < zbuffer[flat]])
+            np.minimum.at(zbuffer, flat, depths)
+            winners[changed] = empty
+            nearest = depths == zbuffer[flat]
+            np.minimum.at(winners, flat[nearest], face_ids[nearest])
+    color = np.zeros((render_size * render_size, 3), dtype=np.float32)
+    covered = winners != empty
+    color[covered] = face_colors[winners[covered]]
+    image = Image.fromarray(
+        np.clip(color.reshape(render_size, render_size, 3) * 255, 0, 255).astype(np.uint8)
+    )
+    image = image.resize((size, size), Image.Resampling.LANCZOS)
+    return image, zbuffer.reshape(render_size, render_size), float(depth_min), float(depth_max)
 
-    depth_buffer = zbuffer.reshape(render_size, render_size)
-    covered = np.isfinite(depth_buffer)
-    if depth_max > depth_min:
-        normalized = np.clip(
-            (depth_buffer - depth_min) / (depth_max - depth_min),
-            0.0,
-            1.0,
-        )
-    else:
-        normalized = np.zeros_like(depth_buffer)
+
+def _rasterize(mesh, elevation, azimuth, size, *, cancel_check=None):
+    rgb, depth, low, high = _raster_buffers(
+        [(mesh, (0.30, 0.68, 1.00), 0.0)], elevation, azimuth, size, cancel_check=cancel_check
+    )
+    covered = np.isfinite(depth)
+    normalized = np.clip((depth - low) / (high - low), 0, 1) if high > low else np.zeros_like(depth)
     shade = np.zeros_like(normalized)
-    # Near is lighter, far is darker; the map stays deliberately dark and the
-    # background remains pure black.
     shade[covered] = 4.0 + 140.0 * (1.0 - normalized[covered]) ** 1.6
-    depth_image = Image.fromarray(np.clip(shade, 0, 255).astype(np.uint8))
-    depth_image = depth_image.resize((size, size), Image.Resampling.LANCZOS).convert("RGB")
-    return rgb_image, depth_image
+    depth_image = Image.fromarray(np.clip(shade, 0, 255).astype(np.uint8)).resize(
+        (size, size), Image.Resampling.LANCZOS
+    )
+    return rgb, depth_image.convert("RGB")
 
 
 def _png_bytes(image: Image.Image) -> bytes:
@@ -303,14 +420,17 @@ def _png_bytes(image: Image.Image) -> bytes:
     return buffer.getvalue()
 
 
-def render_llm_images(mesh: trimesh.Trimesh, size: int = VIEW_SIZE) -> dict[str, bytes]:
+def render_llm_images(
+    mesh: trimesh.Trimesh, size: int = VIEW_SIZE, *, cancel_check=None
+) -> dict[str, bytes]:
     """Return 12 PNGs: RGB plus depth for each of the six views."""
     validate_mesh(mesh)
     if not isinstance(size, int) or isinstance(size, bool) or size < 64:
         raise ValueError("Размер изображения должен быть целым числом не меньше 64")
     images: dict[str, bytes] = {}
     for name, elevation, azimuth in VIEWS:
-        rgb, depth = _rasterize(mesh, elevation, azimuth, size)
+        with timed_stage("render.view", view=name, faces=len(mesh.faces), size=size):
+            rgb, depth = _rasterize(mesh, elevation, azimuth, size, cancel_check=cancel_check)
         images[f"{name}-rgb"] = _png_bytes(rgb)
         images[f"{name}-depth"] = _png_bytes(depth)
     return images
@@ -324,6 +444,55 @@ def _combine_rgb_depth(rgb: bytes, depth: bytes) -> Image.Image:
         depth_values = np.asarray(image.convert("L"), dtype=np.float32)
     combined = 0.5 * color + 0.5 * depth_values[..., None]
     return Image.fromarray(np.clip(combined, 0, 255).astype(np.uint8))
+
+
+def _rasterize_parts(parts, elevation, azimuth, size, *, cancel_check=None):
+    return _raster_buffers(parts, elevation, azimuth, size, cancel_check=cancel_check)[0]
+
+
+def render_overlay_sheet(
+    difference: dict[str, Any],
+    candidate: trimesh.Trimesh,
+    size: int = VIEW_SIZE,
+    *,
+    cancel_check=None,
+) -> bytes:
+    """Render the 3x2 contrast scheme sent to the improvement request.
+
+    Gray is the covered target surface, blue is the current CadQuery model,
+    and red is the target region missing from CadQuery.
+    """
+    validate_mesh(candidate)
+    if not isinstance(size, int) or isinstance(size, bool) or size < 64:
+        raise ValueError("Размер изображения должен быть целым числом не меньше 64")
+    parts: list[tuple[trimesh.Trimesh, tuple[float, float, float], float]] = [
+        (candidate, (0.20, 0.55, 1.00), 0.0005),
+    ]
+    covered = trimesh.Trimesh(
+        vertices=difference["covered_vertices"],
+        faces=difference["covered_triangles"],
+        process=False,
+    )
+    if len(covered.faces):
+        parts.append((covered, (0.55, 0.55, 0.55), -0.0005))
+    missing = trimesh.Trimesh(
+        vertices=difference["missing_vertices"],
+        faces=difference["missing_triangles"],
+        process=False,
+    )
+    if len(missing.faces):
+        parts.append((missing, (1.00, 0.05, 0.05), 0.001))
+    columns = 3
+    rows = math.ceil(len(VIEWS) / columns)
+    sheet = Image.new("RGB", (size * columns, size * rows), "black")
+    for index, (_name, elevation, azimuth) in enumerate(VIEWS):
+        row, column = divmod(index, columns)
+        with timed_stage(
+            "render.overlay_view", view=_name, faces=sum(len(p[0].faces) for p in parts)
+        ):
+            tile = _rasterize_parts(parts, elevation, azimuth, size, cancel_check=cancel_check)
+        sheet.paste(tile, (column * size, row * size))
+    return _png_bytes(sheet)
 
 
 def compose_views(images: dict[str, bytes], size: int = VIEW_SIZE) -> bytes:

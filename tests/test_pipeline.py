@@ -18,6 +18,7 @@ from mesh2cad.pipeline import (
     preview_payload,
     save_run,
 )
+from mesh2cad.prompts import overlay_repair_prompt
 
 PNG = b"\x89PNG\r\n\x1a\n" + b"fake-image-for-payload-tests"
 IMAGES = [
@@ -99,6 +100,15 @@ def test_user_text_is_not_rewritten() -> None:
 
 def test_payload_digest_is_stable() -> None:
     assert payload_digest(make_payload()) == payload_digest(make_payload())
+
+
+def test_overlay_repair_prompt_adds_the_scheme_and_code() -> None:
+    prompt = overlay_repair_prompt("BASE PROMPT", 'r = cq.Workplane("XY").box(1, 1, 1)')
+    assert prompt.startswith("BASE PROMPT")
+    assert "contrast overlay" in prompt
+    assert "red" in prompt
+    assert "Previous CadQuery program" in prompt
+    assert 'r = cq.Workplane("XY").box(1, 1, 1)' in prompt
 
 
 def test_extract_code() -> None:

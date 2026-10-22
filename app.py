@@ -1,4 +1,4 @@
-"""Dumb-simple STL viewer and a fully visible LLM data pipeline."""
+"""Agent harness and a fully visible manual STL reconstruction pipeline."""
 
 from __future__ import annotations
 
@@ -19,12 +19,14 @@ from mesh2cad.geometry import (
     VIEW_NAMES,
     VIEW_SIZE,
     compose_views,
-    evaluate_iou,
     load_mesh,
+    mesh_difference,
     mesh_stats,
     normalize_mesh,
     render_llm_images,
+    render_overlay_sheet,
 )
+from mesh2cad.observability import configure_logging, timed_stage
 from mesh2cad.pipeline import (
     DEFAULT_MODEL,
     REASONING_EFFORTS,
@@ -36,14 +38,24 @@ from mesh2cad.pipeline import (
     preview_payload,
     save_run,
 )
-from mesh2cad.prompts import DEFAULT_REQUEST, SYSTEM_PROMPT
+from mesh2cad.preview import evaluate_saved_pair
+from mesh2cad.prompts import DEFAULT_REQUEST, SYSTEM_PROMPT, overlay_repair_prompt
 
 ROOT = Path(__file__).resolve().parent
+configure_logging(ROOT / "runs/logs")
 DATASET_DIR = ROOT / "data" / "deepcad"
 RUNS_DIR = ROOT / "runs" / "ui"
 CADQUERY_AVAILABLE = importlib.util.find_spec("cadquery") is not None
 
-st.set_page_config(page_title="STL → LLM", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Mesh2CAD · Harness", layout="wide", initial_sidebar_state="expanded")
+mode = st.sidebar.radio("Режим", ["Оркестратор", "Ручной pipeline"], key="app_mode")
+if mode == "Оркестратор":
+    from mesh2cad.harness_ui import render_harness
+
+    with timed_stage("ui.render", view="harness"):
+        render_harness(ROOT)
+    st.stop()
+
 st.title("STL → LLM")
 st.caption(
     "Сверху — только импорт STL и просмотр. Вся работа ниже, в pipeline: "
@@ -116,7 +128,20 @@ def prepare(payload: bytes) -> dict:
     }
 
 
-def _mesh_trace(vertices, faces, *, color: str, opacity: float, name: str):
+def _mesh_trace(
+    vertices,
+    faces,
+    *,
+    color: str,
+    opacity: float,
+    name: str,
+    flat: bool = False,
+):
+    lighting = (
+        {"ambient": 1.0, "diffuse": 0.0, "specular": 0.0, "roughness": 1.0}
+        if flat
+        else {"ambient": 0.45, "diffuse": 0.75, "specular": 0.15, "roughness": 0.7}
+    )
     return go.Mesh3d(
         x=vertices[:, 0],
         y=vertices[:, 1],
@@ -127,13 +152,19 @@ def _mesh_trace(vertices, faces, *, color: str, opacity: float, name: str):
         color=color,
         opacity=opacity,
         flatshading=True,
-        lighting={"ambient": 0.45, "diffuse": 0.75, "specular": 0.15, "roughness": 0.7},
+        lighting=lighting,
         lightposition={"x": 100, "y": 200, "z": 100},
         name=name,
     )
 
 
-def viewer(vertices, faces, revision: str, target: tuple | None = None):
+def viewer(
+    vertices,
+    faces,
+    revision: str,
+    target: tuple | None = None,
+    missing: tuple | None = None,
+):
     traces = []
     if target is not None:
         traces.append(
@@ -150,16 +181,27 @@ def viewer(vertices, faces, revision: str, target: tuple | None = None):
             vertices,
             faces,
             color="#6ea8fe",
-            opacity=1.0,
+            opacity=0.9,
             name="CadQuery" if target is not None else "STL",
         )
     )
+    if missing is not None and len(missing[1]):
+        traces.append(
+            _mesh_trace(
+                missing[0],
+                missing[1],
+                color="#ff2020",
+                opacity=1.0,
+                name="Не хватает",
+                flat=True,
+            )
+        )
     figure = go.Figure(data=traces)
     figure.update_layout(
         height=560,
         margin={"l": 0, "r": 0, "t": 0, "b": 0},
         paper_bgcolor="rgba(0,0,0,0)",
-        showlegend=target is not None,
+        showlegend=target is not None or missing is not None,
         scene={
             "aspectmode": "data",
             "xaxis_visible": False,
@@ -174,6 +216,94 @@ def viewer(vertices, faces, revision: str, target: tuple | None = None):
 
 def _format_volume(value) -> str:
     return "—" if value is None else f"{value:.6g}"
+
+
+def execute_result(result: dict, data: dict, source_sha: str, base_request_sha: str) -> dict:
+    """Run the current code, compute IoU, and build the red missing overlay."""
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    if result.get("run_dir"):
+        cad_dir = Path(result["run_dir"]) / "cadquery"
+    else:
+        cad_dir = RUNS_DIR / f"{stamp}-cadquery"
+    state = {
+        "status": "execution_error",
+        "error": None,
+        "execution": {},
+        "run_dir": str(cad_dir),
+        "source_sha": source_sha,
+        "request_sha": result["request_sha"],
+        "base_request_sha": base_request_sha,
+    }
+    try:
+        execution = execute_code(result["code"], cad_dir, timeout=60)
+    except Exception as exc:  # noqa: BLE001 - keep the failure visible
+        state["error"] = f"{type(exc).__name__}: {exc}"
+        return state
+    state["execution"] = execution
+    state["status"] = execution["status"]
+    state["error"] = execution.get("error")
+    try:
+        (cad_dir / "execution.json").write_text(
+            json.dumps(execution, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
+    if execution["status"] != "valid":
+        return state
+    try:
+        target = load_mesh(data["normalized_stl"])
+        candidate = load_mesh(execution["mesh_path"])
+        state["candidate_vertices"] = candidate.vertices
+        state["candidate_faces"] = candidate.faces
+        target_path = cad_dir / "normalized-target.stl"
+        target_path.unlink(missing_ok=True)
+        target_path.write_bytes(data["normalized_stl"])
+        iou = evaluate_saved_pair(target_path, Path(execution["mesh_path"]))
+        state["iou"] = iou
+        try:
+            (cad_dir / "iou.json").write_text(
+                json.dumps(iou, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                encoding="utf-8",
+            )
+        except OSError:
+            pass
+    except Exception as exc:  # noqa: BLE001 - show the failure
+        state["metric_error"] = f"{type(exc).__name__}: {exc}"
+        return state
+    try:
+        difference = mesh_difference(target, candidate)
+        state["difference"] = difference
+        state["difference_summary"] = {
+            key: difference[key]
+            for key in (
+                "threshold",
+                "missing_faces",
+                "covered_faces",
+                "total_faces",
+                "missing_ratio",
+                "max_distance",
+            )
+        }
+        try:
+            (cad_dir / "difference.json").write_text(
+                json.dumps(
+                    state["difference_summary"],
+                    ensure_ascii=False,
+                    indent=2,
+                    allow_nan=False,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+        except OSError:
+            pass
+        overlay = render_overlay_sheet(difference, candidate)
+        state["overlay_sheet"] = overlay
+        (cad_dir / "overlay.png").write_bytes(overlay)
+    except Exception as exc:  # noqa: BLE001 - keep IoU visible
+        state["difference_error"] = f"{type(exc).__name__}: {exc}"
+    return state
 
 
 st.session_state.setdefault("model", DEFAULT_MODEL)
@@ -414,6 +544,9 @@ if send:
                 "run_dir": None,
                 "source_sha": source_sha,
                 "request_sha": request_sha,
+                "base_request_sha": request_sha,
+                "prompt_mode": "initial",
+                "iteration": 1,
             }
             try:
                 result["run_dir"] = str(
@@ -439,10 +572,13 @@ if st.session_state.get("result_error"):
 
 result = st.session_state.get("result")
 if result:
+    result_base_sha = result.get("base_request_sha", result["request_sha"])
     if result["source_sha"] != source_sha:
         st.warning("Ответ относится к другому STL. Загрузите тот же файл или отправьте заново.")
-    elif result["request_sha"] != request_sha:
+    elif result_base_sha != request_sha:
         st.warning("Ответ относится к другому состоянию полей. Отправьте запрос заново.")
+    if result.get("prompt_mode") == "improve":
+        st.caption(f"Улучшение · итерация {result.get('iteration', 1)}")
     if result["run_dir"]:
         st.success(f"Сохранено: {result['run_dir']}")
     else:
@@ -471,7 +607,8 @@ if result:
         "restricted sandbox с Python audit hooks: сеть, процессы и запись вне папки "
         "запуска блокируются. IoU считается по объёмам, без выравнивания."
     )
-    stale = result["source_sha"] != source_sha or result["request_sha"] != request_sha
+    base_sha = result.get("base_request_sha", result["request_sha"])
+    stale = result["source_sha"] != source_sha or base_sha != request_sha
     if stale:
         st.warning("Код относится к другому STL или запросу. Отправьте запрос заново.")
     if not CADQUERY_AVAILABLE:
@@ -481,51 +618,14 @@ if result:
         type="primary",
         disabled=stale or not CADQUERY_AVAILABLE,
     ):
-        st.session_state.pop("cad", None)
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        if result["run_dir"]:
-            cad_dir = Path(result["run_dir"]) / "cadquery"
-        else:
-            cad_dir = RUNS_DIR / f"{stamp}-cadquery"
         with st.spinner("CadQuery в песочнице…"):
-            execution = execute_code(result["code"], cad_dir, timeout=60)
-            try:
-                (cad_dir / "execution.json").write_text(
-                    json.dumps(execution, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
-                    encoding="utf-8",
-                )
-            except OSError:
-                pass
-            cad_state = {
-                "status": execution["status"],
-                "error": execution.get("error"),
-                "execution": execution,
-                "run_dir": str(cad_dir),
-                "source_sha": result["source_sha"],
-                "request_sha": result["request_sha"],
-            }
-            if execution["status"] == "valid":
-                try:
-                    target = load_mesh(data["normalized_stl"])
-                    candidate = load_mesh(execution["mesh_path"])
-                    cad_state.update(
-                        candidate_vertices=candidate.vertices,
-                        candidate_faces=candidate.faces,
-                        target_vertices=data["normalized_vertices"],
-                        target_faces=data["normalized_faces"],
-                    )
-                    iou = evaluate_iou(target, candidate)
-                    cad_state["iou"] = iou
-                    (cad_dir / "iou.json").write_text(
-                        json.dumps(iou, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
-                        encoding="utf-8",
-                    )
-                except Exception as exc:  # noqa: BLE001 - show the failure
-                    cad_state["metric_error"] = f"{type(exc).__name__}: {exc}"
-            st.session_state["cad"] = cad_state
+            st.session_state["cad"] = execute_result(result, data, source_sha, request_sha)
 
     cad = st.session_state.get("cad")
-    if cad and (cad.get("source_sha") != source_sha or cad.get("request_sha") != request_sha):
+    if cad and (
+        cad.get("source_sha") != source_sha
+        or cad.get("base_request_sha", cad.get("request_sha")) != request_sha
+    ):
         st.session_state.pop("cad", None)
         cad = None
     if cad:
@@ -540,23 +640,44 @@ if result:
             )
             iou = cad.get("iou")
             if iou:
-                iou_col, target_col, cad_col = st.columns(3)
+                iou_col, target_col, cad_col, missing_col = st.columns(4)
                 value = iou.get("iou")
+                summary = cad.get("difference_summary") or {}
                 iou_col.metric("IoU", "—" if value is None else f"{value:.4f}")
                 target_col.metric("Объём исходника", _format_volume(iou.get("target_volume")))
                 cad_col.metric("Объём CadQuery", _format_volume(iou.get("prediction_volume")))
+                ratio = summary.get("missing_ratio")
+                missing_col.metric(
+                    "Не хватает",
+                    "—" if ratio is None else f"{float(ratio):.1%}",
+                )
                 st.caption(
                     f"Статус: `{iou.get('status')}` · "
                     f"пересечение: {_format_volume(iou.get('intersection_volume'))} · "
                     f"объединение: {_format_volume(iou.get('union_volume'))}"
                 )
                 st.caption(
-                    "IoU = |пересечение| / |объединение|, без выравнивания и масштабирования."
+                    "IoU = |пересечение| / |объединение|, без выравнивания и масштабирования. "
+                    "Красным — часть target, которой нет в CadQuery."
                 )
             if cad.get("metric_error"):
                 st.error(f"Метрика IoU: {cad['metric_error']}")
+            if cad.get("difference_error"):
+                st.error(f"Контрастная схема: {cad['difference_error']}")
             if "candidate_vertices" in cad:
-                target = (cad["target_vertices"], cad["target_faces"])
+                difference = cad.get("difference")
+                if difference:
+                    target = (
+                        difference["covered_vertices"],
+                        difference["covered_triangles"],
+                    )
+                    missing = (
+                        difference["missing_vertices"],
+                        difference["missing_triangles"],
+                    )
+                else:
+                    target = (data["normalized_vertices"], data["normalized_faces"])
+                    missing = None
                 tab_cad, tab_overlay = st.tabs(["CadQuery", "Наложение"])
                 with tab_cad:
                     st.plotly_chart(
@@ -576,12 +697,32 @@ if result:
                             cad["candidate_faces"],
                             cad["request_sha"],
                             target=target,
+                            missing=missing,
                         ),
                         config={"displayModeBar": False, "scrollZoom": True},
                         width="stretch",
                         key="overlay-view",
                     )
-                st.caption("Серый — исходник в нормализованных координатах, синий — CadQuery.")
+                st.caption("Серый — исходник, синий — CadQuery, красный — где не хватает.")
+                if cad.get("overlay_sheet"):
+                    st.markdown("**Контрастная схема для улучшения**")
+                    st.image(
+                        cad["overlay_sheet"],
+                        width="stretch",
+                        caption="overlay.png · 1536×1024 · 6 видов",
+                    )
+                    st.caption(
+                        "Серый — покрытая часть target, синий — текущий CadQuery, "
+                        "красный — чего не хватает. Эта схема уходит в улучшение."
+                    )
+                    st.download_button(
+                        "Скачать overlay.png",
+                        cad["overlay_sheet"],
+                        file_name="overlay.png",
+                        mime="image/png",
+                    )
+                if cad.get("overlay_error"):
+                    st.error(f"Контрастная схема: {cad['overlay_error']}")
             st.download_button(
                 "Скачать CadQuery STL",
                 Path(cad["execution"]["mesh_path"]).read_bytes(),
@@ -606,6 +747,81 @@ if result:
             st.json(cad["execution"])
     elif not stale and CADQUERY_AVAILABLE:
         st.caption("Кнопка выполнит ровно тот код, который показан выше.")
+
+    # -----------------------------------------------------------------------
+    # 6. Improve: same image and pipeline, previous code appended to the prompt
+    # -----------------------------------------------------------------------
+    st.divider()
+    st.subheader("6 · Улучшение")
+    st.caption(
+        "В улучшение уходит не исходный лист, а контрастная схема overlay.png: "
+        "серый/синий/красный. В system prompt добавляется текущий CadQuery-код."
+    )
+    overlay = cad.get("overlay_sheet") if cad else None
+    if result.get("prompt_mode") == "improve":
+        st.caption(f"Текущая итерация улучшения: {result.get('iteration', 1)}")
+        with st.expander("Промпт, который был отправлен"):
+            st.code(result.get("repair_prompt", ""), language="text")
+    next_prompt = overlay_repair_prompt(st.session_state["system_prompt"], result["code"])
+    with st.expander("Промпт следующего улучшения"):
+        st.code(next_prompt, language="text")
+    if not overlay:
+        if cad and cad.get("status") == "valid":
+            st.warning(
+                "Не удалось построить контрастную схему: "
+                + str(cad.get("difference_error") or cad.get("overlay_error") or "нет overlay")
+            )
+        else:
+            st.warning("Сначала выполните CadQuery, чтобы получить контрастную схему.")
+    improve_disabled = stale or not CADQUERY_AVAILABLE or not api_key.strip() or not overlay
+    if st.button(
+        "Улучшить",
+        type="primary",
+        disabled=improve_disabled,
+    ):
+        with st.spinner("Отправляю контрастную схему на улучшение…"):
+            try:
+                repair_system = overlay_repair_prompt(
+                    st.session_state["system_prompt"], result["code"]
+                )
+                repair_payload = build_payload(
+                    model=st.session_state["model"],
+                    system_prompt=repair_system,
+                    request=st.session_state["request_text"],
+                    images=[("contrast-overlay", overlay)],
+                    extents=normalized_stats["extents"],
+                    reasoning_effort=st.session_state["reasoning_effort"],
+                )
+                response = call_openrouter(repair_payload, api_key)
+                code = extract_code(response)
+                run_dir = save_run(
+                    RUNS_DIR,
+                    source_name=source_name,
+                    source_bytes=source_bytes,
+                    images={"contrast-overlay": overlay},
+                    extra_images=images,
+                    payload=repair_payload,
+                    response=response,
+                    code=code,
+                )
+                new_result = {
+                    "response": response,
+                    "code": code,
+                    "run_dir": str(run_dir),
+                    "source_sha": source_sha,
+                    "request_sha": payload_digest(repair_payload),
+                    "base_request_sha": request_sha,
+                    "prompt_mode": "improve",
+                    "iteration": result.get("iteration", 1) + 1,
+                    "repair_prompt": repair_system,
+                }
+                st.session_state["result"] = new_result
+                st.session_state["result_error"] = None
+                st.session_state["cad"] = execute_result(new_result, data, source_sha, request_sha)
+                st.rerun()
+            except Exception as exc:  # noqa: BLE001 - show the failure
+                st.session_state["result_error"] = str(exc)
+                st.rerun()
 
 st.divider()
 st.caption(

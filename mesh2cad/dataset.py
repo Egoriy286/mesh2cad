@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import random
+import re
 import shutil
 from pathlib import Path
 from typing import Callable
 
 from .geometry import VIEW_SIZE, load_mesh, normalize_mesh, render_views
+from .observability import log_event
 from .storage import digest, file_digest, read_json, resolve_artifact, write_json
 
 DEFAULT_REPO = "maksimko123/deepcad_test_mesh"
@@ -168,27 +170,83 @@ def prepare_dataset(
     return manifest_path
 
 
-def load_manifest(path: Path) -> dict:
+def read_catalogue(path: Path) -> dict:
+    """Read DeepCAD or native Interior300 without rewriting the source manifest.
+
+    Interior300 has attributed entries and STL hashes, but no official split or
+    preparation status. Keep its items in `all` rather than inventing a split.
+    """
+    path = Path(path)
     manifest = read_json(path)
     if manifest.get("schema_version") != 1:
         raise ValueError("Unsupported dataset manifest version")
     items = manifest.get("items", [])
+    if not isinstance(items, list) or not items or not all(isinstance(i, dict) for i in items):
+        raise ValueError("Manifest must contain STL items")
+    interior = manifest.get("format") == "interior300" or all(
+        "sha256" in item and "mesh_sha256" not in item for item in items
+    )
+    name = manifest.get("name") or (
+        "Interior300"
+        if interior
+        else ("DeepCAD" if path.parent.name.lower() == "deepcad" else path.parent.name)
+    )
+    manifest = {**manifest, "name": name, "format": "interior300" if interior else "deepcad"}
+    manifest["items"] = [
+        {
+            **item,
+            "source_file": item.get("source_file") or item.get("name") or item.get("mesh_path"),
+            "name": item.get("name") or item.get("source_file") or item.get("id"),
+            "split": item.get("split", "all"),
+            "status": item.get("status", "ready"),
+            "mesh_sha256": item.get("mesh_sha256") or item.get("sha256"),
+            "target_watertight": item.get("target_watertight", item.get("watertight")),
+            "target_is_volume": item.get("target_is_volume", item.get("is_volume")),
+        }
+        for item in items
+    ]
+    items = manifest["items"]
     ids = [item["id"] for item in items]
     if not items or len(set(ids)) != len(ids):
         raise ValueError("Manifest must contain unique, nonempty item IDs")
     for item in items:
-        if not isinstance(item["id"], str) or not item["id"].isalnum():
-            raise ValueError("Manifest IDs must be alphanumeric")
-        if item["split"] not in {"dev", "test"}:
-            raise ValueError("Manifest split must be dev or test")
+        if not isinstance(item["id"], str) or not re.fullmatch(r"[A-Za-z0-9_-]+", item["id"]):
+            raise ValueError("Manifest IDs must contain letters, digits, underscores or hyphens")
+        if item["split"] not in {"dev", "test", "all"}:
+            raise ValueError("Manifest split must be dev, test or all")
         if item["status"] == "ready":
-            for key in ("mesh_path", "image_path"):
+            resolve_artifact(path.parent, item["mesh_path"])
+            if not isinstance(item["mesh_sha256"], str) or not re.fullmatch(
+                r"[a-fA-F0-9]{64}", item["mesh_sha256"]
+            ):
+                raise ValueError(f"Missing or invalid STL SHA-256 for {item['id']}")
+    if "source" not in manifest:
+        manifest["source"] = {
+            "kind": "collection",
+            "name": name,
+            "sources": sorted({item.get("source", "local") for item in items}),
+        }
+    return manifest
+
+
+def load_manifest(path: Path, *, verify_images: bool = True) -> dict:
+    log_event("dataset.verify.started", manifest=path)
+    manifest = read_catalogue(path)
+    for item in manifest["items"]:
+        if item["status"] == "ready":
+            # The harness regenerates images with the current renderer rather
+            # than trusting a cache made by an older prompt/render version.
+            keys = ["mesh_path"]
+            if verify_images and manifest["format"] != "interior300":
+                keys.append("image_path")
+            for key in keys:
                 artifact = resolve_artifact(path.parent, item[key])
                 if (
                     not artifact.is_file()
                     or file_digest(artifact) != item[key.replace("path", "sha256")]
                 ):
                     raise ValueError(f"Missing or changed input artifact: {artifact}")
+    log_event("dataset.verify.finished", manifest=path, items=len(manifest["items"]))
     return manifest
 
 

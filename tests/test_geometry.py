@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import warnings
 
+import numpy as np
 import pytest
 import trimesh
 from PIL import Image
@@ -12,11 +13,14 @@ from PIL import Image
 from mesh2cad.geometry import (
     VIEW_NAMES,
     VIEW_SIZE,
+    GeometryCancelled,
     evaluate_iou,
     load_mesh,
+    mesh_difference,
     mesh_stats,
     normalize_mesh,
     render_llm_images,
+    render_overlay_sheet,
     render_views,
     render_views_bytes,
 )
@@ -75,6 +79,59 @@ def test_render_views_can_write_a_file(tmp_path) -> None:
         assert image.size == (128 * 3, 256)
 
 
+def test_difference_of_identical_box_is_empty() -> None:
+    pytest.importorskip("rtree")
+    target = trimesh.creation.box()
+    result = mesh_difference(target, target.copy())
+    assert result["missing_faces"] == 0
+    assert result["max_distance"] == pytest.approx(0, abs=1e-9)
+    assert len(result["missing_triangles"]) == 0
+
+
+def test_difference_marks_missing_volume_in_red() -> None:
+    pytest.importorskip("rtree")
+    target = trimesh.creation.box()
+    prediction = target.copy()
+    prediction.apply_translation((0.5, 0, 0))
+    result = mesh_difference(target, prediction)
+    assert result["missing_faces"] > 0
+    assert result["missing_ratio"] > 0.3
+    assert len(result["missing_triangles"]) == result["missing_faces"]
+    assert result["covered_faces"] + result["missing_faces"] == result["total_faces"]
+
+
+def test_difference_marks_target_surface_missing_for_small_prediction() -> None:
+    pytest.importorskip("rtree")
+    target = trimesh.creation.box()
+    prediction = trimesh.creation.box(extents=(0.5, 0.5, 0.5))
+    result = mesh_difference(target, prediction)
+    assert result["missing_ratio"] > 0.9
+    assert result["missing_faces"] == result["total_faces"]
+
+
+def test_overlay_sheet_marks_missing_region_red() -> None:
+    target = trimesh.creation.box()
+    prediction = target.copy()
+    prediction.apply_translation((0.5, 0, 0))
+    difference = mesh_difference(target, prediction, max_edge=0.08)
+    payload = render_overlay_sheet(difference, prediction, size=128)
+    with Image.open(io.BytesIO(payload)) as image:
+        assert image.size == (128 * 3, 128 * 2)
+        pixels = np.asarray(image.convert("RGB"))
+    red = (pixels[..., 0] > 180) & (pixels[..., 1] < 80) & (pixels[..., 2] < 80)
+    assert red.any()
+
+
+def test_overlay_sheet_has_no_red_for_identical_boxes() -> None:
+    target = trimesh.creation.box()
+    difference = mesh_difference(target, target.copy(), max_edge=0.08)
+    payload = render_overlay_sheet(difference, target, size=128)
+    with Image.open(io.BytesIO(payload)) as image:
+        pixels = np.asarray(image.convert("RGB"))
+    red = (pixels[..., 0] > 180) & (pixels[..., 1] < 80) & (pixels[..., 2] < 80)
+    assert not red.any()
+
+
 def test_iou_of_identical_box_is_one() -> None:
     pytest.importorskip("manifold3d")
     target = trimesh.creation.box()
@@ -129,3 +186,28 @@ def test_iou_boolean_failure_is_visible(monkeypatch) -> None:
     result = evaluate_iou(target, target)
     assert result["iou"] is None
     assert result["status"] == "boolean_error:RuntimeError"
+
+
+def test_threshold_surface_classification_matches_full_nearest_query() -> None:
+    target = trimesh.creation.box()
+    prediction = trimesh.creation.icosphere(subdivisions=1, radius=0.55)
+    prediction.apply_translation([0.1, 0, 0])
+    result = mesh_difference(target, prediction, max_edge=0.12)
+    covered = result["covered_triangles"]
+    missing = result["missing_triangles"]
+    vertices = result["covered_vertices"]
+    faces = np.vstack((covered, missing))
+    centers = vertices[faces].mean(axis=1)
+    _, distances, _ = trimesh.proximity.closest_point(prediction, centers)
+    expected = distances > result["threshold"]
+    assert not expected[: len(covered)].any()
+    assert expected[len(covered) :].all()
+    assert result["max_distance"] is None
+
+
+def test_render_and_surface_query_observe_cancellation() -> None:
+    mesh = trimesh.creation.box()
+    with pytest.raises(GeometryCancelled):
+        render_llm_images(mesh, size=64, cancel_check=lambda: True)
+    with pytest.raises(GeometryCancelled):
+        mesh_difference(mesh, mesh.copy(), cancel_check=lambda: True)

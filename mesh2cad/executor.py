@@ -20,11 +20,18 @@ import time
 from pathlib import Path
 from typing import Callable
 
+from .observability import log_event, tail_log
+from .resources import DEFAULT_MEMORY_MB, monitor_process
+
 SEATBELT = "/usr/bin/sandbox-exec"
 
 
 class ExecutionCancelled(RuntimeError):
     """A caller explicitly cancelled a sandboxed proposal."""
+
+
+class ExecutionMemoryLimit(RuntimeError):
+    """The isolated CAD process exceeded its resident-memory allowance."""
 
 
 def _backend() -> str:
@@ -191,23 +198,17 @@ def _run_process(
             **options,
         )
         try:
-            if cancel_check is None:
-                return process.wait(timeout=timeout), False
-            deadline = time.monotonic() + timeout
-            while True:
-                if cancel_check():
-                    raise ExecutionCancelled("CAD execution was cancelled")
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
-                    raise subprocess.TimeoutExpired(command, timeout)
-                try:
-                    return process.wait(timeout=min(0.15, remaining)), False
-                except subprocess.TimeoutExpired:
-                    if time.monotonic() >= deadline:
-                        raise
-        except subprocess.TimeoutExpired:
-            _kill_tree(process)
-            return process.returncode or 1, True
+            usage = monitor_process(
+                process,
+                memory_limit_mb=DEFAULT_MEMORY_MB,
+                timeout=timeout,
+                cancel_check=cancel_check,
+            )
+            if usage.reason == "cancelled":
+                raise ExecutionCancelled("CAD execution was cancelled")
+            if usage.reason == "memory_limit":
+                raise ExecutionMemoryLimit(f"CadQuery exceeded {DEFAULT_MEMORY_MB} MiB RSS")
+            return usage.returncode, usage.reason == "timeout"
         finally:
             # Reap any child processes spawned by the proposal after completion.
             _kill_tree(process)
@@ -229,6 +230,7 @@ def execute_code(
     directory = Path(work_dir).resolve()
     directory.mkdir(parents=True, exist_ok=True)
     backend = _backend()
+    log_event("cadquery.started", directory=directory, backend=backend, timeout=timeout)
     # Unlink names before writing: a previous proposal could have left symlinks.
     for name in ("code.py", "stdout.log", "stderr.log", "_worker.py", "sandbox.sb"):
         (directory / name).unlink(missing_ok=True)
@@ -240,6 +242,17 @@ def execute_code(
         (directory / name).unlink(missing_ok=True)
 
     def finish(status: str, error: str | None = None) -> dict:
+        for name in ("stdout.log", "stderr.log"):
+            text = tail_log(directory / name, max_bytes=8000, max_lines=30)
+            if text:
+                log_event(f"cadquery.{name}", directory=directory, output=text)
+        log_event(
+            "cadquery.finished",
+            status=status,
+            backend=backend,
+            elapsed_seconds=round(time.monotonic() - started, 3),
+            error=error,
+        )
         if error:
             (directory / "traceback.txt").unlink(missing_ok=True)
             (directory / "traceback.txt").write_text(error, encoding="utf-8")
@@ -292,6 +305,8 @@ def execute_code(
             )
     except ExecutionCancelled as exc:
         return finish("cancelled", str(exc))
+    except ExecutionMemoryLimit as exc:
+        return finish("memory_limit", str(exc))
     except OSError as exc:
         return finish("sandbox_error", f"Could not launch the worker: {exc}")
     if timed_out:

@@ -14,6 +14,8 @@ from typing import Any
 
 import httpx
 
+from .observability import log_event, register_secret
+
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 DEFAULT_MODEL = "openai/gpt-6-luna"
 DEFAULT_MAX_TOKENS = 4096
@@ -22,6 +24,10 @@ REASONING_EFFORTS = ("none", "minimal", "low", "medium", "high", "xhigh")
 
 class PipelineError(RuntimeError):
     """A user-facing failure with no credentials in the message."""
+
+    def __init__(self, message: str, *, retryable: bool = False) -> None:
+        super().__init__(message)
+        self.retryable = retryable
 
 
 def normalize_key(key: str) -> str:
@@ -135,9 +141,17 @@ def call_openrouter(
     payload: dict[str, Any], api_key: str, timeout: float = 180.0
 ) -> dict[str, Any]:
     key = normalize_key(api_key)
+    register_secret(key)
     if not key:
         raise PipelineError("Введите API-ключ OpenRouter")
     started = time.monotonic()
+    log_event(
+        "openrouter.request",
+        model=payload.get("model"),
+        timeout=timeout,
+        max_tokens=payload.get("max_tokens"),
+        reasoning=payload.get("reasoning"),
+    )
     try:
         with httpx.Client(timeout=timeout, follow_redirects=False) as client:
             response = client.post(
@@ -150,17 +164,37 @@ def call_openrouter(
             )
     except httpx.HTTPError as exc:
         # Deliberately do not include request headers: they contain the secret.
-        raise PipelineError(f"Сетевая ошибка OpenRouter: {type(exc).__name__}") from exc
+        raise PipelineError(
+            f"Сетевая ошибка OpenRouter: {type(exc).__name__}", retryable=True
+        ) from exc
     if response.status_code != 200:
-        detail = response.text.strip().replace("\n", " ")[:1000]
-        raise PipelineError(f"OpenRouter HTTP {response.status_code}: {detail}")
+        detail = response.text.replace(key, "[REDACTED]").strip().replace("\n", " ")[:1000]
+        raise PipelineError(
+            f"OpenRouter HTTP {response.status_code}: {detail}",
+            retryable=response.status_code in {408, 429} or response.status_code >= 500,
+        )
     try:
         data = response.json()
     except ValueError as exc:
         raise PipelineError("OpenRouter вернул не JSON") from exc
     if not isinstance(data, dict):
         raise PipelineError("Ответ OpenRouter должен быть JSON-объектом")
+    if data.get("error"):
+        error = data["error"]
+        status = error.get("code") if isinstance(error, dict) else None
+        detail = json.dumps(error, ensure_ascii=False).replace(key, "[REDACTED]")[:1000]
+        raise PipelineError(
+            f"OpenRouter: {detail}",
+            retryable=status in {408, 429, 500, 502, 503, 504},
+        )
     data["_elapsed_seconds"] = round(time.monotonic() - started, 3)
+    log_event(
+        "openrouter.response",
+        model=payload.get("model"),
+        elapsed_seconds=data["_elapsed_seconds"],
+        usage=data.get("usage"),
+        finish_reason=(data.get("choices") or [{}])[0].get("finish_reason"),
+    )
     return data
 
 
