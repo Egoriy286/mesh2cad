@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import io
+import warnings
 
+import pytest
 import trimesh
 from PIL import Image
 
 from mesh2cad.geometry import (
     VIEW_SIZE,
+    evaluate_iou,
     load_mesh,
     mesh_stats,
     normalize_mesh,
@@ -53,3 +56,59 @@ def test_render_views_can_write_a_file(tmp_path) -> None:
     render_views(normalized, output, size=128)
     with Image.open(output) as image:
         assert image.size == (128, 128)
+
+
+def test_iou_of_identical_box_is_one() -> None:
+    pytest.importorskip("manifold3d")
+    target = trimesh.creation.box()
+    result = evaluate_iou(target, target.copy())
+    assert result["status"] == "ok"
+    assert result["iou"] == pytest.approx(1.0)
+    assert result["intersection_volume"] == pytest.approx(1.0)
+    assert result["union_volume"] == pytest.approx(1.0)
+
+
+def test_iou_uses_true_boolean_union() -> None:
+    pytest.importorskip("manifold3d")
+    target = trimesh.creation.box()
+    prediction = target.copy()
+    prediction.apply_translation((0.5, 0, 0))
+    result = evaluate_iou(target, prediction)
+    assert result["status"] == "ok"
+    assert result["iou"] == pytest.approx(1 / 3, abs=1e-6)
+    assert result["intersection_volume"] == pytest.approx(0.5)
+    assert result["union_volume"] == pytest.approx(1.5)
+
+
+def test_iou_is_zero_for_disjoint_boxes() -> None:
+    pytest.importorskip("manifold3d")
+    target = trimesh.creation.box()
+    prediction = target.copy()
+    prediction.apply_translation((3, 0, 0))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        result = evaluate_iou(target, prediction)
+    assert result["status"] == "ok"
+    assert result["iou"] == pytest.approx(0, abs=1e-9)
+
+
+def test_iou_is_unavailable_for_open_surface() -> None:
+    target = trimesh.creation.box()
+    prediction = trimesh.Trimesh(vertices=target.vertices, faces=target.faces[:-1], process=False)
+    result = evaluate_iou(target, prediction)
+    assert result["iou"] is None
+    assert result["status"] == "non_watertight_prediction"
+    assert result["prediction_watertight"] is False
+
+
+def test_iou_boolean_failure_is_visible(monkeypatch) -> None:
+    pytest.importorskip("manifold3d")
+
+    def broken_boolean(*_args, **_kwargs):
+        raise RuntimeError("simulated backend failure")
+
+    monkeypatch.setattr(trimesh.boolean, "intersection", broken_boolean)
+    target = trimesh.creation.box()
+    result = evaluate_iou(target, target)
+    assert result["iou"] is None
+    assert result["status"] == "boolean_error:RuntimeError"

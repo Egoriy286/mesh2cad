@@ -207,7 +207,9 @@ def execute_code(
         if cancel_check is None:
             returncode, timed_out = _run_process(command, directory, timeout)
         else:
-            returncode, timed_out = _run_process(command, directory, timeout, cancel_check=cancel_check)
+            returncode, timed_out = _run_process(
+                command, directory, timeout, cancel_check=cancel_check
+            )
     except ExecutionCancelled as exc:
         return finish("cancelled", str(exc))
     except OSError as exc:

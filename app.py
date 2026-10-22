@@ -3,16 +3,21 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import io
 import json
+import platform
+from datetime import datetime, timezone
 from pathlib import Path
 
 import plotly.graph_objects as go
 import streamlit as st
 from PIL import Image
 
+from mesh2cad.executor import execute_code
 from mesh2cad.geometry import (
     VIEW_SIZE,
+    evaluate_iou,
     load_mesh,
     mesh_stats,
     normalize_mesh,
@@ -34,6 +39,8 @@ from mesh2cad.prompts import DEFAULT_REQUEST, SYSTEM_PROMPT
 ROOT = Path(__file__).resolve().parent
 DATASET_DIR = ROOT / "data" / "deepcad"
 RUNS_DIR = ROOT / "runs" / "ui"
+CADQUERY_AVAILABLE = importlib.util.find_spec("cadquery") is not None
+SANDBOX_AVAILABLE = platform.system() == "Darwin" and Path("/usr/bin/sandbox-exec").is_file()
 
 st.set_page_config(page_title="STL → LLM", layout="wide", initial_sidebar_state="collapsed")
 st.title("STL → LLM")
@@ -97,6 +104,8 @@ def prepare(payload: bytes) -> dict:
     return {
         "source_vertices": source.vertices,
         "source_faces": source.faces,
+        "normalized_vertices": normalized.vertices,
+        "normalized_faces": normalized.faces,
         "source_stats": mesh_stats(source),
         "normalized_stats": mesh_stats(normalized),
         "normalization": normalization,
@@ -105,27 +114,50 @@ def prepare(payload: bytes) -> dict:
     }
 
 
-def viewer(vertices, faces, revision: str):
-    figure = go.Figure(
-        go.Mesh3d(
-            x=vertices[:, 0],
-            y=vertices[:, 1],
-            z=vertices[:, 2],
-            i=faces[:, 0],
-            j=faces[:, 1],
-            k=faces[:, 2],
+def _mesh_trace(vertices, faces, *, color: str, opacity: float, name: str):
+    return go.Mesh3d(
+        x=vertices[:, 0],
+        y=vertices[:, 1],
+        z=vertices[:, 2],
+        i=faces[:, 0],
+        j=faces[:, 1],
+        k=faces[:, 2],
+        color=color,
+        opacity=opacity,
+        flatshading=True,
+        lighting={"ambient": 0.45, "diffuse": 0.75, "specular": 0.15, "roughness": 0.7},
+        lightposition={"x": 100, "y": 200, "z": 100},
+        name=name,
+    )
+
+
+def viewer(vertices, faces, revision: str, target: tuple | None = None):
+    traces = []
+    if target is not None:
+        traces.append(
+            _mesh_trace(
+                target[0],
+                target[1],
+                color="#aab2c0",
+                opacity=0.28,
+                name="Исходник",
+            )
+        )
+    traces.append(
+        _mesh_trace(
+            vertices,
+            faces,
             color="#6ea8fe",
             opacity=1.0,
-            flatshading=True,
-            lighting={"ambient": 0.45, "diffuse": 0.75, "specular": 0.15, "roughness": 0.7},
-            lightposition={"x": 100, "y": 200, "z": 100},
-            name="STL",
+            name="CadQuery" if target is not None else "STL",
         )
     )
+    figure = go.Figure(data=traces)
     figure.update_layout(
         height=560,
         margin={"l": 0, "r": 0, "t": 0, "b": 0},
         paper_bgcolor="rgba(0,0,0,0)",
+        showlegend=target is not None,
         scene={
             "aspectmode": "data",
             "xaxis_visible": False,
@@ -136,6 +168,10 @@ def viewer(vertices, faces, revision: str):
         uirevision=revision,
     )
     return figure
+
+
+def _format_volume(value) -> str:
+    return "—" if value is None else f"{value:.6g}"
 
 
 st.session_state.setdefault("model", DEFAULT_MODEL)
@@ -366,6 +402,149 @@ if result:
     if isinstance(usage, dict):
         st.markdown("**Usage**")
         st.json(usage)
+
+    # -----------------------------------------------------------------------
+    # 5. Sandboxed CadQuery execution, visualization, and volume IoU
+    # -----------------------------------------------------------------------
+    st.subheader("5 · CadQuery: просмотр и IoU")
+    st.caption(
+        "Код выполняется отдельным процессом под macOS Seatbelt: без сети и без записи "
+        "за пределы папки запуска. IoU считается по объёмам, без выравнивания."
+    )
+    stale = result["source_sha"] != source_sha or result["request_sha"] != request_sha
+    if stale:
+        st.warning("Код относится к другому STL или запросу. Отправьте запрос заново.")
+    if not CADQUERY_AVAILABLE:
+        st.warning("CadQuery не установлен. Выполните `uv sync --extra dev`.")
+    if not SANDBOX_AVAILABLE:
+        st.warning("Выполнение доступно только на macOS с /usr/bin/sandbox-exec.")
+    if st.button(
+        "Выполнить в CadQuery и посчитать IoU",
+        type="primary",
+        disabled=stale or not CADQUERY_AVAILABLE or not SANDBOX_AVAILABLE,
+    ):
+        st.session_state.pop("cad", None)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        if result["run_dir"]:
+            cad_dir = Path(result["run_dir"]) / "cadquery"
+        else:
+            cad_dir = RUNS_DIR / f"{stamp}-cadquery"
+        with st.spinner("CadQuery в песочнице…"):
+            execution = execute_code(result["code"], cad_dir, timeout=60)
+            try:
+                (cad_dir / "execution.json").write_text(
+                    json.dumps(execution, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                    encoding="utf-8",
+                )
+            except OSError:
+                pass
+            cad_state = {
+                "status": execution["status"],
+                "error": execution.get("error"),
+                "execution": execution,
+                "run_dir": str(cad_dir),
+                "source_sha": result["source_sha"],
+                "request_sha": result["request_sha"],
+            }
+            if execution["status"] == "valid":
+                try:
+                    target = load_mesh(data["normalized_stl"])
+                    candidate = load_mesh(execution["mesh_path"])
+                    cad_state.update(
+                        candidate_vertices=candidate.vertices,
+                        candidate_faces=candidate.faces,
+                        target_vertices=data["normalized_vertices"],
+                        target_faces=data["normalized_faces"],
+                    )
+                    iou = evaluate_iou(target, candidate)
+                    cad_state["iou"] = iou
+                    (cad_dir / "iou.json").write_text(
+                        json.dumps(iou, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                        encoding="utf-8",
+                    )
+                except Exception as exc:  # noqa: BLE001 - show the failure
+                    cad_state["metric_error"] = f"{type(exc).__name__}: {exc}"
+            st.session_state["cad"] = cad_state
+
+    cad = st.session_state.get("cad")
+    if cad and (cad.get("source_sha") != source_sha or cad.get("request_sha") != request_sha):
+        st.session_state.pop("cad", None)
+        cad = None
+    if cad:
+        if cad["status"] != "valid":
+            st.error(f"CadQuery: {cad['status']}")
+            if cad.get("error"):
+                st.code(cad["error"], language=None)
+        else:
+            st.success(f"Выполнено за {cad['execution']['elapsed_seconds']:.2f} с")
+            iou = cad.get("iou")
+            if iou:
+                iou_col, target_col, cad_col = st.columns(3)
+                value = iou.get("iou")
+                iou_col.metric("IoU", "—" if value is None else f"{value:.4f}")
+                target_col.metric("Объём исходника", _format_volume(iou.get("target_volume")))
+                cad_col.metric("Объём CadQuery", _format_volume(iou.get("prediction_volume")))
+                st.caption(
+                    f"Статус: `{iou.get('status')}` · "
+                    f"пересечение: {_format_volume(iou.get('intersection_volume'))} · "
+                    f"объединение: {_format_volume(iou.get('union_volume'))}"
+                )
+                st.caption(
+                    "IoU = |пересечение| / |объединение|, без выравнивания и масштабирования."
+                )
+            if cad.get("metric_error"):
+                st.error(f"Метрика IoU: {cad['metric_error']}")
+            if "candidate_vertices" in cad:
+                target = (cad["target_vertices"], cad["target_faces"])
+                tab_cad, tab_overlay = st.tabs(["CadQuery", "Наложение"])
+                with tab_cad:
+                    st.plotly_chart(
+                        viewer(
+                            cad["candidate_vertices"],
+                            cad["candidate_faces"],
+                            cad["request_sha"],
+                        ),
+                        config={"displayModeBar": False, "scrollZoom": True},
+                        width="stretch",
+                        key="cad-view",
+                    )
+                with tab_overlay:
+                    st.plotly_chart(
+                        viewer(
+                            cad["candidate_vertices"],
+                            cad["candidate_faces"],
+                            cad["request_sha"],
+                            target=target,
+                        ),
+                        config={"displayModeBar": False, "scrollZoom": True},
+                        width="stretch",
+                        key="overlay-view",
+                    )
+                st.caption("Серый — исходник в нормализованных координатах, синий — CadQuery.")
+            st.download_button(
+                "Скачать CadQuery STL",
+                Path(cad["execution"]["mesh_path"]).read_bytes(),
+                file_name="candidate.stl",
+                mime="model/stl",
+            )
+            st.download_button(
+                "Скачать STEP",
+                Path(cad["execution"]["step_path"]).read_bytes(),
+                file_name="candidate.step",
+                mime="application/step",
+            )
+            if (Path(cad["run_dir"]) / "iou.json").is_file():
+                st.download_button(
+                    "Скачать iou.json",
+                    (Path(cad["run_dir"]) / "iou.json").read_bytes(),
+                    file_name="iou.json",
+                    mime="application/json",
+                )
+            st.caption(f"Артефакты: {cad['run_dir']}")
+        with st.expander("Детали выполнения"):
+            st.json(cad["execution"])
+    elif not stale and CADQUERY_AVAILABLE and SANDBOX_AVAILABLE:
+        st.caption("Кнопка выполнит ровно тот код, который показан выше.")
 
 st.divider()
 st.caption(
