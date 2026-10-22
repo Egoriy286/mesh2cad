@@ -23,11 +23,45 @@ from mesh2cad.geometry import (
     render_overlay_sheet,
     render_views,
     render_views_bytes,
+    section_evidence,
+    solid_difference_parts,
 )
 
 
 def box() -> trimesh.Trimesh:
     return trimesh.creation.box(extents=(2.0, 1.0, 0.5))
+
+
+def test_zero_area_export_faces_are_removed_without_filling_real_holes():
+    mesh = trimesh.creation.box()
+    degenerate = np.array([[0, 0, 1]])
+    with_zero = trimesh.Trimesh(
+        vertices=mesh.vertices, faces=np.vstack([mesh.faces, degenerate]), process=False
+    )
+    cleaned = load_mesh(with_zero.export(file_type="stl"))
+    assert cleaned.is_volume
+    assert len(cleaned.faces) == len(mesh.faces)
+    assert cleaned.metadata["removed_zero_area_faces"] == 1
+    assert evaluate_iou(mesh, cleaned)["iou"] == pytest.approx(1)
+    open_mesh = trimesh.Trimesh(
+        vertices=mesh.vertices, faces=np.vstack([mesh.faces[1:], degenerate]), process=False
+    )
+    still_open = load_mesh(open_mesh.export(file_type="stl"))
+    assert not still_open.is_watertight
+    assert evaluate_iou(mesh, still_open)["iou"] is None
+
+
+def test_section_measurements_expose_holes_and_original_coordinates():
+    mesh = trimesh.boolean.difference(
+        [trimesh.creation.box(), trimesh.creation.box(extents=[0.4, 0.4, 2])], engine="manifold"
+    )
+    mesh.apply_translation([0.1, 0.2, 0.3])
+    evidence = section_evidence(mesh)
+    assert len(evidence["sections"]) == 9
+    middle = next(s for s in evidence["sections"] if s["axis"] == "z" and s["at"] == 0.3)
+    assert middle["closed_loops"] == 2
+    assert middle["in_plane_axes"] == "xy"
+    assert evidence["bounds"] == mesh.bounds.tolist()
 
 
 def test_load_mesh_from_bytes_merges_stl_vertices() -> None:
@@ -113,8 +147,7 @@ def test_overlay_sheet_marks_missing_region_red() -> None:
     target = trimesh.creation.box()
     prediction = target.copy()
     prediction.apply_translation((0.5, 0, 0))
-    difference = mesh_difference(target, prediction, max_edge=0.08)
-    payload = render_overlay_sheet(difference, prediction, size=128)
+    payload = render_overlay_sheet(target, prediction, size=128)
     with Image.open(io.BytesIO(payload)) as image:
         assert image.size == (128 * 3, 128 * 2)
         pixels = np.asarray(image.convert("RGB"))
@@ -124,12 +157,44 @@ def test_overlay_sheet_marks_missing_region_red() -> None:
 
 def test_overlay_sheet_has_no_red_for_identical_boxes() -> None:
     target = trimesh.creation.box()
-    difference = mesh_difference(target, target.copy(), max_edge=0.08)
-    payload = render_overlay_sheet(difference, target, size=128)
+    payload = render_overlay_sheet(target, target, size=128)
     with Image.open(io.BytesIO(payload)) as image:
         pixels = np.asarray(image.convert("RGB"))
     red = (pixels[..., 0] > 180) & (pixels[..., 1] < 80) & (pixels[..., 2] < 80)
     assert not red.any()
+    green = (pixels[..., 1] > 100) & (pixels[..., 0] < 80) & (pixels[..., 2] < 80)
+    blue = (pixels[..., 2] > 100) & (pixels[..., 0] < 100) & (pixels[..., 1] < pixels[..., 2] * 0.8)
+    assert green.any() and not blue.any()
+
+
+def test_solid_colors_distinguish_contained_missing_and_outside_geometry():
+    target = trimesh.creation.box()
+    small = trimesh.creation.box(extents=[0.5, 0.5, 0.5])
+    nested = solid_difference_parts(target, small)
+    assert nested["excess"].is_empty
+    assert nested["covered"].volume == pytest.approx(0.125)
+    assert nested["missing"].volume == pytest.approx(0.875)
+    extended = target.copy()
+    extended.apply_translation([0.5, 0, 0])
+    parts = solid_difference_parts(target, extended)
+    assert all(part.volume == pytest.approx(0.5) for part in parts.values())
+    with Image.open(io.BytesIO(render_overlay_sheet(target, extended, size=128))) as image:
+        p = np.array(image)
+    assert ((p[..., 1] > 100) & (p[..., 0] < 80) & (p[..., 2] < 80)).any()
+    assert ((p[..., 2] > 100) & (p[..., 0] < 80) & (p[..., 1] < p[..., 2] * 0.8)).any()
+
+
+def test_overlay_blue_includes_cad_filling_a_target_hole_not_just_bbox_excess():
+    cube = trimesh.creation.box()
+    target = trimesh.boolean.difference(
+        [cube, trimesh.creation.box(extents=[0.4, 0.4, 2])], engine="manifold"
+    )
+    parts = solid_difference_parts(target, cube)
+    assert parts["missing"].is_empty
+    assert parts["excess"].volume == pytest.approx(0.16)
+    with Image.open(io.BytesIO(render_overlay_sheet(target, cube, size=128))) as image:
+        p = np.array(image)
+    assert ((p[..., 2] > 100) & (p[..., 0] < 80) & (p[..., 1] < p[..., 2] * 0.8)).any()
 
 
 def test_iou_of_identical_box_is_one() -> None:

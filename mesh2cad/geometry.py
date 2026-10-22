@@ -17,7 +17,7 @@ import numpy as np
 import trimesh
 from PIL import Image
 
-from .observability import timed_stage
+from .observability import log_event, timed_stage
 
 
 class GeometryCancelled(RuntimeError):
@@ -65,7 +65,8 @@ def _as_mesh(loaded: Any) -> trimesh.Trimesh:
 def load_mesh(source: str | Path | bytes | bytearray | BinaryIO) -> trimesh.Trimesh:
     """Load an STL from a path, raw bytes, or an already-open binary stream.
 
-    Duplicate STL vertices are merged; no geometry is otherwise repaired.
+    Duplicate STL vertices are merged. Only zero-area faces and repeated-index
+    triangles are removed; no holes are filled and no vertices are moved.
     """
     if isinstance(source, (bytes, bytearray)):
         loaded = trimesh.load(io.BytesIO(bytes(source)), file_type="stl", process=False)
@@ -76,6 +77,19 @@ def load_mesh(source: str | Path | bytes | bytearray | BinaryIO) -> trimesh.Trim
     mesh = _as_mesh(loaded).copy()
     validate_mesh(mesh)
     mesh.merge_vertices()
+    faces = np.asarray(mesh.faces)
+    valid = (
+        (faces[:, 0] != faces[:, 1])
+        & (faces[:, 1] != faces[:, 2])
+        & (faces[:, 0] != faces[:, 2])
+        & (mesh.area_faces > 0)
+    )
+    removed = int((~valid).sum())
+    if removed:
+        mesh.update_faces(valid)
+        mesh.remove_unreferenced_vertices()
+        mesh.metadata["removed_zero_area_faces"] = removed
+        log_event("mesh.zero_area_faces_removed", removed=removed, remaining=len(mesh.faces))
     validate_mesh(mesh)
     return mesh
 
@@ -122,6 +136,41 @@ def mesh_stats(mesh: trimesh.Trimesh) -> dict[str, Any]:
     }
 
 
+def section_evidence(mesh: trimesh.Trimesh) -> dict[str, Any]:
+    """Bounded geometric measurements for structure repair, in original coordinates."""
+    evidence = {"bounds": np.round(mesh.bounds, 6).tolist(), "sections": []}
+    if mesh.is_volume:
+        evidence.update(
+            volume=round(float(mesh.volume), 7), centroid=np.round(mesh.center_mass, 6).tolist()
+        )
+    center = mesh.bounds.mean(axis=0)
+    for axis in range(3):
+        other = [i for i in range(3) if i != axis]
+        for fraction in (-0.3, 0.0, 0.3):
+            origin = center.copy()
+            origin[axis] += fraction * mesh.extents[axis]
+            section = mesh.section(plane_origin=origin, plane_normal=np.eye(3)[axis])
+            loops = []
+            if section is not None:
+                for path in section.discrete:
+                    if len(path) < 4 or not np.allclose(path[0], path[-1], atol=1e-6):
+                        continue
+                    points = path[:, other]
+                    bounds = np.array([points.min(axis=0), points.max(axis=0)])
+                    loops.append(bounds)
+            loops.sort(key=lambda b: -float(np.prod(b[1] - b[0])))
+            evidence["sections"].append(
+                {
+                    "axis": "xyz"[axis],
+                    "at": round(float(origin[axis]), 6),
+                    "in_plane_axes": "".join("xyz"[i] for i in other),
+                    "closed_loops": len(loops),
+                    "largest_loop_bounds": [np.round(b, 5).tolist() for b in loops[:4]],
+                }
+            )
+    return evidence
+
+
 def evaluate_iou(target: trimesh.Trimesh, prediction: trimesh.Trimesh) -> dict[str, Any]:
     """Exact volume IoU through manifold booleans, with explicit failure reasons.
 
@@ -139,6 +188,10 @@ def evaluate_iou(target: trimesh.Trimesh, prediction: trimesh.Trimesh) -> dict[s
         "union_volume": None,
         "target_watertight": bool(target.is_watertight),
         "prediction_watertight": bool(prediction.is_watertight),
+        "target_zero_area_faces_removed": int(target.metadata.get("removed_zero_area_faces", 0)),
+        "prediction_zero_area_faces_removed": int(
+            prediction.metadata.get("removed_zero_area_faces", 0)
+        ),
     }
     target_closed, prediction_closed = target.is_watertight, prediction.is_watertight
     if not target_closed or not prediction_closed:
@@ -299,13 +352,24 @@ def _camera_basis(elevation: float, azimuth: float) -> tuple[np.ndarray, np.ndar
     return forward, right, up
 
 
-def _project(vertices: np.ndarray, right: np.ndarray, up: np.ndarray, size: int):
-    u = (vertices @ right) / _FRAME_SCALE + 0.5
-    v = (vertices @ up) / _FRAME_SCALE + 0.5
+def _project(
+    vertices: np.ndarray, right: np.ndarray, up: np.ndarray, size: int, frame_width=_FRAME_SCALE
+):
+    u = (vertices @ right) / frame_width + 0.5
+    v = (vertices @ up) / frame_width + 0.5
     return u * (size - 1), (1.0 - v) * (size - 1)
 
 
-def _raster_buffers(parts, elevation, azimuth, size, *, cancel_check=None):
+def _raster_buffers(
+    parts,
+    elevation,
+    azimuth,
+    size,
+    *,
+    cancel_check=None,
+    frame_width=_FRAME_SCALE,
+    render_color=True,
+):
     """Rasterize bounded NumPy batches instead of allocating a grid per triangle."""
     render_size = size * _SUPERSAMPLE
     forward, right, up = _camera_basis(elevation, azimuth)
@@ -315,20 +379,23 @@ def _raster_buffers(parts, elevation, azimuth, size, *, cancel_check=None):
     depth_min, depth_max = np.inf, -np.inf
     for mesh, base_color, bias in parts:
         vertices, faces = np.asarray(mesh.vertices), np.asarray(mesh.faces)
-        x, y = _project(vertices, right, up, render_size)
+        x, y = _project(vertices, right, up, render_size, frame_width)
         depth = vertices @ forward + bias
         depth_min, depth_max = min(depth_min, depth.min()), max(depth_max, depth.max())
         triangles = vertices[faces]
         normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
         lengths = np.linalg.norm(normals, axis=1)
         valid = lengths > 1e-12
-        normals[valid] /= lengths[valid, None]
-        brightness = 0.55 + 0.45 * np.abs(normals @ light)
-        colors.append((np.asarray(base_color)[None, :] * brightness[:, None]).astype(np.float32))
+        if render_color:
+            normals[valid] /= lengths[valid, None]
+            brightness = 0.55 + 0.45 * np.abs(normals @ light)
+            colors.append(
+                (np.asarray(base_color)[None, :] * brightness[:, None]).astype(np.float32)
+            )
         projected.append(np.stack((x[faces], y[faces], depth[faces]), axis=1))
         validity.append(valid)
     projected = np.concatenate(projected)
-    face_colors = np.concatenate(colors)
+    face_colors = np.concatenate(colors) if render_color else None
     valid = np.concatenate(validity)
     x, y, z = projected[:, 0], projected[:, 1], projected[:, 2]
     xmin = np.maximum(np.floor(x.min(axis=1)).astype(int), 0)
@@ -390,6 +457,8 @@ def _raster_buffers(parts, elevation, azimuth, size, *, cancel_check=None):
             winners[changed] = empty
             nearest = depths == zbuffer[flat]
             np.minimum.at(winners, flat[nearest], face_ids[nearest])
+    if not render_color:
+        return None, zbuffer.reshape(render_size, render_size), float(depth_min), float(depth_max)
     color = np.zeros((render_size * render_size, 3), dtype=np.float32)
     covered = winners != empty
     color[covered] = face_colors[winners[covered]]
@@ -450,47 +519,70 @@ def _rasterize_parts(parts, elevation, azimuth, size, *, cancel_check=None):
     return _raster_buffers(parts, elevation, azimuth, size, cancel_check=cancel_check)[0]
 
 
+OVERLAY_VERSION = 2
+OVERLAY_LEGEND = (
+    "Зелёный — совпадение; синий — CAD за пределами исходного mesh; "
+    "красный — геометрия, которой не хватает в CAD."
+)
+
+
+def solid_difference_parts(target, candidate, *, cancel_check=None) -> dict:
+    """Partition actual solids, so excess means outside the target, including holes."""
+    validate_mesh(target)
+    validate_mesh(candidate)
+    if not target.is_volume or not candidate.is_volume:
+        raise ValueError("Объёмная цветовая схема требует двух корректных замкнутых mesh")
+    parts = {}
+    for name, operation, inputs in (
+        ("covered", trimesh.boolean.intersection, [target, candidate]),
+        ("excess", trimesh.boolean.difference, [candidate, target]),
+        ("missing", trimesh.boolean.difference, [target, candidate]),
+    ):
+        if cancel_check is not None and cancel_check():
+            raise GeometryCancelled("Solid comparison cancelled")
+        parts[name] = operation(inputs, engine="manifold")
+    return parts
+
+
 def render_overlay_sheet(
-    difference: dict[str, Any],
+    target: trimesh.Trimesh,
     candidate: trimesh.Trimesh,
     size: int = VIEW_SIZE,
     *,
     cancel_check=None,
+    parts: dict | None = None,
 ) -> bytes:
     """Render the 3x2 contrast scheme sent to the improvement request.
 
-    Gray is the covered target surface, blue is the current CadQuery model,
-    and red is the target region missing from CadQuery.
+    Green is the solid intersection, blue is candidate minus target, red is
+    target minus candidate. No pose/scale alignment or surface-distance proxy.
     """
     validate_mesh(candidate)
     if not isinstance(size, int) or isinstance(size, bool) or size < 64:
         raise ValueError("Размер изображения должен быть целым числом не меньше 64")
-    parts: list[tuple[trimesh.Trimesh, tuple[float, float, float], float]] = [
-        (candidate, (0.20, 0.55, 1.00), 0.0005),
+    solids = (
+        parts
+        if parts is not None
+        else solid_difference_parts(target, candidate, cancel_check=cancel_check)
+    )
+    colored = [
+        (solids[name], color, 0.0)
+        for name, color in (
+            ("missing", (1.00, 0.05, 0.05)),
+            ("excess", (0.20, 0.55, 1.00)),
+            ("covered", (0.05, 0.95, 0.20)),
+        )
+        if len(solids[name].faces)
     ]
-    covered = trimesh.Trimesh(
-        vertices=difference["covered_vertices"],
-        faces=difference["covered_triangles"],
-        process=False,
-    )
-    if len(covered.faces):
-        parts.append((covered, (0.55, 0.55, 0.55), -0.0005))
-    missing = trimesh.Trimesh(
-        vertices=difference["missing_vertices"],
-        faces=difference["missing_triangles"],
-        process=False,
-    )
-    if len(missing.faces):
-        parts.append((missing, (1.00, 0.05, 0.05), 0.001))
     columns = 3
     rows = math.ceil(len(VIEWS) / columns)
     sheet = Image.new("RGB", (size * columns, size * rows), "black")
     for index, (_name, elevation, azimuth) in enumerate(VIEWS):
         row, column = divmod(index, columns)
         with timed_stage(
-            "render.overlay_view", view=_name, faces=sum(len(p[0].faces) for p in parts)
+            "render.overlay_view", view=_name, faces=sum(len(p[0].faces) for p in colored)
         ):
-            tile = _rasterize_parts(parts, elevation, azimuth, size, cancel_check=cancel_check)
+            tile = _rasterize_parts(colored, elevation, azimuth, size, cancel_check=cancel_check)
         sheet.paste(tile, (column * size, row * size))
     return _png_bytes(sheet)
 

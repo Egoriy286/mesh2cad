@@ -1,0 +1,1383 @@
+{
+  "as_of": "2026-10-22",
+  "repository": {
+    "branch": "harness",
+    "head": "f380495817d31123bb771e2060dd92e204547d7c",
+    "working_tree_has_uncommitted_implementation": true,
+    "file_sha256": {
+      "mesh2cad/harness.py": "82606d421927b9e2714aefdcacd781337ca215448083853142a37a5194f76b6f",
+      "mesh2cad/harness2.py": "f3e7cc191e7ea01f95150b9ec96771ef0c53993c0ff21edf38a2e52ca7b5f42a",
+      "mesh2cad/agent.py": "c2ada25e9094c3a4095d780fdf11a4e2246607aa74222911a332bcf4a8a0fe8c",
+      "mesh2cad/vision.py": "896b42c321d3042a4aef6bb0dec787cfd1d5c0e45b736ebea1e962fda370e55e",
+      "mesh2cad/geometry.py": "4037223f9834d7a865e2566bc6b391f66d6bbcf5964adbf4ff44ec9e0cc8e4a8",
+      "mesh2cad/executor.py": "81b4f9b5e715b8f3296d5e96a189de60404f2fcf216084efaf10f2bec61da40a",
+      "mesh2cad/resources.py": "7d1d04da8eff42cb9f6c259047be548187114f3246900601a2290ad688b4aee9",
+      "mesh2cad/harness_ui.py": "e50028cb894b5678e2007ede2245b63acb569e18bb06fe4e61ed2c0c9bd7282e",
+      "mesh2cad/observability.py": "4b00f75f437f865398b55bfa957d9d697013205f4bc07dd13885a841734aee0f",
+      "mesh2cad/dataset.py": "d3d54aa7d9a16efc5a853c12f54dc85fbc08bab9628488c4ef17cccb654c085e",
+      "mesh2cad/prompts.py": "6d5b782e9c68995e880cb38f1e2e1c3daa2bab437b66c470f73174c8c1694ff9",
+      "README.md": "d51f9c5b0193babd2c9e87a287638e5b7118610d990b47a4459ceeb318250cdb",
+      "data/deepcad/manifest.json": "3ccb976a592679a48b5f187fda5011cfb6d3318bf297f39e7fc1b877f1d096e0",
+      "data/interior300/manifest.json": "f165ce918f25c9ee21303da0bee3f686f48f894914ee6569ec1a6fe8a1d834c4"
+    }
+  },
+  "interpretation": {
+    "unit_of_analysis": "selected object; not dataset mean",
+    "controlled_ablation": false,
+    "classic_cost_scope": "selected DeepCAD item only, all five calls",
+    "v2_cost_scope": "all calls including geometry analysis and failed generation",
+    "numeric_parameter_optimization": false,
+    "target_normalization": "bbox centered; longest extent 1",
+    "metric_alignment": "no candidate pose or scale fitting",
+    "v2_protocol_changed_after_deepcad": "repair prompt explicitly requires executable code",
+    "v2_renderer_changed_between_pilots": "DeepCAD calibration v1; Interior calibration v2 adds bbox-fitting frame and dominant depth levels",
+    "figures": "unmodified crops of saved renders, no regenerated geometry"
+  },
+  "runs": [
+    {
+      "run": "20261022T184742Z-b4c867e2",
+      "checkpoint_sha256": "675ac5fe38893af3bd292935fe6e21f81e8897fa5c4acb36ed41be7fd530d7d2",
+      "item_id": "274a034e5c4ac827",
+      "input_sha256": "8706d851e0bb7817d32ea6629986a7684d3b18d324cdf5ee0d72410ddf87a0dd",
+      "model": "openai/gpt-6-luna",
+      "reasoning_effort": "medium",
+      "max_iterations": 5,
+      "max_output_tokens": 4096,
+      "total_token_budget": 100000,
+      "orchestrator": "classic",
+      "prompt_version": 7,
+      "vision_prompt_version": null,
+      "target_calibration": null,
+      "best_iou": 0.8067900926014285,
+      "item_calls": [
+        {
+          "started_at": "2026-10-22T18:51:36.347643+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2115,
+            "total_tokens": 4302,
+            "cost": 0.0013308,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0013308,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0010575
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1890,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 22.773507791003794
+        },
+        {
+          "started_at": "2026-10-22T18:52:02.827574+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 4774,
+            "completion_tokens": 2112,
+            "total_tokens": 6886,
+            "cost": 0.001401515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 2587,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001401515,
+              "upstream_inference_prompt_cost": 0.000345515,
+              "upstream_inference_completions_cost": 0.001056
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1872,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 21.13640587500413
+        },
+        {
+          "started_at": "2026-10-22T18:52:26.634017+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 5240,
+            "completion_tokens": 1137,
+            "total_tokens": 6377,
+            "cost": 0.000972265,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3053,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.000972265,
+              "upstream_inference_prompt_cost": 0.000403765,
+              "upstream_inference_completions_cost": 0.0005685
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 892,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 11.746149583006627
+        },
+        {
+          "started_at": "2026-10-22T18:52:41.214766+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 5696,
+            "completion_tokens": 1842,
+            "total_tokens": 7538,
+            "cost": 0.001381765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3509,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001381765,
+              "upstream_inference_prompt_cost": 0.000460765,
+              "upstream_inference_completions_cost": 0.000921
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1539,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 19.773779833005392
+        },
+        {
+          "started_at": "2026-10-22T18:53:03.884121+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 5830,
+            "completion_tokens": 2282,
+            "total_tokens": 8112,
+            "cost": 0.001618515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3643,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001618515,
+              "upstream_inference_prompt_cost": 0.000477515,
+              "upstream_inference_completions_cost": 0.001141
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1967,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 24.100316750002094
+        }
+      ],
+      "item_cost_usd": 0.00670486,
+      "run_active_seconds": 153.48904024998774,
+      "run_item_count": 3,
+      "run_peak_rss_mb": 1126.6,
+      "attempts": [
+        {
+          "iteration": 1,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.7567689872553421,
+            "status": "ok",
+            "target_volume": 0.06370030886642633,
+            "prediction_volume": 0.08366458699882434,
+            "intersection_volume": 0.06348084671960837,
+            "union_volume": 0.08388404888239591,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 0
+          },
+          "code_sha256": "2ac0f1dd83b2438aff2d686ebdf3118bde21c730d0273c872edc81797eb25b6e",
+          "visual_metrics": null
+        },
+        {
+          "iteration": 2,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.7640314420123955,
+            "status": "ok",
+            "target_volume": 0.06370030886642633,
+            "prediction_volume": 0.06421469495608013,
+            "intersection_volume": 0.05540212166452751,
+            "union_volume": 0.07251288182408162,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 0
+          },
+          "code_sha256": "018011abb3f97b0584729bec32ceea0b88df6075e042b888866323542e0a4964",
+          "visual_metrics": null
+        },
+        {
+          "iteration": 3,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.5663230794535619,
+            "status": "ok",
+            "target_volume": 0.06370030886642633,
+            "prediction_volume": 0.06421469498024034,
+            "intersection_volume": 0.04624921866602442,
+            "union_volume": 0.08166578468009765,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 0
+          },
+          "code_sha256": "098a4ea9afcdcf1c512d63484e88d66e271446f0f58dccb6f9ccb6ce0b57a678",
+          "visual_metrics": null
+        },
+        {
+          "iteration": 4,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.7677838054177064,
+            "status": "ok",
+            "target_volume": 0.06370030886642633,
+            "prediction_volume": 0.060916969572300354,
+            "intersection_volume": 0.05412377224247695,
+            "union_volume": 0.07049350593300331,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 0
+          },
+          "code_sha256": "fef5f5bb3491d3d10a86fb904d1314d3a349d55c13ff249d4bb4e946f8a58e7d",
+          "visual_metrics": null
+        },
+        {
+          "iteration": 5,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.8067900926014285,
+            "status": "ok",
+            "target_volume": 0.06370030886642633,
+            "prediction_volume": 0.07546174558657008,
+            "intersection_volume": 0.06214034880111837,
+            "union_volume": 0.07702170536174026,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 0
+          },
+          "code_sha256": "c7214a9f745ec191ac1347cec4f77d4af5bfdf105781a163b11b9a6d09e4e5b2",
+          "visual_metrics": null
+        }
+      ]
+    },
+    {
+      "run": "20261022T184705Z-7cef923e",
+      "checkpoint_sha256": "998277103faa23896dcf30e1ecd8d381c3ac5555b40327f5b966e1bae65e7541",
+      "item_id": "274a034e5c4ac827",
+      "input_sha256": "8706d851e0bb7817d32ea6629986a7684d3b18d324cdf5ee0d72410ddf87a0dd",
+      "model": "openai/gpt-6-luna",
+      "reasoning_effort": "medium",
+      "max_iterations": 2,
+      "max_output_tokens": 8192,
+      "total_token_budget": 30000,
+      "orchestrator": "vision2",
+      "prompt_version": 7,
+      "vision_prompt_version": null,
+      "target_calibration": {
+        "version": 1,
+        "size": 512,
+        "frame_width": 1.15,
+        "reference_extents": [
+          1.0,
+          0.23966942727565765,
+          0.9996892213821411
+        ],
+        "tile_order": [
+          "top",
+          "left",
+          "right",
+          "isometric",
+          "bottom",
+          "front"
+        ],
+        "encoding": "0=empty; 1..255 linear; near=255, far=1; raw=world_dot_forward",
+        "views": [
+          {
+            "view": "top",
+            "camera_direction": [
+              0.0,
+              -0.0,
+              1.0
+            ],
+            "image_right": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "image_up": [
+              -0.0,
+              1.0,
+              0.0
+            ],
+            "forward": [
+              -0.0,
+              0.0,
+              -1.0
+            ],
+            "near": -0.5498446106910706,
+            "far": 0.5498446106910706,
+            "occupied_pixels": 44227
+          },
+          {
+            "view": "left",
+            "camera_direction": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "image_right": [
+              -0.0,
+              -1.0,
+              0.0
+            ],
+            "image_up": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "forward": [
+              1.0,
+              -0.0,
+              -0.0
+            ],
+            "near": -0.55,
+            "far": 0.55,
+            "occupied_pixels": 44227
+          },
+          {
+            "view": "right",
+            "camera_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "image_right": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "image_up": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "forward": [
+              -1.0,
+              -0.0,
+              -0.0
+            ],
+            "near": -0.55,
+            "far": 0.55,
+            "occupied_pixels": 44227
+          },
+          {
+            "view": "isometric",
+            "camera_direction": [
+              0.51983679,
+              -0.74240388,
+              -0.42261826
+            ],
+            "image_right": [
+              0.81915204,
+              0.57357644,
+              -0.0
+            ],
+            "image_up": [
+              0.24240388,
+              -0.34618861,
+              0.90630779
+            ],
+            "forward": [
+              -0.51983679,
+              0.74240388,
+              0.42261826
+            ],
+            "near": -0.6101276118182821,
+            "far": 0.6101276118182821,
+            "occupied_pixels": 99185
+          },
+          {
+            "view": "bottom",
+            "camera_direction": [
+              0.0,
+              -0.0,
+              -1.0
+            ],
+            "image_right": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "image_up": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "forward": [
+              -0.0,
+              0.0,
+              1.0
+            ],
+            "near": -0.5498446106910706,
+            "far": 0.5498446106910706,
+            "occupied_pixels": 44227
+          },
+          {
+            "view": "front",
+            "camera_direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "image_right": [
+              1.0,
+              0.0,
+              -0.0
+            ],
+            "image_up": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "forward": [
+              -0.0,
+              1.0,
+              -0.0
+            ],
+            "near": -0.16983471363782887,
+            "far": 0.16983471363782887,
+            "occupied_pixels": 90270
+          }
+        ]
+      },
+      "best_iou": 0.9397865017726,
+      "item_calls": [
+        {
+          "started_at": "2026-10-22T18:47:06.090812+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "geometry_analysis",
+          "usage": {
+            "prompt_tokens": 8003,
+            "completion_tokens": 1548,
+            "total_tokens": 9551,
+            "cost": 0.0017743,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 8000,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0017743,
+              "upstream_inference_prompt_cost": 0.0010003,
+              "upstream_inference_completions_cost": 0.000774
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 780,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 15.058043540993822
+        },
+        {
+          "started_at": "2026-10-22T18:47:21.158810+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 8509,
+            "completion_tokens": 6824,
+            "total_tokens": 15333,
+            "cost": 0.00447555,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 8506,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00447555,
+              "upstream_inference_prompt_cost": 0.00106355,
+              "upstream_inference_completions_cost": 0.003412
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 6371,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 204.007713125
+        },
+        {
+          "started_at": "2026-10-22T18:50:48.838202+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 15793,
+            "completion_tokens": 1565,
+            "total_tokens": 17358,
+            "cost": 0.00177836,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 8506,
+              "cache_write_tokens": 7284,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00177836,
+              "upstream_inference_prompt_cost": 0.00099586,
+              "upstream_inference_completions_cost": 0.0007825
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1458,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 43.9479328749876
+        }
+      ],
+      "item_cost_usd": 0.008028210000000001,
+      "run_active_seconds": 270.0725642909965,
+      "run_item_count": 1,
+      "run_peak_rss_mb": 1039.0,
+      "attempts": [
+        {
+          "iteration": 1,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.9397865017726,
+            "status": "ok",
+            "target_volume": 0.06370030886642633,
+            "prediction_volume": 0.06367390145439387,
+            "intersection_volume": 0.06171017442388865,
+            "union_volume": 0.06566403572246737,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 0
+          },
+          "code_sha256": "d3d715c0aa03947c17c43b15835d344923edf5f5d20539aa678d5cc13532db7c",
+          "visual_metrics": {
+            "threshold": 0.01,
+            "views": [
+              {
+                "view": "top",
+                "silhouette_iou": 0.9930840911642528,
+                "depth_mae": 0.0036761858500540257,
+                "target_visible_pixels": 44227,
+                "prediction_visible_pixels": 44535,
+                "missing_or_farther_pixels": 0,
+                "excess_or_nearer_pixels": 1780
+              },
+              {
+                "view": "left",
+                "silhouette_iou": 0.9930840911642528,
+                "depth_mae": 0.003676315303891897,
+                "target_visible_pixels": 44227,
+                "prediction_visible_pixels": 44535,
+                "missing_or_farther_pixels": 0,
+                "excess_or_nearer_pixels": 1780
+              },
+              {
+                "view": "right",
+                "silhouette_iou": 0.9948040847541499,
+                "depth_mae": 0.002757707145065069,
+                "target_visible_pixels": 44227,
+                "prediction_visible_pixels": 44458,
+                "missing_or_farther_pixels": 0,
+                "excess_or_nearer_pixels": 1335
+              },
+              {
+                "view": "isometric",
+                "silhouette_iou": 0.98340770912576,
+                "depth_mae": 0.0027723105158656836,
+                "target_visible_pixels": 99185,
+                "prediction_visible_pixels": 99487,
+                "missing_or_farther_pixels": 680,
+                "excess_or_nearer_pixels": 25696
+              },
+              {
+                "view": "bottom",
+                "silhouette_iou": 0.9948040847541499,
+                "depth_mae": 0.002757582813501358,
+                "target_visible_pixels": 44227,
+                "prediction_visible_pixels": 44458,
+                "missing_or_farther_pixels": 0,
+                "excess_or_nearer_pixels": 1335
+              },
+              {
+                "view": "front",
+                "silhouette_iou": 0.9999778447359092,
+                "depth_mae": 0.00430839229375124,
+                "target_visible_pixels": 90270,
+                "prediction_visible_pixels": 90272,
+                "missing_or_farther_pixels": 0,
+                "excess_or_nearer_pixels": 2
+              }
+            ],
+            "legend": "gray=matching visible surface; red=missing/farther; blue=excess/nearer; these are view metrics, not volume IoU"
+          }
+        },
+        {
+          "iteration": 2,
+          "status": "execution_error",
+          "iou": null,
+          "code_sha256": "671cd15ee86bd1c93b642bacf3d71cf2262f5a01861542bcaad02a8ef6528f14",
+          "visual_metrics": null
+        }
+      ]
+    },
+    {
+      "run": "20261022T185141Z-59366e3d",
+      "checkpoint_sha256": "f2c49b3d3a803f79c02f6d29a58bd8cfd4619fed2b75899f894006994c60cea7",
+      "item_id": "indoorcad_d8441ba72f8641",
+      "input_sha256": "41824510aa28eaee004c3a83eac4b1dad8b7f89c4a567de9f72cbdf344f5833f",
+      "model": "openai/gpt-6-luna",
+      "reasoning_effort": "medium",
+      "max_iterations": 2,
+      "max_output_tokens": 8192,
+      "total_token_budget": 65000,
+      "orchestrator": "vision2",
+      "prompt_version": 7,
+      "vision_prompt_version": 1,
+      "target_calibration": {
+        "version": 2,
+        "size": 512,
+        "frame_width": 1.3585863167934549,
+        "reference_extents": [
+          0.5690752585131176,
+          0.6172833234323106,
+          1.0000000000000002
+        ],
+        "tile_order": [
+          "top",
+          "left",
+          "right",
+          "isometric",
+          "bottom",
+          "front"
+        ],
+        "encoding": "0=empty; 1..255 linear; near=255, far=1; raw=world_dot_forward",
+        "views": [
+          {
+            "view": "top",
+            "camera_direction": [
+              0.0,
+              -0.0,
+              1.0
+            ],
+            "image_right": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "image_up": [
+              -0.0,
+              1.0,
+              0.0
+            ],
+            "forward": [
+              -0.0,
+              0.0,
+              -1.0
+            ],
+            "near": -0.5500000000000002,
+            "far": 0.5500000000000002,
+            "occupied_pixels": 36650,
+            "visible_depth_range": [
+              -0.5,
+              -0.43863844871520996
+            ],
+            "dominant_depth_levels": [
+              {
+                "depth": -0.466,
+                "fraction": 0.5063
+              },
+              {
+                "depth": -0.454,
+                "fraction": 0.3759
+              },
+              {
+                "depth": -0.462,
+                "fraction": 0.0576
+              },
+              {
+                "depth": -0.476,
+                "fraction": 0.036
+              }
+            ]
+          },
+          {
+            "view": "left",
+            "camera_direction": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "image_right": [
+              -0.0,
+              -1.0,
+              0.0
+            ],
+            "image_up": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "forward": [
+              1.0,
+              -0.0,
+              -0.0
+            ],
+            "near": -0.33453762925655883,
+            "far": 0.33453762925655883,
+            "occupied_pixels": 27293,
+            "visible_depth_range": [
+              -0.2844473123550415,
+              0.0017727473750710487
+            ],
+            "dominant_depth_levels": [
+              {
+                "depth": -0.261,
+                "fraction": 0.5875
+              },
+              {
+                "depth": -0.199,
+                "fraction": 0.0288
+              },
+              {
+                "depth": -0.241,
+                "fraction": 0.0169
+              },
+              {
+                "depth": -0.242,
+                "fraction": 0.0165
+              },
+              {
+                "depth": -0.247,
+                "fraction": 0.0159
+              },
+              {
+                "depth": -0.239,
+                "fraction": 0.0149
+              },
+              {
+                "depth": -0.245,
+                "fraction": 0.0149
+              },
+              {
+                "depth": -0.24,
+                "fraction": 0.014
+              }
+            ]
+          },
+          {
+            "view": "right",
+            "camera_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "image_right": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "image_up": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "forward": [
+              -1.0,
+              -0.0,
+              -0.0
+            ],
+            "near": -0.3345376292565588,
+            "far": 0.3345376292565588,
+            "occupied_pixels": 27513,
+            "visible_depth_range": [
+              -0.2844623029232025,
+              -0.005662333220243454
+            ],
+            "dominant_depth_levels": [
+              {
+                "depth": -0.261,
+                "fraction": 0.5836
+              },
+              {
+                "depth": -0.199,
+                "fraction": 0.0329
+              },
+              {
+                "depth": -0.242,
+                "fraction": 0.0168
+              },
+              {
+                "depth": -0.244,
+                "fraction": 0.0165
+              },
+              {
+                "depth": -0.238,
+                "fraction": 0.0152
+              },
+              {
+                "depth": -0.247,
+                "fraction": 0.0151
+              },
+              {
+                "depth": -0.241,
+                "fraction": 0.0149
+              },
+              {
+                "depth": -0.24,
+                "fraction": 0.0144
+              }
+            ]
+          },
+          {
+            "view": "isometric",
+            "camera_direction": [
+              0.51983679,
+              -0.74240388,
+              -0.42261826
+            ],
+            "image_right": [
+              0.81915204,
+              0.57357644,
+              -0.0
+            ],
+            "image_up": [
+              0.24240388,
+              -0.34618861,
+              0.90630779
+            ],
+            "forward": [
+              -0.51983679,
+              0.74240388,
+              0.42261826
+            ],
+            "near": -0.6383590250131332,
+            "far": 0.6383590250131332,
+            "occupied_pixels": 83549,
+            "visible_depth_range": [
+              -0.5419104695320129,
+              0.4261133670806885
+            ],
+            "dominant_depth_levels": []
+          },
+          {
+            "view": "bottom",
+            "camera_direction": [
+              0.0,
+              -0.0,
+              -1.0
+            ],
+            "image_right": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "image_up": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "forward": [
+              -0.0,
+              0.0,
+              1.0
+            ],
+            "near": -0.5500000000000002,
+            "far": 0.5500000000000002,
+            "occupied_pixels": 36721,
+            "visible_depth_range": [
+              -0.5,
+              -0.4405041038990021
+            ],
+            "dominant_depth_levels": [
+              {
+                "depth": -0.466,
+                "fraction": 0.503
+              },
+              {
+                "depth": -0.454,
+                "fraction": 0.38
+              },
+              {
+                "depth": -0.462,
+                "fraction": 0.0568
+              },
+              {
+                "depth": -0.476,
+                "fraction": 0.0358
+              }
+            ]
+          },
+          {
+            "view": "front",
+            "camera_direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "image_right": [
+              1.0,
+              0.0,
+              -0.0
+            ],
+            "image_up": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "forward": [
+              -0.0,
+              1.0,
+              -0.0
+            ],
+            "near": -0.3586416617161553,
+            "far": 0.3586416617161553,
+            "occupied_pixels": 70626,
+            "visible_depth_range": [
+              -0.3086416721343994,
+              0.13945063948631287
+            ],
+            "dominant_depth_levels": [
+              {
+                "depth": -0.259,
+                "fraction": 0.9504
+              },
+              {
+                "depth": -0.196,
+                "fraction": 0.0212
+              }
+            ]
+          }
+        ]
+      },
+      "best_iou": 0.7310592831395422,
+      "item_calls": [
+        {
+          "started_at": "2026-10-22T18:54:10.603619+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "geometry_analysis",
+          "usage": {
+            "prompt_tokens": 8775,
+            "completion_tokens": 1768,
+            "total_tokens": 10543,
+            "cost": 0.0019808,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 8772,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0019808,
+              "upstream_inference_prompt_cost": 0.0010968,
+              "upstream_inference_completions_cost": 0.000884
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 357,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 17.02764854200359
+        },
+        {
+          "started_at": "2026-10-22T18:54:27.636145+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 9883,
+            "completion_tokens": 5799,
+            "total_tokens": 15682,
+            "cost": 0.0041348,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 9880,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0041348,
+              "upstream_inference_prompt_cost": 0.0012353,
+              "upstream_inference_completions_cost": 0.0028995
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4552,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 55.43867083299847
+        },
+        {
+          "started_at": "2026-10-22T18:55:31.825614+00:00",
+          "status": "received",
+          "retry": 0,
+          "phase": "generation",
+          "usage": {
+            "prompt_tokens": 18733,
+            "completion_tokens": 2673,
+            "total_tokens": 21406,
+            "cost": 0.00254185,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 9880,
+              "cache_write_tokens": 8850,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00254185,
+              "upstream_inference_prompt_cost": 0.00120535,
+              "upstream_inference_completions_cost": 0.0013365
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1518,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          },
+          "elapsed_seconds": 23.91657883299922
+        }
+      ],
+      "item_cost_usd": 0.00865745,
+      "run_active_seconds": 116.31762999900093,
+      "run_item_count": 1,
+      "run_peak_rss_mb": 1359.7,
+      "attempts": [
+        {
+          "iteration": 1,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.7055780483336669,
+            "status": "ok",
+            "target_volume": 0.05534753565938494,
+            "prediction_volume": 0.06007909411669803,
+            "intersection_volume": 0.04775067356406623,
+            "union_volume": 0.06767596253431768,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 10
+          },
+          "code_sha256": "e56308094573b3a5286f3ae344f6fff310f827e957ee093e3bd0d49faa777bdc",
+          "visual_metrics": {
+            "threshold": 0.01,
+            "views": [
+              {
+                "view": "top",
+                "silhouette_iou": 0.9353587588881707,
+                "depth_mae": 0.006216827780008316,
+                "target_visible_pixels": 36650,
+                "prediction_visible_pixels": 38200,
+                "missing_or_farther_pixels": 874,
+                "excess_or_nearer_pixels": 16510
+              },
+              {
+                "view": "left",
+                "silhouette_iou": 0.6285187789443057,
+                "depth_mae": 0.016968756914138794,
+                "target_visible_pixels": 27293,
+                "prediction_visible_pixels": 39872,
+                "missing_or_farther_pixels": 2135,
+                "excess_or_nearer_pixels": 22929
+              },
+              {
+                "view": "right",
+                "silhouette_iou": 0.6390532544378699,
+                "depth_mae": 0.014207880012691021,
+                "target_visible_pixels": 27513,
+                "prediction_visible_pixels": 39521,
+                "missing_or_farther_pixels": 2422,
+                "excess_or_nearer_pixels": 22506
+              },
+              {
+                "view": "isometric",
+                "silhouette_iou": 0.9516031111467486,
+                "depth_mae": 0.010719969868659973,
+                "target_visible_pixels": 83549,
+                "prediction_visible_pixels": 86824,
+                "missing_or_farther_pixels": 2406,
+                "excess_or_nearer_pixels": 18339
+              },
+              {
+                "view": "bottom",
+                "silhouette_iou": 0.939598185353208,
+                "depth_mae": 0.006258135661482811,
+                "target_visible_pixels": 36721,
+                "prediction_visible_pixels": 38099,
+                "missing_or_farther_pixels": 876,
+                "excess_or_nearer_pixels": 16498
+              },
+              {
+                "view": "front",
+                "silhouette_iou": 0.9815649439085689,
+                "depth_mae": 0.004678179044276476,
+                "target_visible_pixels": 70626,
+                "prediction_visible_pixels": 70507,
+                "missing_or_farther_pixels": 967,
+                "excess_or_nearer_pixels": 3132
+              }
+            ],
+            "legend": "gray=matching visible surface; red=missing/farther; blue=excess/nearer; these are view metrics, not volume IoU"
+          }
+        },
+        {
+          "iteration": 2,
+          "status": "evaluated",
+          "iou": {
+            "iou": 0.7310592831395422,
+            "status": "ok",
+            "target_volume": 0.05534753565938494,
+            "prediction_volume": 0.054145355976671534,
+            "intersection_volume": 0.04624093463647535,
+            "union_volume": 0.0632519628748754,
+            "target_watertight": true,
+            "prediction_watertight": true,
+            "target_zero_area_faces_removed": 0,
+            "prediction_zero_area_faces_removed": 10
+          },
+          "code_sha256": "b952514e7c677186fe8e383ffc85f64de89b8d14b3813b9d1b8d76a4e349c05d",
+          "visual_metrics": {
+            "threshold": 0.01,
+            "views": [
+              {
+                "view": "top",
+                "silhouette_iou": 0.9325627698911385,
+                "depth_mae": 0.006258692126721144,
+                "target_visible_pixels": 36650,
+                "prediction_visible_pixels": 38088,
+                "missing_or_farther_pixels": 984,
+                "excess_or_nearer_pixels": 16537
+              },
+              {
+                "view": "left",
+                "silhouette_iou": 0.5417256922086284,
+                "depth_mae": 0.05132460966706276,
+                "target_visible_pixels": 27293,
+                "prediction_visible_pixels": 20593,
+                "missing_or_farther_pixels": 12991,
+                "excess_or_nearer_pixels": 7674
+              },
+              {
+                "view": "right",
+                "silhouette_iou": 0.5448436288446628,
+                "depth_mae": 0.016586465761065483,
+                "target_visible_pixels": 27513,
+                "prediction_visible_pixels": 20303,
+                "missing_or_farther_pixels": 13023,
+                "excess_or_nearer_pixels": 7403
+              },
+              {
+                "view": "isometric",
+                "silhouette_iou": 0.8927195574926114,
+                "depth_mae": 0.012770957313477993,
+                "target_visible_pixels": 83549,
+                "prediction_visible_pixels": 81040,
+                "missing_or_farther_pixels": 11639,
+                "excess_or_nearer_pixels": 11390
+              },
+              {
+                "view": "bottom",
+                "silhouette_iou": 0.9366671851506196,
+                "depth_mae": 0.006298858672380447,
+                "target_visible_pixels": 36721,
+                "prediction_visible_pixels": 37984,
+                "missing_or_farther_pixels": 990,
+                "excess_or_nearer_pixels": 16521
+              },
+              {
+                "view": "front",
+                "silhouette_iou": 0.9808860883842991,
+                "depth_mae": 0.004686069209128618,
+                "target_visible_pixels": 70626,
+                "prediction_visible_pixels": 70526,
+                "missing_or_farther_pixels": 982,
+                "excess_or_nearer_pixels": 3151
+              }
+            ],
+            "legend": "gray=matching visible surface; red=missing/farther; blue=excess/nearer; these are view metrics, not volume IoU"
+          }
+        }
+      ]
+    }
+  ],
+  "figure_sources": [
+    {
+      "output": "images/interior-target-rgb.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/vision/rgb.png",
+      "source_sha256": "793075f8de4a8f6cb442a372c8710233c29061e421a8a23fab2b478f13c3f97f",
+      "tile_index_zero_based": 3,
+      "box_pixels": [
+        0,
+        512,
+        512,
+        1024
+      ]
+    },
+    {
+      "output": "images/interior-target-depth.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/vision/depth.png",
+      "source_sha256": "235a0222a02876d60b3dddfda1d209affe089a3d1d9d72fcd059c993cfd0bef7",
+      "tile_index_zero_based": 3,
+      "box_pixels": [
+        0,
+        512,
+        512,
+        1024
+      ]
+    },
+    {
+      "output": "images/interior-target-blueprint.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/vision/blueprint.png",
+      "source_sha256": "3ad9de24dc24533a531fd553e7ecd916a81a61f3818a5961a5d662201b34ae80",
+      "tile_index_zero_based": 3,
+      "box_pixels": [
+        0,
+        512,
+        512,
+        1024
+      ]
+    },
+    {
+      "output": "images/interior-difference.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/attempt-002/difference-scheme.png",
+      "source_sha256": "9a837245070a956b918f10a63c23037545efd0864b3ea53478a95d61936d245f",
+      "tile_index_zero_based": 3,
+      "box_pixels": [
+        0,
+        512,
+        512,
+        1024
+      ]
+    },
+    {
+      "output": "images/deepcad-target.png",
+      "source": "runs/harness/20261022T184705Z-7cef923e/items/274a034e5c4ac827/vision/rgb.png",
+      "source_sha256": "2c23f5d8f4f20b4d99c28f576489fa45e90a280dc817081e181657b843e0fcc5",
+      "tile_index_zero_based": 3,
+      "box_pixels": [
+        0,
+        512,
+        512,
+        1024
+      ]
+    },
+    {
+      "output": "images/deepcad-v2.png",
+      "source": "runs/harness/20261022T184705Z-7cef923e/items/274a034e5c4ac827/attempt-001/vision/rgb.png",
+      "source_sha256": "6c7d551023d4090608164be543428ce644a6fdcacf83055d29c0bce7cd47838e",
+      "tile_index_zero_based": 3,
+      "box_pixels": [
+        0,
+        512,
+        512,
+        1024
+      ]
+    },
+    {
+      "output": "images/interior-target-right.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/vision/rgb.png",
+      "source_sha256": "793075f8de4a8f6cb442a372c8710233c29061e421a8a23fab2b478f13c3f97f",
+      "tile_index_zero_based": 2,
+      "box_pixels": [
+        1024,
+        0,
+        1536,
+        512
+      ]
+    },
+    {
+      "output": "images/interior-first-right.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/attempt-001/vision/rgb.png",
+      "source_sha256": "cc6f0284b559fc776a951be4cf26621c05c23469fa6b994db70b9f0f8337a27c",
+      "tile_index_zero_based": 2,
+      "box_pixels": [
+        1024,
+        0,
+        1536,
+        512
+      ]
+    },
+    {
+      "output": "images/interior-second-right.png",
+      "source": "runs/harness/20261022T185141Z-59366e3d/items/indoorcad_d8441ba72f8641/attempt-002/vision/rgb.png",
+      "source_sha256": "ad07392004b9d1e83d849a8b8e29be4f1918a35febae62b71d010aa071d797be",
+      "tile_index_zero_based": 2,
+      "box_pixels": [
+        1024,
+        0,
+        1536,
+        512
+      ]
+    }
+  ],
+  "slide_macros": {
+    "ClassicIoU": "0.8068",
+    "DeepIoU": "0.9398",
+    "ClassicCost": "0.00670",
+    "DeepCost": "0.00803",
+    "DeepSeconds": "270.1",
+    "DeepMemory": "1039",
+    "InteriorFirst": "0.7056",
+    "InteriorBest": "0.7311",
+    "InteriorGain": "+0.0255",
+    "InteriorCost": "0.00866",
+    "InteriorSeconds": "116.3",
+    "InteriorMemory": "1360"
+  }
+}

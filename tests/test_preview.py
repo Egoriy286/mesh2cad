@@ -4,7 +4,13 @@ import numpy as np
 import pytest
 import trimesh
 
-from mesh2cad.preview import comparison_figure, evaluate_saved_pair, preview_mesh
+from mesh2cad.preview import (
+    comparison_figure,
+    evaluate_saved_pair,
+    preview_mesh,
+    render_saved_overlay,
+    solid_overlay_figure,
+)
 from mesh2cad.storage import file_digest
 
 
@@ -62,3 +68,36 @@ def test_open_interior_surface_has_no_fabricated_volume_iou(interior_manifest) -
     score = evaluate_saved_pair(path, path)
     assert score["iou"] is None
     assert score["status"] == "non_watertight_both"
+
+
+def test_solid_overlay_is_isolated_cached_and_uses_actual_coordinates(tmp_path, monkeypatch):
+    target, candidate = tmp_path / "target.stl", tmp_path / "candidate.stl"
+    cube = trimesh.creation.box()
+    cube.export(target)
+    cube.apply_translation([0.5, 0, 0])
+    cube.export(candidate)
+    folder = tmp_path / "comparison"
+    metadata = render_saved_overlay(target, candidate, folder)
+    assert metadata["volumes"] == pytest.approx({"covered": 0.5, "excess": 0.5, "missing": 0.5})
+    assert "за пределами" in metadata["legend"]
+    figure = solid_overlay_figure(folder / "overlay-solid.npz")
+    assert [t.name for t in figure.data] == [
+        "Совпадение",
+        "Лишнее за пределами mesh",
+        "Не хватает в CAD",
+    ]
+    assert len(figure.data) == 3
+    assert np.max(figure.data[1].x) == pytest.approx(1)
+    assert np.max(figure.data[0].x) == pytest.approx(0.5)
+    with monkeypatch.context() as patch:
+
+        def unexpected_worker(*args, **kwargs):
+            raise AssertionError("Unchanged preview must reuse the saved color scheme")
+
+        patch.setattr("mesh2cad.preview.subprocess.Popen", unexpected_worker)
+        assert render_saved_overlay(target, candidate, folder) == metadata
+    trimesh.creation.box(extents=[0.5, 0.5, 0.5]).export(candidate)
+    updated = render_saved_overlay(target, candidate, folder)
+    assert updated["candidate_sha256"] != metadata["candidate_sha256"]
+    assert updated["volumes"]["excess"] == 0
+    assert updated["volumes"]["missing"] == pytest.approx(0.875)

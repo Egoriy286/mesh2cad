@@ -47,7 +47,14 @@ from .pipeline import (
     normalize_key,
     payload_digest,
 )
-from .prompts import DEFAULT_REQUEST, PROMPT_VERSION, SYSTEM_PROMPT
+from .prompts import (
+    DEFAULT_REQUEST,
+    LEGACY_VISION_SYSTEM_PROMPT,
+    PROMPT_VERSION,
+    SYSTEM_PROMPT,
+    VISION_PROMPT_VERSION,
+    VISION_SYSTEM_PROMPT,
+)
 from .resources import DEFAULT_MEMORY_MB, kill_tree, monitor_process, worker_environment
 from .storage import file_digest, read_json, resolve_artifact, write_json
 
@@ -83,13 +90,50 @@ class HarnessConfig:
     max_retries: int = 2
     retry_backoff: float = 1
     memory_limit_mb: int = DEFAULT_MEMORY_MB
+    orchestrator: str = "classic"
+    analysis_max_tokens: int = 4096
+
+    @classmethod
+    def from_dict(cls, values: dict) -> HarnessConfig:
+        # Old checkpoints remain readable; retired fitting options have no effect.
+        retired = {
+            "numerical_refinement",
+            "optimization_seconds",
+            "optimization_evaluations",
+            "pose_evaluations",
+        }
+        settings = {key: value for key, value in values.items() if key not in retired}
+        legacy_prompts = {
+            LEGACY_VISION_SYSTEM_PROMPT,
+            LEGACY_VISION_SYSTEM_PROMPT.replace(
+                "Calibration also lists measured visible depth ranges and dominant surface levels\n"
+                "(rounded to 0.001 world units); use these to constrain planar walls and step heights.\n",
+                "",
+            ),
+        }
+        if (
+            settings.get("orchestrator") == "vision2"
+            and settings.get("system_prompt") in legacy_prompts
+        ):
+            settings["system_prompt"] = VISION_SYSTEM_PROMPT
+        return cls(**settings)
 
     def __post_init__(self) -> None:
+        if self.orchestrator not in {"classic", "vision2"}:
+            raise ValueError("Unsupported orchestrator")
+        if self.orchestrator == "vision2" and self.system_prompt == SYSTEM_PROMPT:
+            object.__setattr__(self, "system_prompt", VISION_SYSTEM_PROMPT)
         if not self.model.strip() or not self.system_prompt.strip():
             raise ValueError("Model and system prompt must not be empty")
         if self.reasoning_effort not in REASONING_EFFORTS:
             raise ValueError("Unsupported reasoning effort")
-        for name in ("max_iterations", "patience", "max_tokens", "total_token_budget"):
+        for name in (
+            "max_iterations",
+            "patience",
+            "max_tokens",
+            "total_token_budget",
+            "analysis_max_tokens",
+        ):
             value = getattr(self, name)
             if not isinstance(value, int) or isinstance(value, bool) or value < 1:
                 raise ValueError(f"{name} must be a positive integer")
@@ -318,6 +362,9 @@ def create_run(
         "stop_reason": None,
         "config": asdict(config),
         "prompt_version": PROMPT_VERSION,
+        "vision_prompt_version": VISION_PROMPT_VERSION
+        if config.orchestrator == "vision2"
+        else None,
         "dataset": {
             "name": manifest["name"],
             "format": manifest["format"],
@@ -349,7 +396,9 @@ class Orchestrator:
         self.state = read_json(self.root / "run.json")
         if self.state.get("schema_version") != 1:
             raise ValueError("Unsupported run schema")
-        self.config = HarnessConfig(**self.state["config"])
+        self.config = HarnessConfig.from_dict(self.state["config"])
+        if self.state.get("mode") == "local_refinement":
+            raise ValueError("This archived run used a removed workflow; create a new agent run")
         self.key = normalize_key(api_key)
         configure_logging()
         register_secret(self.key)
@@ -429,16 +478,26 @@ class Orchestrator:
         if before_call and summarize(self.state)["total_tokens"] >= self.config.total_token_budget:
             raise _Stopped("token_budget")
 
-    def _request(self, attempt: dict, folder: Path, payload: dict, item_id: str) -> dict:
+    def _request(
+        self, attempt: dict, folder: Path, payload: dict, item_id: str, *, phase="generation"
+    ) -> dict:
         for retry in range(self.config.max_retries + 1):
             self._check(before_call=True)
-            call = {"started_at": utc_now(), "status": "requesting", "retry": retry}
+            call = {"started_at": utc_now(), "status": "requesting", "retry": retry, "phase": phase}
             attempt.setdefault("calls", []).append(call)
             self._save()
-            self._event("llm_request", item_id=item_id, iteration=attempt["iteration"], retry=retry)
+            self._event(
+                "llm_request",
+                item_id=item_id,
+                iteration=attempt["iteration"],
+                retry=retry,
+                phase=phase,
+            )
             started = time.monotonic()
             try:
-                with self._stage("llm", item_id, attempt["iteration"]):
+                with self._stage(
+                    "llm" if phase == "generation" else phase, item_id, attempt["iteration"]
+                ):
                     response = self.agent.complete(
                         payload,
                         self.key,
@@ -458,6 +517,7 @@ class Orchestrator:
                     "llm_response",
                     item_id=item_id,
                     iteration=attempt["iteration"],
+                    phase=phase,
                     usage=response.get("usage"),
                     elapsed_seconds=call["elapsed_seconds"],
                 )
@@ -470,7 +530,12 @@ class Orchestrator:
                 )
                 self._save()
                 self._event(
-                    "llm_error", level="WARNING", item_id=item_id, error=call["error"], retry=retry
+                    "llm_error",
+                    level="WARNING",
+                    item_id=item_id,
+                    phase=phase,
+                    error=call["error"],
+                    retry=retry,
                 )
                 if not exc.retryable or retry == self.config.max_retries:
                     raise
@@ -480,13 +545,23 @@ class Orchestrator:
                     time.sleep(max(0, min(0.1, until - time.monotonic())))
         raise AssertionError("Unreachable retry state")
 
-    def _evaluate(self, item: dict, target, sheet: bytes, attempt: dict) -> None:
+    def _context(self, item: dict, target, sheet: bytes, attempt: dict) -> AgentContext:
         cfg = self.config
-        folder = self.root / attempt["path"]
-        folder.mkdir(parents=True, exist_ok=True)
         best = item["attempts"][item["best_attempt"]] if item["best_attempt"] is not None else None
-        overlay_path = self.root / best["path"] / "overlay.png" if best else None
-        context = AgentContext(
+        overlay_path = (
+            self.root / best["path"] / "overlay-feedback-v2.png"
+            if best and cfg.orchestrator == "classic"
+            else None
+        )
+        if (
+            overlay_path
+            and not overlay_path.is_file()
+            and best.get("execution", {}).get("mesh_path")
+        ):
+            self._render_overlay(
+                target, load_mesh(best["execution"]["mesh_path"]), overlay_path.parent, item, best
+            )
+        return AgentContext(
             extents=mesh_stats(target)["extents"],
             image=sheet,
             attempts=[a for a in item["attempts"] if a["status"] in FINISHED_ATTEMPTS],
@@ -497,6 +572,12 @@ class Orchestrator:
                 max(1, cfg.total_token_budget - summarize(self.state)["total_tokens"]),
             ),
         )
+
+    def _evaluate(self, item: dict, target, sheet: bytes, attempt: dict) -> None:
+        cfg = self.config
+        folder = self.root / attempt["path"]
+        folder.mkdir(parents=True, exist_ok=True)
+        context = self._context(item, target, sheet, attempt)
         if (folder / "response.json").is_file():
             response = read_json(folder / "response.json")
             if attempt.get("calls") and attempt["calls"][-1]["status"] == "requesting":
@@ -599,12 +680,7 @@ class Orchestrator:
             }
             attempt["difference"] = summary
             write_json(folder / "difference.json", summary)
-            with self._stage("overlay", item["id"], attempt["iteration"]):
-                (folder / "overlay.png").write_bytes(
-                    render_overlay_sheet(
-                        difference, candidate, cancel_check=lambda: self._stopped() is not None
-                    )
-                )
+            self._render_overlay(target, candidate, folder, item, attempt)
         except Exception as exc:
             self._check()
             attempt["overlay_error"] = self._safe_error(exc)
@@ -612,6 +688,24 @@ class Orchestrator:
                 "overlay_error", level="WARNING", item_id=item["id"], error=attempt["overlay_error"]
             )
         attempt["status"] = "evaluated"
+
+    def _render_overlay(self, target, candidate, folder: Path, item: dict, attempt: dict) -> None:
+        with self._stage("overlay", item["id"], attempt["iteration"]):
+            pixels = render_overlay_sheet(
+                target, candidate, cancel_check=lambda: self._stopped() is not None
+            )
+            (folder / "overlay-feedback-v2.png").write_bytes(pixels)
+            (folder / "overlay.png").write_bytes(pixels)
+
+    def _render_target(self, target, prepared: Path, item: dict) -> bytes:
+        if (prepared / "target.png").is_file():
+            self._event("target_render_reused", item_id=item["id"])
+            return (prepared / "target.png").read_bytes()
+        sheet = compose_views(
+            render_llm_images(target, cancel_check=lambda: self._stopped() is not None)
+        )
+        (prepared / "target.png").write_bytes(sheet)
+        return sheet
 
     def _item(self, item: dict) -> None:
         self._check()
@@ -632,14 +726,7 @@ class Orchestrator:
         write_json(prepared / "normalization.json", normalization)
         target.export(prepared / "target.stl")
         with self._stage("render_target", item["id"]):
-            if (prepared / "target.png").is_file():
-                sheet = (prepared / "target.png").read_bytes()
-                self._event("target_render_reused", item_id=item["id"])
-            else:
-                sheet = compose_views(
-                    render_llm_images(target, cancel_check=lambda: self._stopped() is not None)
-                )
-                (prepared / "target.png").write_bytes(sheet)
+            sheet = self._render_target(target, prepared, item)
         self._check()
         while True:
             last = item["attempts"][-1] if item["attempts"] else None
@@ -777,9 +864,18 @@ class Orchestrator:
         return self.state
 
 
+def make_orchestrator(root: Path, api_key: str, *, agent=None) -> Orchestrator:
+    config = HarnessConfig.from_dict(read_json(root / "run.json")["config"])
+    if config.orchestrator == "vision2":
+        from .harness2 import Orchestrator2
+
+        return Orchestrator2(root, api_key, agent=agent)
+    return Orchestrator(root, api_key, agent=agent)
+
+
 def run_isolated(root: Path, api_key: str, *, _lease: RunLock | None = None) -> dict:
     """Run outside the GUI, with a resident-memory limit for the whole process tree."""
-    worker = Orchestrator(root, api_key)  # Validate configuration/key before spawning.
+    worker = make_orchestrator(root, api_key)
     lease = _lease or RunLock(root)
     root = worker.root
     if _lease is None:
@@ -880,7 +976,7 @@ def run_isolated(root: Path, api_key: str, *, _lease: RunLock | None = None) -> 
 
 def start_run(root: Path, api_key: str) -> None:
     """One monitor thread; the actual work runs in a disposable bounded process."""
-    Orchestrator(root, api_key)
+    make_orchestrator(root, api_key)
     lease = RunLock(root)
     (root / "cancel.requested").unlink(missing_ok=True)
     thread = threading.Thread(
@@ -927,7 +1023,11 @@ def launch_run(
             if (
                 state["status"] in {"pending", "queued", "running"}
                 and not (path.parent / "cancel.requested").exists()
-                and asdict(HarnessConfig(**state["config"])) == asdict(config)
+                and (
+                    config.orchestrator != "vision2"
+                    or state.get("vision_prompt_version") == VISION_PROMPT_VERSION
+                )
+                and asdict(HarnessConfig.from_dict(state["config"])) == asdict(config)
                 and Path(state["dataset"]["manifest"]).resolve() == manifest_path.resolve()
                 and [i["id"] for i in state["items"]] == selected
             ):
@@ -957,11 +1057,14 @@ def main() -> None:
     parser.add_argument("--token-budget", type=int, default=100_000)
     parser.add_argument("--wall-seconds", type=float, default=1800)
     parser.add_argument("--memory-limit-mb", type=int, default=DEFAULT_MEMORY_MB)
+    parser.add_argument("--orchestrator", choices=["1", "2"], default="1")
     args = parser.parse_args()
     key = api_key_from_environment(Path.cwd())
     if not key:
         parser.error("Set OPENROUTER_API_KEY in the environment or .env")
     config = HarnessConfig(
+        orchestrator="vision2" if args.orchestrator == "2" else "classic",
+        max_tokens=8192 if args.orchestrator == "2" else 4096,
         model=args.model,
         max_iterations=args.max_iterations,
         target_iou=args.target_iou,

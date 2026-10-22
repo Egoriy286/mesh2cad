@@ -8,6 +8,7 @@ dependencies = [
   "httpx>=0.28,<1",
   "huggingface-hub>=0.27,<2",
   "manifold3d>=3,<4",
+  "networkx>=3,<4",
   "numpy>=2,<3",
   "pillow>=10,<13",
   "plotly>=6,<7",

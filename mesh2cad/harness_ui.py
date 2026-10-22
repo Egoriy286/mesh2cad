@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from .dataset import read_catalogue
+from .geometry import OVERLAY_LEGEND
 from .harness import (
     HarnessConfig,
     cancel_run,
@@ -21,8 +22,14 @@ from .harness import (
 )
 from .observability import configure_logging, tail_log
 from .pipeline import DEFAULT_MODEL, REASONING_EFFORTS, api_key_from_environment, preview_payload
-from .preview import comparison_figure, evaluate_saved_pair, preview_mesh
-from .prompts import DEFAULT_REQUEST, SYSTEM_PROMPT
+from .preview import (
+    comparison_figure,
+    evaluate_saved_pair,
+    preview_mesh,
+    render_saved_overlay,
+    solid_overlay_figure,
+)
+from .prompts import DEFAULT_REQUEST, SYSTEM_PROMPT, VISION_SYSTEM_PROMPT
 from .storage import read_json, resolve_artifact, write_json
 
 STATUS = {
@@ -50,6 +57,17 @@ def _best(item: dict) -> dict | None:
 
 def _catalogue(manifest_path: Path) -> dict:
     return _catalogue_cached(str(manifest_path), manifest_path.stat().st_mtime_ns)
+
+
+def _runs(runs_dir: Path, variant: str) -> list[Path]:
+    matching = []
+    for path in sorted(runs_dir.glob("*/run.json"), reverse=True):
+        try:
+            if read_json(path)["config"].get("orchestrator", "classic") == variant:
+                matching.append(path)
+        except (OSError, ValueError, KeyError):
+            continue
+    return matching
 
 
 @st.cache_data(show_spinner=False, max_entries=8)
@@ -94,6 +112,11 @@ def _live_status(root: Path, initial_revision: tuple) -> None:
         return
     current = state.get("current", {})
     stage = current.get("stage", state["status"])
+    stage = {
+        "geometry_analysis": "Разбор карт глубины",
+        "depth_comparison": "Сравнение карт глубины",
+        "llm": "Генерация CadQuery агентом",
+    }.get(stage, stage)
     elapsed = (
         datetime.now(timezone.utc)
         - datetime.fromisoformat(current.get("started_at", state["updated_at"]))
@@ -118,7 +141,14 @@ def _display_mesh(path: str, modified: int, normalize: bool = False) -> dict:
     return preview_mesh(Path(path), normalize=normalize)
 
 
-def _comparison(target: Path, candidate: Path | None, key: str, *, normalize_target=False) -> None:
+def _comparison(
+    target: Path,
+    candidate: Path | None,
+    key: str,
+    *,
+    normalize_target=False,
+    solid_path: Path | None = None,
+) -> None:
     modes = {
         "Наложение": "overlay",
         "Рядом": "side_by_side",
@@ -126,6 +156,10 @@ def _comparison(target: Path, candidate: Path | None, key: str, *, normalize_tar
         "CadQuery": "candidate",
     }
     mode = st.radio("Режим preview", list(modes), horizontal=True, key=f"view-mode-{key}")
+    if mode == "Наложение" and solid_path is not None:
+        st.plotly_chart(solid_overlay_figure(solid_path), width="stretch", key=f"solid-{key}")
+        st.caption(OVERLAY_LEGEND)
+        return
     target_opacity, candidate_opacity = 0.35, 0.85
     if mode == "Наложение" and candidate:
         left, right = st.columns(2)
@@ -196,6 +230,15 @@ def _run_preview(root: Path, item: dict, attempt: dict | None = None) -> None:
     metrics[2].metric("Объём CadQuery", _score(iou.get("prediction_volume")))
     missing = ((attempt or {}).get("difference") or {}).get("missing_ratio")
     metrics[3].metric("Missing surface", "—" if missing is None else f"{missing:.1%}")
+    visual = (attempt or {}).get("visual_metrics", {})
+    if visual:
+        views = visual.get("views", [])
+        silhouettes = [v["silhouette_iou"] for v in views if v.get("silhouette_iou") is not None]
+        depths = [v["depth_mae"] for v in views if v.get("depth_mae") is not None]
+        st.caption(
+            f"Виды: средний silhouette IoU {_score(sum(silhouettes) / len(silhouettes)) if silhouettes else '—'} · "
+            f"depth MAE {_score(sum(depths) / len(depths)) if depths else '—'} норм. ед. · объёмный IoU показан выше"
+        )
     if iou:
         st.caption(
             f"Статус IoU: {iou.get('status')} · пересечение: {_score(iou.get('intersection_volume'))} · "
@@ -203,21 +246,38 @@ def _run_preview(root: Path, item: dict, attempt: dict | None = None) -> None:
         )
     elif not candidate:
         st.caption("Показан исходный STL. Наложение и IoU появятся после выполнения CadQuery.")
+    solid_path = None
+    overlay_folder = root / attempt["path"] if attempt else None
+    if (
+        candidate
+        and target.is_file()
+        and iou.get("iou") is not None
+        and not (root / "items" / item["id"] / "vision/calibration.json").is_file()
+    ):
+        try:
+            with st.spinner("Считаю совпадение, лишнюю и недостающую геометрию…"):
+                render_saved_overlay(
+                    target, candidate, overlay_folder, normalize_target=normalize_target
+                )
+            solid_path = overlay_folder / "overlay-solid.npz"
+        except Exception as exc:
+            st.warning(f"Цветовая схема недоступна: {exc}")
     try:
         if target.is_file():
-            _comparison(target, candidate, key, normalize_target=normalize_target)
+            _comparison(
+                target, candidate, key, normalize_target=normalize_target, solid_path=solid_path
+            )
         else:
             st.warning("Исходный STL этого запуска отсутствует на диске.")
     except Exception as exc:
         st.warning(f"Не удалось показать 3D: {exc}")
     if attempt:
-        overlay = root / attempt["path"] / "overlay.png"
-        if overlay.is_file():
+        if solid_path is not None:
             with st.expander("Карта расхождений · 6 видов", expanded=True):
                 st.image(
-                    str(overlay),
+                    str(overlay_folder / "overlay-solid.png"),
                     width="stretch",
-                    caption="Серый — target, синий — CadQuery, красный — отсутствующая поверхность",
+                    caption=OVERLAY_LEGEND,
                 )
         if attempt.get("overlay_error"):
             st.warning(attempt["overlay_error"])
@@ -264,6 +324,46 @@ def _item_details(root: Path, item: dict) -> None:
         f"{item.get('name') or item['source_file']}"
     )
     _run_preview(root, item, attempt)
+    prepared = root / "items" / item["id"]
+    if (prepared / "vision/calibration.json").is_file():
+        observation = st.expander(
+            "Оркестратор 2 · карты глубины",
+            key=f"observations-{root.name}-{item['id']}",
+            on_change="rerun",
+        )
+        if observation.open:
+            with observation:
+                depth, metrics, analysis = st.tabs(
+                    ["Карта глубины", "Метрики глубины", "Разбор геометрии"],
+                    key=f"depth-tab-{root.name}-{item['id']}",
+                    on_change="rerun",
+                )
+                if depth.open:
+                    with depth:
+                        st.image(
+                            str(prepared / "vision/depth.png"),
+                            caption="Глубина исходника · светлее — ближе, чёрный — пусто",
+                            width="stretch",
+                        )
+                        predicted = folder / "vision/depth.png"
+                        if predicted.is_file():
+                            st.image(
+                                str(predicted),
+                                caption="Глубина CadQuery · те же камеры и шкала",
+                                width="stretch",
+                            )
+                if metrics.open:
+                    with metrics:
+                        st.json(attempt.get("visual_metrics", {}))
+                if analysis.open:
+                    with analysis:
+                        st.json(item.get("analysis", {"status": "pending"}))
+                        for name in ("geometry.json", "request.json", "response.json"):
+                            _download(
+                                prepared / "analysis" / name,
+                                f"Скачать analysis/{name}",
+                                f"analysis-{root.name}-{item['id']}-{name}",
+                            )
     rows = [
         {
             "Итерация": a["iteration"],
@@ -301,7 +401,11 @@ def _item_details(root: Path, item: dict) -> None:
         on_change="rerun",
     )
     with st.expander("Исходные виды для агента"):
-        image = root / "items" / item["id"] / "target.png"
+        image = (
+            prepared / "vision/depth.png"
+            if (prepared / "vision/calibration.json").is_file()
+            else prepared / "target.png"
+        )
         if image.is_file():
             st.image(str(image), width="stretch")
     if code.open:
@@ -333,10 +437,10 @@ def _item_details(root: Path, item: dict) -> None:
                 "code.py",
                 "iou.json",
                 "difference.json",
-                "overlay.png",
                 "attempt.json",
-                "cadquery/candidate.stl",
-                "cadquery/candidate.step",
+                "vision/depth.png",
+                "vision/calibration.json",
+                "visual-metrics.json",
             ):
                 _download(
                     folder / name,
@@ -344,6 +448,21 @@ def _item_details(root: Path, item: dict) -> None:
                     f"artifact-{root.name}-{item['id']}-{iteration}-{name}",
                 )
             st.caption(str(folder))
+            if not (prepared / "vision/calibration.json").is_file():
+                _download(
+                    folder / "overlay-solid.png",
+                    "Скачать цветовую схему",
+                    f"overlay-{root.name}-{item['id']}-{iteration}",
+                )
+            for field, label in (
+                ("mesh_path", "Скачать выбранный STL"),
+                ("step_path", "Скачать выбранный STEP"),
+            ):
+                path = (attempt.get("execution") or {}).get(field)
+                if path:
+                    _download(
+                        Path(path), label, f"selected-{root.name}-{item['id']}-{iteration}-{field}"
+                    )
 
 
 @st.fragment
@@ -363,7 +482,11 @@ def _dashboard(root: Path) -> None:
     if stop_col.button("Остановить", disabled=not active, key=f"stop-{root.name}"):
         cancel_run(root)
         st.toast("Остановка запрошена. Worker и CadQuery завершатся в течение двух секунд.")
-    resume_disabled = active or state["status"] in {"completed", "budget_exhausted"}
+    resume_disabled = (
+        active
+        or state["status"] in {"completed", "budget_exhausted"}
+        or state.get("mode") == "local_refinement"
+    )
     if resume_col.button("Продолжить", disabled=resume_disabled, key=f"resume-{root.name}"):
         try:
             start_run(root, st.session_state.get("harness_effective_key", ""))
@@ -454,6 +577,7 @@ def _dashboard(root: Path) -> None:
                         "config": state["config"],
                         "dataset": state["dataset"],
                         "prompt_version": state["prompt_version"],
+                        "vision_prompt_version": state.get("vision_prompt_version"),
                     }
                 )
     if details.open:
@@ -540,10 +664,15 @@ def _catalogue_preview(manifest_path: Path, item: dict) -> None:
                 st.warning(f"Не удалось прочитать STL: {exc}")
 
 
-def render_harness(project_root: Path) -> None:
+def render_harness(project_root: Path, *, variant="classic") -> None:
     configure_logging(project_root / "runs/logs")
-    st.title("Mesh2CAD · Harness")
-    st.caption("STL → агент → CadQuery → IoU → обратная связь → следующая итерация")
+    is_v2 = variant == "vision2"
+    st.title("Mesh2CAD · Оркестратор 2" if is_v2 else "Mesh2CAD · Harness")
+    st.caption(
+        "Карты глубины → разбор геометрии → CadQuery → IoU и ошибки глубины → исправление"
+        if is_v2
+        else "STL → агент → CadQuery → IoU → обратная связь → следующая итерация"
+    )
     runs_dir = project_root / "runs" / "harness"
     with st.sidebar:
         # Do not copy a server-side .env secret into a browser widget. A blank
@@ -574,7 +703,10 @@ def render_harness(project_root: Path) -> None:
     except (OSError, ValueError, KeyError) as exc:
         st.warning(f"Датасет недоступен: {exc}")
         st.code("uv run python -m mesh2cad.dataset --output data/deepcad", language="bash")
-    runs = sorted(runs_dir.glob("*/run.json"), reverse=True)
+    runs = _runs(runs_dir, variant)
+    if st.session_state.get("harness_ui_variant", variant) != variant:
+        st.session_state["harness_workspace"] = "Запущенные · preview" if runs else "Новый запуск"
+    st.session_state["harness_ui_variant"] = variant
     if st.session_state.pop("_harness_show_workspace", False):
         st.session_state["harness_workspace"] = "Запущенные · preview"
     workspace, setup, dataset, history, console = st.tabs(
@@ -651,7 +783,9 @@ def render_harness(project_root: Path) -> None:
                     col1, col2, col3 = st.columns(3)
                     model = col1.text_input("Модель OpenRouter", DEFAULT_MODEL)
                     iterations = col2.number_input("Итераций на STL", 1, 30, 5)
-                    target_iou = col3.number_input("Целевой IoU", 0.0, 1.0, 0.9, 0.01)
+                    target_iou = col3.number_input(
+                        "Целевой IoU", 0.0, 1.0, 0.95 if is_v2 else 0.9, 0.01
+                    )
                     limit = col1.number_input(
                         "Максимум STL в запуске",
                         1,
@@ -667,7 +801,7 @@ def render_harness(project_root: Path) -> None:
                         )
                         wall = budget2.number_input("Активное время, минут", 1, 1440, 30)
                         max_tokens = budget3.number_input(
-                            "Max output tokens / вызов", 1, 100_000, 4096
+                            "Max output tokens / вызов", 1, 100_000, 8192 if is_v2 else 4096
                         )
                         request_timeout = budget1.number_input("HTTP timeout, с", 1, 900, 180)
                         execution_timeout = budget2.number_input("CadQuery timeout, с", 1, 600, 60)
@@ -679,12 +813,13 @@ def render_harness(project_root: Path) -> None:
                             "Минимальное улучшение IoU", 0.0, 1.0, 0.001, step=0.001, format="%.3f"
                         )
                         interior = catalogue["format"] == "interior300"
+                        base_system = VISION_SYSTEM_PROMPT if is_v2 else SYSTEM_PROMPT
                         default_system = (
-                            SYSTEM_PROMPT.replace(
+                            base_system.replace(
                                 "a mechanical part", "a piece of furniture or an interior object"
                             )
                             if interior
-                            else SYSTEM_PROMPT
+                            else base_system
                         )
                         default_request = (
                             "Reconstruct the complete furniture or interior object from the contact sheet. "
@@ -707,6 +842,7 @@ def render_harness(project_root: Path) -> None:
                         if not effective_key:
                             raise ValueError("Добавьте OpenRouter API key в боковой панели")
                         config = HarnessConfig(
+                            orchestrator=variant,
                             model=model,
                             max_iterations=iterations,
                             target_iou=target_iou,
@@ -778,7 +914,7 @@ def render_harness(project_root: Path) -> None:
                     "Перед запуском проверяются SHA-256 STL. Старый кеш изображений не нужен: "
                     "виды 1536×1024 строятся текущим рендерером."
                 )
-    runs = sorted(runs_dir.glob("*/run.json"), reverse=True)
+    runs = _runs(runs_dir, variant)
     if history.open:
         with history:
             history_rows = []

@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from .harness import Orchestrator, RunLock
+from .harness import RunLock, make_orchestrator
 from .resources import watch_parent
 
 
@@ -17,7 +17,7 @@ def main() -> None:
     # The monitor owns .worker.lock for the full lifetime of this process.
     # This independent lease also guards against a second private worker.
     lease = RunLock(root, ".process.lock")
-    state = Orchestrator(root, key).run(_lease=lease)
+    state = make_orchestrator(root, key).run(_lease=lease)
     raise SystemExit(0 if state["status"] == "completed" else 1)
 
 

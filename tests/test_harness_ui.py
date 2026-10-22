@@ -16,7 +16,10 @@ from mesh2cad.preview import evaluate_saved_pair
 from mesh2cad.storage import read_json, write_json
 
 
-def test_gui_starts_once_survives_rerun_and_requests_cancellation(tmp_path, monkeypatch) -> None:
+@pytest.mark.parametrize("variant", ["classic", "vision2"])
+def test_gui_starts_once_survives_rerun_and_requests_cancellation(
+    tmp_path, monkeypatch, variant
+) -> None:
     dataset = tmp_path / "data/deepcad"
     (dataset / "meshes").mkdir(parents=True)
     data = trimesh.creation.box().export(file_type="stl")
@@ -38,7 +41,9 @@ def test_gui_starts_once_survives_rerun_and_requests_cancellation(tmp_path, monk
         },
     )
     original = harness_ui.render_harness
-    monkeypatch.setattr(harness_ui, "render_harness", lambda _: original(tmp_path))
+    monkeypatch.setattr(
+        harness_ui, "render_harness", lambda _, **kwargs: original(tmp_path, **kwargs)
+    )
     monkeypatch.setattr(harness_ui, "api_key_from_environment", lambda _: "server-only-secret")
     starts = []
     leases = []
@@ -48,15 +53,23 @@ def test_gui_starts_once_survives_rerun_and_requests_cancellation(tmp_path, monk
         starts.append(root)
         leases.append(RunLock(root))
         state = read_json(root / "run.json")
+        assert state["config"]["orchestrator"] == variant
+        assert "numerical_refinement" not in state["config"]
+        if variant == "vision2":
+            assert state["config"]["max_tokens"] == 8192
+            assert "linear depth" in state["config"]["system_prompt"]
         state["status"] = "running"
         write_json(root / "run.json", state)
 
     monkeypatch.setattr(harness_ui, "start_run", start)
     monkeypatch.setattr("mesh2cad.harness.start_run", start)
     app = Path(__file__).resolve().parents[1] / "app.py"
-    at = AppTest.from_file(str(app)).run(timeout=30)
+    at = AppTest.from_file(str(app))
+    at.session_state["app_mode"] = "Оркестратор 2" if variant == "vision2" else "Оркестратор"
+    at.run(timeout=30)
     try:
         assert not at.exception
+        assert not any("Числен" in widget.label for widget in [*at.checkbox, *at.button])
         password = next(v for v in at.text_input if "API key" in v.label)
         assert password.value == ""
         next(v for v in at.button if v.label == "Запустить оркестратор").click().run(timeout=30)
@@ -72,6 +85,76 @@ def test_gui_starts_once_survives_rerun_and_requests_cancellation(tmp_path, monk
     finally:
         for lease in leases:
             lease.close()
+
+
+def test_each_orchestrator_has_its_own_history(interior_manifest, tmp_path):
+    runs = tmp_path / "runs/harness"
+    classic = create_run(interior_manifest, runs, HarnessConfig(), limit=1)
+    second = create_run(interior_manifest, runs, HarnessConfig(orchestrator="vision2"), limit=1)
+    # Checkpoints created before the variant selector belong to the first mode.
+    state = read_json(classic / "run.json")
+    del state["config"]["orchestrator"]
+    write_json(classic / "run.json", state)
+    assert harness_ui._runs(runs, "classic") == [classic / "run.json"]
+    assert harness_ui._runs(runs, "vision2") == [second / "run.json"]
+
+
+def test_v2_preview_only_exposes_depth_even_with_legacy_images(
+    interior_manifest, tmp_path, monkeypatch
+):
+    from mesh2cad.vision import render_observations, save_observations
+
+    root = create_run(
+        interior_manifest, tmp_path / "runs", HarnessConfig(orchestrator="vision2"), limit=1
+    )
+    state = read_json(root / "run.json")
+    item = state["items"][0]
+    prepared = root / "items" / item["id"]
+    relative = f"items/{item['id']}/attempt-001"
+    folder = root / relative
+    mesh = trimesh.creation.box()
+    bundle = render_observations(mesh, mesh.extents, size=64)
+    save_observations(bundle, prepared / "vision")
+    save_observations(bundle, folder / "vision")
+    mesh.export(prepared / "target.stl")
+    mesh.export(folder / "candidate.stl")
+    for path in (
+        prepared / "target.png",
+        prepared / "vision/rgb.png",
+        prepared / "vision/blueprint.png",
+        folder / "overlay.png",
+    ):
+        path.write_bytes(bundle["depth"])
+    item.update(
+        best_attempt=0,
+        attempts=[
+            {
+                "iteration": 1,
+                "status": "evaluated",
+                "path": relative,
+                "calls": [],
+                "iou": evaluate_saved_pair(prepared / "target.stl", folder / "candidate.stl"),
+                "execution": {"status": "valid", "mesh_path": str(folder / "candidate.stl")},
+            }
+        ],
+    )
+    write_json(root / "run.json", state)
+    monkeypatch.setattr(harness_ui, "_comparison", lambda *args, **kwargs: None)
+    source = f"""from pathlib import Path
+import streamlit as st
+from mesh2cad.harness_ui import _item_details
+from mesh2cad.storage import read_json
+root = Path({str(root)!r})
+item = read_json(root / "run.json")["items"][0]
+st.session_state["observations-" + root.name + "-" + item["id"]] = True
+_item_details(root, item)
+"""
+    at = AppTest.from_string(source).run(timeout=30)
+    assert not at.exception
+    labels = [tab.label for tab in at.tabs]
+    assert "Карта глубины" in labels and "Метрики глубины" in labels
+    assert not {"RGB", "Чертёж", "Схема ошибок"}.intersection(labels)
+    assert not any(e.label == "Карта расхождений · 6 видов" for e in at.expander)
 
 
 def test_manual_pipeline_remains_available(monkeypatch) -> None:

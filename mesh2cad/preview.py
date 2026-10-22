@@ -12,10 +12,10 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from .geometry import load_mesh, normalize_mesh
+from .geometry import OVERLAY_VERSION, load_mesh, normalize_mesh
 from .observability import log_event
 from .resources import DEFAULT_MEMORY_MB, monitor_process, worker_environment
-from .storage import read_json
+from .storage import file_digest, read_json
 
 
 def preview_mesh(path: Path, *, normalize: bool = False, max_faces: int = 40_000) -> dict:
@@ -107,7 +107,13 @@ def comparison_figure(
     return figure
 
 
-def evaluate_saved_pair(target: Path, candidate: Path, *, normalize_target: bool = False) -> dict:
+def evaluate_saved_pair(
+    target: Path,
+    candidate: Path,
+    *,
+    normalize_target: bool = False,
+    overlay_folder: Path | None = None,
+) -> dict:
     """Use complete STL meshes; never align or rescale the candidate for a preview score."""
     with TemporaryDirectory(prefix="mesh2cad-iou-") as temporary:
         output = Path(temporary) / "iou.json"
@@ -122,6 +128,8 @@ def evaluate_saved_pair(target: Path, candidate: Path, *, normalize_target: bool
         ]
         if normalize_target:
             command.append("--normalize-target")
+        if overlay_folder is not None:
+            command.extend(["--overlay-folder", str(overlay_folder.resolve())])
         process = subprocess.Popen(
             command,
             cwd=Path(__file__).resolve().parents[1],
@@ -145,3 +153,70 @@ def evaluate_saved_pair(target: Path, candidate: Path, *, normalize_target: bool
         if usage.returncode or not output.is_file():
             raise RuntimeError(f"IoU worker exited with code {usage.returncode}")
         return read_json(output)
+
+
+def render_saved_overlay(
+    target: Path, candidate: Path, folder: Path, *, normalize_target=False
+) -> dict:
+    """Build/cache the solid comparison in the same bounded worker as preview IoU."""
+    signature = {
+        "version": OVERLAY_VERSION,
+        "target_sha256": file_digest(target),
+        "candidate_sha256": file_digest(candidate),
+        "normalize_target": normalize_target,
+    }
+    metadata = folder / "overlay-solid.json"
+    if metadata.is_file() and all(
+        (folder / name).is_file() for name in ("overlay-solid.png", "overlay-solid.npz")
+    ):
+        saved = read_json(metadata)
+        if all(saved.get(k) == value for k, value in signature.items()):
+            return saved
+    evaluate_saved_pair(target, candidate, normalize_target=normalize_target, overlay_folder=folder)
+    return read_json(metadata)
+
+
+def solid_overlay_figure(path: Path) -> go.Figure:
+    """Use the same boolean regions and palette as the six-view sheet."""
+    figure = go.Figure()
+    with np.load(path, allow_pickle=False) as arrays:
+        for name, label, color in (
+            ("covered", "Совпадение", "#16e633"),
+            ("excess", "Лишнее за пределами mesh", "#338cff"),
+            ("missing", "Не хватает в CAD", "#ff0d0d"),
+        ):
+            vertices, faces = arrays[name + "_vertices"], arrays[name + "_faces"]
+            if not len(faces):
+                continue
+            if len(faces) > 40_000:
+                faces = faces[np.linspace(0, len(faces) - 1, 40_000, dtype=int)]
+            ids, inverse = np.unique(faces, return_inverse=True)
+            vertices, faces = vertices[ids], inverse.reshape(-1, 3)
+            figure.add_trace(
+                go.Mesh3d(
+                    x=vertices[:, 0],
+                    y=vertices[:, 1],
+                    z=vertices[:, 2],
+                    i=faces[:, 0],
+                    j=faces[:, 1],
+                    k=faces[:, 2],
+                    color=color,
+                    name=label,
+                    showlegend=True,
+                    flatshading=True,
+                    opacity=1,
+                )
+            )
+    figure.update_layout(
+        height=430,
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor="rgba(0,0,0,0)",
+        uirevision=str(path),
+        scene=dict(
+            aspectmode="data",
+            xaxis=dict(visible=False),
+            yaxis=dict(visible=False),
+            zaxis=dict(visible=False),
+        ),
+    )
+    return figure

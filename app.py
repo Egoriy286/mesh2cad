@@ -16,6 +16,8 @@ from PIL import Image
 
 from mesh2cad.executor import execute_code
 from mesh2cad.geometry import (
+    OVERLAY_LEGEND,
+    OVERLAY_VERSION,
     VIEW_NAMES,
     VIEW_SIZE,
     compose_views,
@@ -24,7 +26,6 @@ from mesh2cad.geometry import (
     mesh_stats,
     normalize_mesh,
     render_llm_images,
-    render_overlay_sheet,
 )
 from mesh2cad.observability import configure_logging, timed_stage
 from mesh2cad.pipeline import (
@@ -38,7 +39,7 @@ from mesh2cad.pipeline import (
     preview_payload,
     save_run,
 )
-from mesh2cad.preview import evaluate_saved_pair
+from mesh2cad.preview import evaluate_saved_pair, render_saved_overlay, solid_overlay_figure
 from mesh2cad.prompts import DEFAULT_REQUEST, SYSTEM_PROMPT, overlay_repair_prompt
 
 ROOT = Path(__file__).resolve().parent
@@ -48,12 +49,17 @@ RUNS_DIR = ROOT / "runs" / "ui"
 CADQUERY_AVAILABLE = importlib.util.find_spec("cadquery") is not None
 
 st.set_page_config(page_title="Mesh2CAD · Harness", layout="wide", initial_sidebar_state="expanded")
-mode = st.sidebar.radio("Режим", ["Оркестратор", "Ручной pipeline"], key="app_mode")
-if mode == "Оркестратор":
+mode = st.sidebar.radio(
+    "Режим", ["Оркестратор", "Оркестратор 2", "Ручной pipeline"], key="app_mode"
+)
+if mode in {"Оркестратор", "Оркестратор 2"}:
     from mesh2cad.harness_ui import render_harness
 
     with timed_stage("ui.render", view="harness"):
-        render_harness(ROOT)
+        if mode == "Оркестратор 2":
+            render_harness(ROOT, variant="vision2")
+        else:
+            render_harness(ROOT)
     st.stop()
 
 st.title("STL → LLM")
@@ -218,6 +224,14 @@ def _format_volume(value) -> str:
     return "—" if value is None else f"{value:.6g}"
 
 
+def refresh_overlay(state: dict, target_path: Path, candidate_path: Path) -> None:
+    folder = Path(state["run_dir"])
+    render_saved_overlay(target_path, candidate_path, folder)
+    state["overlay_sheet"] = (folder / "overlay-solid.png").read_bytes()
+    state["overlay_version"] = OVERLAY_VERSION
+    state["overlay_parts_path"] = str(folder / "overlay-solid.npz")
+
+
 def execute_result(result: dict, data: dict, source_sha: str, base_request_sha: str) -> dict:
     """Run the current code, compute IoU, and build the red missing overlay."""
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -298,9 +312,8 @@ def execute_result(result: dict, data: dict, source_sha: str, base_request_sha: 
             )
         except OSError:
             pass
-        overlay = render_overlay_sheet(difference, candidate)
-        state["overlay_sheet"] = overlay
-        (cad_dir / "overlay.png").write_bytes(overlay)
+        refresh_overlay(state, target_path, Path(execution["mesh_path"]))
+        (cad_dir / "overlay.png").write_bytes(state["overlay_sheet"])
     except Exception as exc:  # noqa: BLE001 - keep IoU visible
         state["difference_error"] = f"{type(exc).__name__}: {exc}"
     return state
@@ -634,6 +647,16 @@ if result:
             if cad.get("error"):
                 st.code(cad["error"], language=None)
         else:
+            if cad.get("overlay_version") != OVERLAY_VERSION:
+                try:
+                    target_path = Path(cad["run_dir"]) / "normalized-target.stl"
+                    if not target_path.is_file():
+                        target_path.write_bytes(data["normalized_stl"])
+                    with st.spinner("Обновляю цветовую схему: совпадение, лишнее, недостаток…"):
+                        refresh_overlay(cad, target_path, Path(cad["execution"]["mesh_path"]))
+                except Exception as exc:
+                    cad.pop("overlay_sheet", None)
+                    cad["overlay_error"] = str(exc)
             st.success(
                 f"Выполнено за {cad['execution']['elapsed_seconds']:.2f} с · "
                 f"изоляция: {cad['execution'].get('sandbox', 'restricted')}"
@@ -691,19 +714,30 @@ if result:
                         key="cad-view",
                     )
                 with tab_overlay:
-                    st.plotly_chart(
-                        viewer(
-                            cad["candidate_vertices"],
-                            cad["candidate_faces"],
-                            cad["request_sha"],
-                            target=target,
-                            missing=missing,
-                        ),
-                        config={"displayModeBar": False, "scrollZoom": True},
-                        width="stretch",
-                        key="overlay-view",
-                    )
-                st.caption("Серый — исходник, синий — CadQuery, красный — где не хватает.")
+                    if cad.get("overlay_parts_path"):
+                        st.plotly_chart(
+                            solid_overlay_figure(Path(cad["overlay_parts_path"])),
+                            width="stretch",
+                            key="overlay-view",
+                        )
+                    else:
+                        st.plotly_chart(
+                            viewer(
+                                cad["candidate_vertices"],
+                                cad["candidate_faces"],
+                                cad["request_sha"],
+                                target=target,
+                                missing=missing,
+                            ),
+                            config={"displayModeBar": False, "scrollZoom": True},
+                            width="stretch",
+                            key="overlay-view",
+                        )
+                st.caption(
+                    OVERLAY_LEGEND
+                    if cad.get("overlay_version") == OVERLAY_VERSION
+                    else "Архивное наложение: серый — исходник, синий — весь CAD."
+                )
                 if cad.get("overlay_sheet"):
                     st.markdown("**Контрастная схема для улучшения**")
                     st.image(
@@ -712,8 +746,9 @@ if result:
                         caption="overlay.png · 1536×1024 · 6 видов",
                     )
                     st.caption(
-                        "Серый — покрытая часть target, синий — текущий CadQuery, "
-                        "красный — чего не хватает. Эта схема уходит в улучшение."
+                        OVERLAY_LEGEND
+                        if cad.get("overlay_version") == OVERLAY_VERSION
+                        else "Архивная схема: серый — покрытая поверхность, синий — весь CAD, красный — недостающая поверхность."
                     )
                     st.download_button(
                         "Скачать overlay.png",
@@ -755,7 +790,8 @@ if result:
     st.subheader("6 · Улучшение")
     st.caption(
         "В улучшение уходит не исходный лист, а контрастная схема overlay.png: "
-        "серый/синий/красный. В system prompt добавляется текущий CadQuery-код."
+        "зелёный — совпадение, синий — лишнее за пределами mesh, красный — чего не хватает. "
+        "В system prompt добавляется текущий CadQuery-код."
     )
     overlay = cad.get("overlay_sheet") if cad else None
     if result.get("prompt_mode") == "improve":
