@@ -93,7 +93,6 @@ def _environment(directory: Path) -> dict[str, str]:
         "LC_ALL": "en_US.UTF-8",
         "PYTHONNOUSERSITE": "1",
         "PYTHONDONTWRITEBYTECODE": "1",
-        "MPLCONFIGDIR": str(home / "matplotlib"),
         "XDG_CACHE_HOME": str(home / ".cache"),
         "OMP_NUM_THREADS": "1",
         "OPENBLAS_NUM_THREADS": "1",
@@ -207,7 +206,9 @@ def execute_code(
         if cancel_check is None:
             returncode, timed_out = _run_process(command, directory, timeout)
         else:
-            returncode, timed_out = _run_process(command, directory, timeout, cancel_check=cancel_check)
+            returncode, timed_out = _run_process(
+                command, directory, timeout, cancel_check=cancel_check
+            )
     except ExecutionCancelled as exc:
         return finish("cancelled", str(exc))
     except OSError as exc:

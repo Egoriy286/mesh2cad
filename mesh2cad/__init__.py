@@ -1,3 +1,3 @@
-"""Reproducible mesh-to-CAD generation and repair experiments."""
+"""Minimal mesh-to-LLM pipeline: STL input, normalization, and a 512x512 image."""
 
-__version__ = "0.1.0"
+__version__ = "0.4.0"

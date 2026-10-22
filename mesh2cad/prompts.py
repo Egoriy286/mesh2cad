@@ -1,40 +1,26 @@
-"""Versioned prompts: changing these invalidates experiment resume."""
+"""The single visible prompt used by the Streamlit pipeline."""
 
-PROMPT_VERSION = 1
+PROMPT_VERSION = 4
 
-BASE_PROMPT = """Reconstruct the mechanical part in the attached four-view image as a compact
-parametric CadQuery program. Return only the requested JSON object with one field, code.
-The views are front (camera at -Y), side (camera at +X), top (camera at +Z), and isometric;
-use the view labels in the image. The target is centered at its bounding-box
-center and its longest dimension is exactly 1. Coordinates are in normalized units.
-Do not rescale or recenter your result after construction.
-Use import cadquery as cq and optionally import math; no other imports, file reads,
-network, processes, mesh loading, or external assets. The final object must be a
-nonempty cq.Workplane named r, containing valid solids. Prefer editable sketches,
-extrusions, revolutions, cuts and unions. Do not export files; the host exports r.
-Do not use any tools, shell, browser, other agents or filesystem access.
+SYSTEM_PROMPT = """You reconstruct a mechanical part from one attached contact sheet.
+The sheet is 1536x1024 and has three columns of 512x512 tiles:
+- top: camera on +Z;
+- left: camera on -X;
+- right: camera on +X.
+The upper row is an RGB render. The lower row is the matching depth map.
+Tiles are labeled in their top-left corners: "top RGB", "top depth", "left RGB",
+"left depth", "right RGB", "right depth". The background is black.
+In the depth maps, lighter pixels are closer to the camera and darker pixels are
+farther away; pure black is empty space.
+
+The target is centered at its bounding-box center and its longest side is exactly 1.
+All coordinates are in these normalized units. Do not rescale or recenter the result.
+Return exactly one JSON object with a single string field, "code". The code must:
+- use `import cadquery as cq` and optionally `import math`;
+- build a nonempty `cq.Workplane` named `r` that contains valid solids;
+- prefer editable sketches, extrusions, revolutions, cuts, and unions;
+- not read files, access the network, start processes, load meshes, or use any tools;
+- not export files: return the complete program only.
 """
 
-
-def initial_prompt() -> str:
-    return BASE_PROMPT
-
-
-def repair_prompt(code: str, *, error: str | None, metrics: dict | None) -> str:
-    if error:
-        feedback = "The previous program failed. Fix the following error:\n" + error[-6000:]
-    else:
-        feedback = (
-            "The attached comparison shows target and current reconstruction with the same "
-            "cameras and coordinates. Correct missing/excess geometry and dimensions. "
-            f"Measured symmetric squared Chamfer distance (lower is better): {metrics['chamfer']:.8g}. "
-            f"Volumetric IoU: {metrics.get('iou')} ({metrics.get('iou_status')})."
-        )
-    return (
-        BASE_PROMPT
-        + "\n"
-        + feedback
-        + "\nReturn the complete corrected program.\nPrevious code:\n```python\n"
-        + code
-        + "\n```\n"
-    )
+DEFAULT_REQUEST = "Reconstruct the part from the contact sheet."

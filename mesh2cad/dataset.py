@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 from typing import Callable
 
-from .geometry import load_mesh, normalize_mesh, render_views
+from .geometry import VIEW_SIZE, load_mesh, normalize_mesh, render_views
 from .storage import digest, file_digest, read_json, resolve_artifact, write_json
 
 DEFAULT_REPO = "maksimko123/deepcad_test_mesh"
@@ -145,7 +145,7 @@ def prepare_dataset(
             image_path = output / "views" / f"{item['id']}.png"
             mesh_path.parent.mkdir(parents=True, exist_ok=True)
             mesh.export(mesh_path)
-            render_views(mesh, image_path)
+            render_views(mesh, image_path, size=VIEW_SIZE)
             item.update(
                 status="ready",
                 error=None,
@@ -190,3 +190,23 @@ def load_manifest(path: Path) -> dict:
                 ):
                     raise ValueError(f"Missing or changed input artifact: {artifact}")
     return manifest
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Prepare the pinned DeepCAD STL subset")
+    parser.add_argument("--output", type=Path, default=Path("data/deepcad"))
+    parser.add_argument("--source-dir", type=Path, help="Use local STL files instead")
+    parser.add_argument("--dev-count", type=int, default=10)
+    parser.add_argument("--test-count", type=int, default=100)
+    parser.add_argument("--seed", type=int, default=42)
+    args = parser.parse_args()
+    manifest = prepare_dataset(
+        args.output,
+        source_dir=args.source_dir,
+        dev_count=args.dev_count,
+        test_count=args.test_count,
+        seed=args.seed,
+    )
+    print(f"Manifest: {manifest}")
