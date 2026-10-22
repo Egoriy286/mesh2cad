@@ -1,4 +1,9 @@
-"""Execute generated CAD in a fresh, fail-closed macOS Seatbelt sandbox."""
+"""Run generated CadQuery code in a fresh, isolated process.
+
+macOS uses Seatbelt. Windows and Linux use a restricted subprocess with Python
+audit hooks that block network, process creation, and file access outside the
+run directory. The restricted backend is defense in depth, not a kernel sandbox.
+"""
 
 from __future__ import annotations
 
@@ -15,9 +20,24 @@ import time
 from pathlib import Path
 from typing import Callable
 
+SEATBELT = "/usr/bin/sandbox-exec"
+
 
 class ExecutionCancelled(RuntimeError):
     """A caller explicitly cancelled a sandboxed proposal."""
+
+
+def _backend() -> str:
+    forced = os.environ.get("MESH2CAD_SANDBOX", "auto").strip().lower()
+    if forced == "seatbelt":
+        return "seatbelt"
+    if forced == "restricted":
+        return "restricted"
+    if forced not in {"", "auto"}:
+        return "unsupported"
+    if platform.system() == "Darwin" and Path(SEATBELT).is_file():
+        return "seatbelt"
+    return "restricted"
 
 
 def _sandbox_profile(directory: Path) -> str:
@@ -80,23 +100,68 @@ def _sandbox_profile(directory: Path) -> str:
 
 
 def _environment(directory: Path) -> dict[str, str]:
-    """Do not inherit API keys, Codex auth, user Python paths, or startup hooks."""
+    """Do not inherit API keys, user Python paths, or startup hooks."""
     home = directory / "home"
     temporary = directory / "tmp"
     home.mkdir(exist_ok=True)
     temporary.mkdir(exist_ok=True)
-    return {
+    environment = {
         "HOME": str(home),
+        "USERPROFILE": str(home),
         "TMPDIR": str(temporary),
-        "PATH": "/usr/bin:/bin",
-        "LANG": "en_US.UTF-8",
-        "LC_ALL": "en_US.UTF-8",
+        "TMP": str(temporary),
+        "TEMP": str(temporary),
         "PYTHONNOUSERSITE": "1",
         "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1",
         "XDG_CACHE_HOME": str(home / ".cache"),
         "OMP_NUM_THREADS": "1",
         "OPENBLAS_NUM_THREADS": "1",
     }
+    if os.name == "nt":
+        # DLL resolution on Windows needs the inherited PATH and system roots.
+        # Process creation is still blocked by the worker's audit hook.
+        environment["APPDATA"] = str(home / "AppData" / "Roaming")
+        environment["LOCALAPPDATA"] = str(home / "AppData" / "Local")
+        for name in ("PATH", "SYSTEMROOT", "SystemDrive", "WINDIR", "COMSPEC", "PATHEXT"):
+            if os.environ.get(name):
+                environment[name] = os.environ[name]
+    else:
+        environment.update(
+            {
+                "PATH": "/usr/bin:/bin",
+                "LANG": "en_US.UTF-8",
+                "LC_ALL": "en_US.UTF-8",
+            }
+        )
+    return environment
+
+
+def _kill_tree(process: subprocess.Popen) -> None:
+    if process.poll() is not None:
+        return
+    if os.name == "nt":
+        taskkill = shutil.which("taskkill")
+        if taskkill:
+            subprocess.run(
+                [taskkill, "/F", "/T", "/PID", str(process.pid)],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+        else:
+            process.kill()
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    try:
+        process.wait(timeout=2)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
 
 
 def _run_process(
@@ -107,6 +172,11 @@ def _run_process(
     cancel_check: Callable[[], bool] | None = None,
 ) -> tuple[int, bool]:
     """Private transport helper, also usable by worker integration tests."""
+    options: dict = {}
+    if os.name == "nt":
+        options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW
+    else:
+        options["start_new_session"] = True
     with (
         (directory / "stdout.log").open("w", encoding="utf-8") as stdout,
         (directory / "stderr.log").open("w", encoding="utf-8") as stderr,
@@ -115,9 +185,10 @@ def _run_process(
             command,
             cwd=directory,
             env=_environment(directory),
+            stdin=subprocess.DEVNULL,
             stdout=stdout,
             stderr=stderr,
-            start_new_session=True,
+            **options,
         )
         try:
             if cancel_check is None:
@@ -135,19 +206,11 @@ def _run_process(
                     if time.monotonic() >= deadline:
                         raise
         except subprocess.TimeoutExpired:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            process.wait()
-            return process.returncode, True
+            _kill_tree(process)
+            return process.returncode or 1, True
         finally:
             # Reap any child processes spawned by the proposal after completion.
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            process.wait(timeout=2)
+            _kill_tree(process)
 
 
 def execute_code(
@@ -159,12 +222,13 @@ def execute_code(
 ) -> dict:
     """Save and execute one proposal; never fall back to unsandboxed execution.
 
-    Only macOS with ``/usr/bin/sandbox-exec`` is supported. Results use absolute
-    artifact paths; failed candidates expose neither STEP nor mesh paths.
+    Results use absolute artifact paths; failed candidates expose neither STEP
+    nor mesh paths.
     """
     started = time.monotonic()
     directory = Path(work_dir).resolve()
     directory.mkdir(parents=True, exist_ok=True)
+    backend = _backend()
     # Unlink names before writing: a previous proposal could have left symlinks.
     for name in ("code.py", "stdout.log", "stderr.log", "_worker.py", "sandbox.sb"):
         (directory / name).unlink(missing_ok=True)
@@ -182,6 +246,7 @@ def execute_code(
         return {
             "status": status,
             "error": error,
+            "sandbox": backend,
             "mesh_path": str(directory / "candidate.stl") if status == "valid" else None,
             "step_path": str(directory / "candidate.step") if status == "valid" else None,
             "elapsed_seconds": time.monotonic() - started,
@@ -191,17 +256,33 @@ def execute_code(
         return finish("execution_error", "Execution timeout must be positive and finite")
     if cancel_check is not None and cancel_check():
         return finish("cancelled", "CAD execution was cancelled before launch")
-    if platform.system() != "Darwin" or not Path("/usr/bin/sandbox-exec").is_file():
+    if backend == "unsupported":
         return finish(
             "sandbox_error",
-            "CAD execution requires macOS sandbox-exec; unsandboxed execution is disabled",
+            "MESH2CAD_SANDBOX must be one of: auto, seatbelt, restricted",
+        )
+    if backend == "seatbelt" and (platform.system() != "Darwin" or not Path(SEATBELT).is_file()):
+        return finish(
+            "sandbox_error",
+            "Seatbelt is available only on macOS with /usr/bin/sandbox-exec",
         )
     # Copy the small standalone entry point, never expose the package/repository.
     worker = directory / "_worker.py"
     shutil.copyfile(Path(__file__).with_name("_worker.py"), worker)
-    profile = directory / "sandbox.sb"
-    profile.write_text(_sandbox_profile(directory), encoding="utf-8")
-    command = ["/usr/bin/sandbox-exec", "-f", str(profile), sys.executable, "-I", "-B", str(worker)]
+    if backend == "seatbelt":
+        profile = directory / "sandbox.sb"
+        profile.write_text(_sandbox_profile(directory), encoding="utf-8")
+        command = [
+            SEATBELT,
+            "-f",
+            str(profile),
+            sys.executable,
+            "-I",
+            "-B",
+            str(worker),
+        ]
+    else:
+        command = [sys.executable, "-I", "-B", str(worker)]
     try:
         if cancel_check is None:
             returncode, timed_out = _run_process(command, directory, timeout)
@@ -212,7 +293,7 @@ def execute_code(
     except ExecutionCancelled as exc:
         return finish("cancelled", str(exc))
     except OSError as exc:
-        return finish("sandbox_error", f"Could not launch macOS sandbox: {exc}")
+        return finish("sandbox_error", f"Could not launch the worker: {exc}")
     if timed_out:
         return finish("timeout", f"CadQuery execution exceeded {timeout:g} seconds")
     result_file = directory / "worker_result.json"
@@ -232,7 +313,7 @@ def execute_code(
         )
         return finish(
             status,
-            f"Sandboxed worker exited with code {returncode} without a result.\n{stderr}".rstrip(),
+            f"Worker exited with code {returncode} without a result.\n{stderr}".rstrip(),
         )
     if result_file.is_symlink():
         return finish("execution_error", "Worker replaced its result file with a symlink")

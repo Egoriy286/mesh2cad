@@ -11,7 +11,7 @@ app.py                    Streamlit: импорт STL, 3D-просмотр, pipe
 mesh2cad/geometry.py      загрузка STL, нормализация, RGB/depth 512×512, IoU
 mesh2cad/pipeline.py      точный запрос к OpenRouter, разбор ответа, артефакты
 mesh2cad/prompts.py       system prompt и запрос по умолчанию
-mesh2cad/executor.py      запуск кода в macOS Seatbelt
+mesh2cad/executor.py      Seatbelt / restricted-запуск кода
 mesh2cad/_worker.py       CadQuery worker: r -> STEP/STL
 mesh2cad/dataset.py       воспроизводимая подготовка DeepCAD
 mesh2cad/storage.py       атомарная запись JSON
@@ -37,6 +37,16 @@ UV_PROJECT_ENVIRONMENT=.venv-mesh2cad uv sync --extra dev
 .venv-mesh2cad/bin/streamlit run app.py
 ```
 
+Windows (PowerShell):
+
+```powershell
+uv sync --extra dev
+.venv\Scripts\streamlit run app.py
+```
+
+На Windows CadQuery работает через restricted backend; отдельный
+`MESH2CAD_SANDBOX` выставлять не нужно.
+
 Откройте `http://localhost:8501`.
 
 ## Экран
@@ -46,18 +56,20 @@ UV_PROJECT_ENVIRONMENT=.venv-mesh2cad uv sync --extra dev
 2. **Pipeline.** Находится сразу под просмотром:
    - **1 · Нормализация** — центр bounding box в 0, длиннейшая сторона в 1;
      матрица, границы и normalized STL показаны полностью.
-   - **2 · Изображения для LLM** — три вида: top (+Z), left (−X), right (+X).
-     Для каждого есть RGB и карта глубины **512 × 512**, фон чёрный; в depth
-     ближе — светлее, дальше — темнее. Все шесть тайлов плюс один общий
-     contact sheet **1536 × 1024** (3 колонки, сверху RGB, снизу depth) показаны
-     и скачиваются. В LLM уходит именно один общий `llm-input.png`.
+   - **2 · Изображение для LLM** — шесть видов: top (+Z), left (−X), right (+X),
+     isometric (снизу-спереди), bottom (−Z), front (−Y). В LLM уходит один
+     contact sheet **1536 × 1024**: сетка 3×2, в каждом тайле 512×512 RGB и его
+     depth смешаны 50/50 в одно изображение, без рамок и подписей. Фон чёрный;
+     ближе — светлее, дальше — темнее. Отдельные RGB и depth-тайлы доступны в
+     блоке «Отдельные тайлы и метаданные», в ZIP и в артефактах.
    - **3 · Ввод** — редактируемые system prompt и запрос пользователя, модель,
      reasoning effort. Ниже показан точный JSON запроса; base64 сокращён только
      в предпросмотре, в скачиваемом `request.json` он полный.
    - **4 · Ответ** — кнопка отправки в OpenRouter, сырой ответ, usage и извлечённый
      CadQuery-код.
    - **5 · CadQuery и IoU** — кнопка выполняет ровно показанный код в отдельном
-     процессе под macOS Seatbelt. Результат показывается отдельно и в наложении на
+     процессе (macOS Seatbelt или restricted на других ОС). Результат показывается
+     отдельно и в наложении на
      исходник; считаются объёмы и **IoU = |пересечение| / |объединение|** без
      выравнивания и масштабирования. STL/STEP и `iou.json` можно скачать.
 
@@ -74,6 +86,12 @@ renders/
   left-depth.png
   right-rgb.png
   right-depth.png
+  isometric-rgb.png
+  isometric-depth.png
+  bottom-rgb.png
+  bottom-depth.png
+  front-rgb.png
+  front-depth.png
 request.json      # точный запрос с base64 одного llm-input.png
 response.json     # сырой ответ
 code.py
@@ -98,9 +116,17 @@ OPENROUTER_API_KEY=...
 
 ## CadQuery
 
-Код модели выполняется только после ответа LLM и только в отдельном процессе под
-macOS Seatbelt: сеть, домашний каталог и запись за пределы папки запуска закрыты.
-На других ОС выполнение возвращает `sandbox_error` и не запускается без песочницы.
+Код модели выполняется только после ответа LLM и всегда в отдельном процессе:
+
+- **macOS** — Seatbelt (`/usr/bin/sandbox-exec`), если он доступен;
+- **Windows / Linux / другие ОС** — restricted subprocess с Python audit hooks.
+  Он блокирует сеть, создание процессов, `ctypes`, опасные импорты и доступ к
+  файлам вне папки запуска. Разрешены только импорты `cadquery` и `math`.
+
+Restricted backend — defense in depth, а не полноценная kernel-песочница.
+На macOS можно принудительно выбрать backend через `MESH2CAD_SANDBOX=seatbelt`
+или `MESH2CAD_SANDBOX=restricted`; по умолчанию `auto`. Seatbelt на не-macOS
+возвращает `sandbox_error`.
 
 Worker принимает переменную `r` типа `cq.Workplane`, проверяет валидность и
 положительный объём, затем экспортирует `candidate.step` и `candidate.stl`.
@@ -127,7 +153,7 @@ IoU считается через `manifold3d`; если тела не замк�
 .venv/bin/ruff check app.py mesh2cad tests
 ```
 
-Тесты проверяют нормализацию, шесть тайлов 512×512 (RGB + depth, чёрный фон),
-общий sheet 1536×1024, структуру запроса, извлечение кода, сохранение артефактов,
-настоящий CadQuery-экспорт в песочнице и IoU на совпадающих, сдвинутых,
+Тесты проверяют нормализацию, 12 тайлов 512×512 (RGB + depth, чёрный фон),
+общий sheet 1536×1024 (RGB+depth 50/50), структуру запроса, извлечение кода, сохранение артефактов,
+настоящий CadQuery-экспорт в Seatbelt/restricted, блокировку опасных операций и IoU на совпадающих, сдвинутых,
 разъединённых и незамкнутых телах. Сеть не используется.

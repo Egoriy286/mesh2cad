@@ -6,7 +6,6 @@ import hashlib
 import importlib.util
 import io
 import json
-import platform
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +16,7 @@ from PIL import Image
 
 from mesh2cad.executor import execute_code
 from mesh2cad.geometry import (
+    VIEW_NAMES,
     VIEW_SIZE,
     compose_views,
     evaluate_iou,
@@ -42,7 +42,6 @@ ROOT = Path(__file__).resolve().parent
 DATASET_DIR = ROOT / "data" / "deepcad"
 RUNS_DIR = ROOT / "runs" / "ui"
 CADQUERY_AVAILABLE = importlib.util.find_spec("cadquery") is not None
-SANDBOX_AVAILABLE = platform.system() == "Darwin" and Path("/usr/bin/sandbox-exec").is_file()
 
 st.set_page_config(page_title="STL → LLM", layout="wide", initial_sidebar_state="collapsed")
 st.title("STL → LLM")
@@ -271,8 +270,8 @@ for label, blob in images.items():
         "sha256": hashlib.sha256(blob).hexdigest(),
     }
 st.caption(
-    "Три ортографических вида: top (+Z), left (−X), right (+X). "
-    "Для каждого — RGB и карта глубины; depth уже включён в общий лист."
+    "Шесть видов: top, left, right, isometric, bottom, front. "
+    "В каждом тайле RGB и его depth в одном изображении."
 )
 sheet = data["sheet"]
 with Image.open(io.BytesIO(sheet)) as image:
@@ -288,9 +287,10 @@ st.image(
     caption=f"llm-input · {sheet_size[0]}×{sheet_size[1]}",
 )
 st.caption(
-    "Одно изображение: 3 колонки top / left / right. В каждой колонке сверху RGB, "
-    f"снизу её depth. Каждый тайл {VIEW_SIZE}×{VIEW_SIZE}, фон чёрный; "
-    "ближе — светлее, дальше — темнее; чистый чёрный — пустота."
+    "Одно изображение 3×2: top, left, right, isometric, bottom, front. "
+    "В каждом тайле RGB и его depth смешаны 50/50 в одно изображение; "
+    f"тайл {VIEW_SIZE}×{VIEW_SIZE}, фон чёрный; в depth ближе — светлее, "
+    "дальше — темнее; чистый чёрный — пустота."
 )
 download_col, archive_col = st.columns(2)
 with download_col:
@@ -308,7 +308,7 @@ with zipfile.ZipFile(archive_buffer, "w", zipfile.ZIP_DEFLATED) as archive:
     archive.writestr("llm-input.png", sheet)
 with archive_col:
     st.download_button(
-        "Скачать 6 тайлов + llm-input.png",
+        "Скачать 12 тайлов + llm-input.png",
         archive_buffer.getvalue(),
         file_name="llm-images-512.zip",
         mime="application/zip",
@@ -316,8 +316,9 @@ with archive_col:
     )
 with st.expander("Отдельные тайлы и метаданные"):
     tile_columns = st.columns(3)
-    for column, view in zip(tile_columns, ("top", "left", "right"), strict=True):
-        with column:
+    for index, view in enumerate(VIEW_NAMES):
+        with tile_columns[index % 3]:
+            st.markdown(f"**{view}**")
             st.image(
                 images[f"{view}-rgb"],
                 width="stretch",
@@ -466,20 +467,19 @@ if result:
     # -----------------------------------------------------------------------
     st.subheader("5 · CadQuery: просмотр и IoU")
     st.caption(
-        "Код выполняется отдельным процессом под macOS Seatbelt: без сети и без записи "
-        "за пределы папки запуска. IoU считается по объёмам, без выравнивания."
+        "Код выполняется отдельным процессом. macOS — Seatbelt, если доступен; Windows/Linux — "
+        "restricted sandbox с Python audit hooks: сеть, процессы и запись вне папки "
+        "запуска блокируются. IoU считается по объёмам, без выравнивания."
     )
     stale = result["source_sha"] != source_sha or result["request_sha"] != request_sha
     if stale:
         st.warning("Код относится к другому STL или запросу. Отправьте запрос заново.")
     if not CADQUERY_AVAILABLE:
         st.warning("CadQuery не установлен. Выполните `uv sync --extra dev`.")
-    if not SANDBOX_AVAILABLE:
-        st.warning("Выполнение доступно только на macOS с /usr/bin/sandbox-exec.")
     if st.button(
         "Выполнить в CadQuery и посчитать IoU",
         type="primary",
-        disabled=stale or not CADQUERY_AVAILABLE or not SANDBOX_AVAILABLE,
+        disabled=stale or not CADQUERY_AVAILABLE,
     ):
         st.session_state.pop("cad", None)
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -534,7 +534,10 @@ if result:
             if cad.get("error"):
                 st.code(cad["error"], language=None)
         else:
-            st.success(f"Выполнено за {cad['execution']['elapsed_seconds']:.2f} с")
+            st.success(
+                f"Выполнено за {cad['execution']['elapsed_seconds']:.2f} с · "
+                f"изоляция: {cad['execution'].get('sandbox', 'restricted')}"
+            )
             iou = cad.get("iou")
             if iou:
                 iou_col, target_col, cad_col = st.columns(3)
@@ -601,7 +604,7 @@ if result:
             st.caption(f"Артефакты: {cad['run_dir']}")
         with st.expander("Детали выполнения"):
             st.json(cad["execution"])
-    elif not stale and CADQUERY_AVAILABLE and SANDBOX_AVAILABLE:
+    elif not stale and CADQUERY_AVAILABLE:
         st.caption("Кнопка выполнит ровно тот код, который показан выше.")
 
 st.divider()

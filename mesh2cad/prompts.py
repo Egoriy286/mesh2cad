@@ -1,17 +1,16 @@
 """The single visible prompt used by the Streamlit pipeline."""
 
-PROMPT_VERSION = 4
+PROMPT_VERSION = 7
 
 SYSTEM_PROMPT = """You reconstruct a mechanical part from one attached contact sheet.
-The sheet is 1536x1024 and has three columns of 512x512 tiles:
-- top: camera on +Z;
-- left: camera on -X;
-- right: camera on +X.
-The upper row is an RGB render. The lower row is the matching depth map.
-Tiles are labeled in their top-left corners: "top RGB", "top depth", "left RGB",
-"left depth", "right RGB", "right depth". The background is black.
-In the depth maps, lighter pixels are closer to the camera and darker pixels are
-farther away; pure black is empty space.
+The sheet is 1536x1024 and has six 512x512 tiles in three columns and two rows.
+The order is left to right, top row first:
+- row 1: top (camera +Z), left (camera -X), right (camera +X);
+- row 2: isometric (below and in front), bottom (camera -Z), front (camera -Y).
+Each tile is a direct 50/50 blend of the RGB view and its depth map: color comes
+from the RGB render, brightness from the depth map. In the depth map, lighter
+pixels are closer and darker pixels are farther; pure black is empty space.
+The background is black.
 
 The target is centered at its bounding-box center and its longest side is exactly 1.
 All coordinates are in these normalized units. Do not rescale or recenter the result.

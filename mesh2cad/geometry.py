@@ -1,8 +1,8 @@
 """CPU-only mesh helpers and deterministic 512x512 RGB/depth renders.
 
 The mesh is loaded as-is; normalization returns its matrix. The LLM receives
-one contact sheet: top/left/right columns, RGB row above its depth row, all on
-a black background.
+one 3x2 contact sheet of top/left/right, isometric, bottom, and front views;
+each tile blends the RGB render with its depth map on a black background.
 """
 
 from __future__ import annotations
@@ -15,14 +15,18 @@ from typing import Any, BinaryIO
 
 import numpy as np
 import trimesh
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 VIEW_SIZE = 512
 VIEWS = (
     ("top", 90.0, -90.0),
     ("left", 0.0, 180.0),
     ("right", 0.0, 0.0),
+    ("isometric", -25.0, -55.0),
+    ("bottom", -90.0, -90.0),
+    ("front", 0.0, -90.0),
 )
+VIEW_NAMES = tuple(name for name, _elevation, _azimuth in VIEWS)
 _FRAME_SCALE = 1.15
 _SUPERSAMPLE = 2
 
@@ -300,7 +304,7 @@ def _png_bytes(image: Image.Image) -> bytes:
 
 
 def render_llm_images(mesh: trimesh.Trimesh, size: int = VIEW_SIZE) -> dict[str, bytes]:
-    """Return six PNGs: top/left/right RGB plus a depth map for each view."""
+    """Return 12 PNGs: RGB plus depth for each of the six views."""
     validate_mesh(mesh)
     if not isinstance(size, int) or isinstance(size, bool) or size < 64:
         raise ValueError("Размер изображения должен быть целым числом не меньше 64")
@@ -312,30 +316,35 @@ def render_llm_images(mesh: trimesh.Trimesh, size: int = VIEW_SIZE) -> dict[str,
     return images
 
 
-def compose_views(images: dict[str, bytes], size: int = VIEW_SIZE) -> bytes:
-    """Combine the six PNGs into the single image sent to the LLM.
+def _combine_rgb_depth(rgb: bytes, depth: bytes) -> Image.Image:
+    """Blend one RGB view and its depth map into a single equal-weight tile."""
+    with Image.open(io.BytesIO(rgb)) as image:
+        color = np.asarray(image.convert("RGB"), dtype=np.float32)
+    with Image.open(io.BytesIO(depth)) as image:
+        depth_values = np.asarray(image.convert("L"), dtype=np.float32)
+    combined = 0.5 * color + 0.5 * depth_values[..., None]
+    return Image.fromarray(np.clip(combined, 0, 255).astype(np.uint8))
 
-    Layout: three columns (top, left, right), RGB in the upper row and the
-    matching depth map directly below it. Each tile is exactly ``size`` pixels.
+
+def compose_views(images: dict[str, bytes], size: int = VIEW_SIZE) -> bytes:
+    """Combine all views into the single image sent to the LLM.
+
+    Layout: three columns, two rows (top/left/right, then isometric/bottom/front).
+    Each tile is one ``size``-pixel blend of RGB and its depth map; the
+    background is black. No labels or frames are added.
     """
-    sheet = Image.new("RGB", (size * len(VIEWS), size * 2), "black")
-    draw = ImageDraw.Draw(sheet)
-    try:
-        font = ImageFont.load_default(size=max(12, size // 24))
-    except TypeError:
-        font = ImageFont.load_default()
-    for column, (name, _elevation, _azimuth) in enumerate(VIEWS):
-        with Image.open(io.BytesIO(images[f"{name}-rgb"])) as image:
-            sheet.paste(image.convert("RGB"), (column * size, 0))
-        with Image.open(io.BytesIO(images[f"{name}-depth"])) as image:
-            sheet.paste(image.convert("RGB"), (column * size, size))
-        draw.text((column * size + 12, 12), f"{name} RGB", fill="white", font=font)
-        draw.text((column * size + 12, size + 12), f"{name} depth", fill="white", font=font)
+    columns = 3
+    rows = math.ceil(len(VIEWS) / columns)
+    sheet = Image.new("RGB", (size * columns, size * rows), "black")
+    for index, (name, _elevation, _azimuth) in enumerate(VIEWS):
+        row, column = divmod(index, columns)
+        combined = _combine_rgb_depth(images[f"{name}-rgb"], images[f"{name}-depth"])
+        sheet.paste(combined, (column * size, row * size))
     return _png_bytes(sheet)
 
 
 def render_views(mesh: trimesh.Trimesh, output_path: str | Path, size: int = VIEW_SIZE) -> None:
-    """Write a preview sheet: RGB row over depth row, each tile ``size`` pixels."""
+    """Write a 3x2 preview sheet of combined RGB+depth tiles, each ``size`` pixels."""
     data = render_views_bytes(mesh, size)
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)

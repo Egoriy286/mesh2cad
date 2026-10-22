@@ -10,6 +10,7 @@ import trimesh
 from PIL import Image
 
 from mesh2cad.geometry import (
+    VIEW_NAMES,
     VIEW_SIZE,
     evaluate_iou,
     load_mesh,
@@ -42,10 +43,10 @@ def test_normalization_is_explicit_and_reversible() -> None:
     assert len(values["inverse_transform"]) == 4
 
 
-def test_llm_images_are_six_black_512_pngs() -> None:
+def test_llm_images_are_black_512_pngs_for_every_view() -> None:
     normalized, _ = normalize_mesh(box())
     images = render_llm_images(normalized)
-    expected = {f"{view}-{kind}" for view in ("top", "left", "right") for kind in ("rgb", "depth")}
+    expected = {f"{view}-{kind}" for view in VIEW_NAMES for kind in ("rgb", "depth")}
     assert set(images) == expected
     for label, payload in images.items():
         assert payload.startswith(b"\x89PNG\r\n\x1a\n"), label
@@ -53,16 +54,17 @@ def test_llm_images_are_six_black_512_pngs() -> None:
             assert image.size == (VIEW_SIZE, VIEW_SIZE), label
             assert image.convert("RGB").getpixel((0, 0)) == (0, 0, 0), label
     assert images["top-rgb"] != images["top-depth"]
-    assert len({images[f"{view}-rgb"] for view in ("top", "left", "right")}) >= 2
+    assert len({images[f"{view}-rgb"] for view in VIEW_NAMES}) >= 4
 
 
-def test_render_views_builds_rgb_over_depth_sheet() -> None:
+def test_render_views_builds_combined_sheet() -> None:
     normalized, _ = normalize_mesh(box())
     payload = render_views_bytes(normalized)
     assert payload.startswith(b"\x89PNG\r\n\x1a\n")
     with Image.open(io.BytesIO(payload)) as image:
         assert image.size == (VIEW_SIZE * 3, VIEW_SIZE * 2)
         assert image.mode == "RGB"
+        assert image.convert("RGB").getpixel((VIEW_SIZE - 1, VIEW_SIZE - 1)) == (0, 0, 0)
 
 
 def test_render_views_can_write_a_file(tmp_path) -> None:
@@ -70,7 +72,7 @@ def test_render_views_can_write_a_file(tmp_path) -> None:
     output = tmp_path / "views.png"
     render_views(normalized, output, size=128)
     with Image.open(output) as image:
-        assert image.size == (128 * 3, 128 * 2)
+        assert image.size == (128 * 3, 256)
 
 
 def test_iou_of_identical_box_is_one() -> None:
