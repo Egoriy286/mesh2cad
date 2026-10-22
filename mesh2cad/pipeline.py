@@ -56,7 +56,7 @@ def build_user_text(extents: list[float] | tuple[float, ...], request: str) -> s
         raise ValueError("extents must contain exactly three numbers")
     x, y, z = (float(value) for value in extents)
     if not request.strip():
-        request = "Reconstruct the part shown in the four views."
+        request = "Reconstruct the part from the contact sheet."
     return (
         f"Target extents (normalized units, x/y/z): [{x:.8g}, {y:.8g}, {z:.8g}]\nRequest: {request}"
     )
@@ -67,13 +67,18 @@ def build_payload(
     model: str,
     system_prompt: str,
     request: str,
-    image_png: bytes,
+    images: list[tuple[str, bytes]],
     extents: list[float] | tuple[float, ...],
     reasoning_effort: str = "medium",
     max_tokens: int = DEFAULT_MAX_TOKENS,
 ) -> dict[str, Any]:
-    if not image_png.startswith(b"\x89PNG\r\n\x1a\n"):
-        raise ValueError("LLM input must be a PNG image")
+    if not images:
+        raise ValueError("At least one image is required")
+    for label, image_png in images:
+        if not label or not label.strip():
+            raise ValueError("Every image needs a nonempty label")
+        if not image_png.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError(f"LLM input {label!r} must be a PNG image")
     if not model.strip():
         raise ValueError("Model name is empty")
     if not system_prompt.strip():
@@ -82,18 +87,22 @@ def build_payload(
         raise ValueError(f"Unknown reasoning effort: {reasoning_effort}")
     if not isinstance(max_tokens, int) or isinstance(max_tokens, bool) or max_tokens < 1:
         raise ValueError("max_tokens must be a positive integer")
-    data_url = "data:image/png;base64," + base64.b64encode(image_png).decode("ascii")
+    content: list[dict[str, Any]] = [{"type": "text", "text": build_user_text(extents, request)}]
+    for label, image_png in images:
+        content.append({"type": "text", "text": f"Image: {label}"})
+        content.append(
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": "data:image/png;base64," + base64.b64encode(image_png).decode("ascii")
+                },
+            }
+        )
     return {
         "model": model.strip(),
         "messages": [
             {"role": "system", "content": system_prompt},
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": build_user_text(extents, request)},
-                    {"type": "image_url", "image_url": {"url": data_url}},
-                ],
-            },
+            {"role": "user", "content": content},
         ],
         "max_tokens": max_tokens,
         "reasoning": {"effort": reasoning_effort},
@@ -198,17 +207,45 @@ def save_run(
     *,
     source_name: str,
     source_bytes: bytes,
-    image_png: bytes,
+    images: dict[str, bytes],
     payload: dict[str, Any],
     response: dict[str, Any],
     code: str,
+    extra_images: dict[str, bytes] | None = None,
 ) -> Path:
     """Persist the exact request, response, and inputs next to each other."""
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     folder = Path(root) / f"{stamp}-{uuid.uuid4().hex[:8]}"
     folder.mkdir(parents=True, exist_ok=False)
     (folder / "source.stl").write_bytes(source_bytes)
-    (folder / "llm-input-512.png").write_bytes(image_png)
+    image_dir = folder / "llm-images"
+    image_dir.mkdir()
+    image_meta: dict[str, dict[str, Any]] = {}
+    for label, image_png in images.items():
+        name = "".join(
+            character if character.isalnum() or character in "-_" else "_" for character in label
+        )
+        (image_dir / f"{name}.png").write_bytes(image_png)
+        image_meta[label] = {
+            "file": f"llm-images/{name}.png",
+            "sha256": hashlib.sha256(image_png).hexdigest(),
+            "bytes": len(image_png),
+        }
+    render_meta: dict[str, dict[str, Any]] = {}
+    if extra_images:
+        render_dir = folder / "renders"
+        render_dir.mkdir()
+        for label, image_png in extra_images.items():
+            name = "".join(
+                character if character.isalnum() or character in "-_" else "_"
+                for character in label
+            )
+            (render_dir / f"{name}.png").write_bytes(image_png)
+            render_meta[label] = {
+                "file": f"renders/{name}.png",
+                "sha256": hashlib.sha256(image_png).hexdigest(),
+                "bytes": len(image_png),
+            }
     (folder / "request.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
         encoding="utf-8",
@@ -222,7 +259,8 @@ def save_run(
         "created_at": datetime.now(timezone.utc).isoformat(),
         "source_name": source_name,
         "source_sha256": hashlib.sha256(source_bytes).hexdigest(),
-        "image_sha256": hashlib.sha256(image_png).hexdigest(),
+        "images": image_meta,
+        "renders": render_meta,
         "request_sha256": payload_digest(payload),
         "model": payload.get("model"),
         "usage": response.get("usage"),

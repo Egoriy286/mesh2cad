@@ -20,6 +20,17 @@ from mesh2cad.pipeline import (
 )
 
 PNG = b"\x89PNG\r\n\x1a\n" + b"fake-image-for-payload-tests"
+IMAGES = [
+    (label, PNG + label.encode("ascii"))
+    for label in (
+        "top-rgb",
+        "top-depth",
+        "left-rgb",
+        "left-depth",
+        "right-rgb",
+        "right-depth",
+    )
+]
 
 
 def make_payload() -> dict:
@@ -27,7 +38,7 @@ def make_payload() -> dict:
         model="openai/test-model",
         system_prompt="Return JSON.",
         request="Reconstruct this part.",
-        image_png=PNG,
+        images=IMAGES,
         extents=[1.0, 0.5, 0.25],
         reasoning_effort="low",
     )
@@ -42,19 +53,36 @@ def test_payload_has_exact_structure() -> None:
     assert payload["messages"][1]["content"][0]["text"].startswith(
         "Target extents (normalized units, x/y/z): [1, 0.5, 0.25]"
     )
-    assert payload["messages"][1]["content"][1]["image_url"]["url"].startswith(
-        "data:image/png;base64,"
+    content = payload["messages"][1]["content"]
+    assert len(content) == 1 + 2 * len(IMAGES)
+    assert content[1] == {"type": "text", "text": "Image: top-rgb"}
+    image_urls = [part for part in content if part["type"] == "image_url"]
+    assert len(image_urls) == len(IMAGES)
+    assert all(part["image_url"]["url"].startswith("data:image/png;base64,") for part in image_urls)
+
+
+def test_single_sheet_payload() -> None:
+    payload = build_payload(
+        model="openai/test-model",
+        system_prompt="Return JSON.",
+        request="Reconstruct this part.",
+        images=[("views-rgb-depth", PNG)],
+        extents=[1.0, 0.5, 0.25],
     )
+    content = payload["messages"][1]["content"]
+    assert len(content) == 3
+    assert content[1] == {"type": "text", "text": "Image: views-rgb-depth"}
+    assert content[2]["type"] == "image_url"
 
 
-def test_preview_hides_only_the_base64_image() -> None:
+def test_preview_hides_only_the_base64_images() -> None:
     payload = make_payload()
     preview = preview_payload(payload)
-    assert len(preview["messages"][1]["content"][1]["image_url"]["url"]) < 100
-    assert preview["messages"][1]["content"][0] == payload["messages"][1]["content"][0]
-    assert payload["messages"][1]["content"][1]["image_url"]["url"].startswith(
-        "data:image/png;base64,"
-    )
+    content = preview["messages"][1]["content"]
+    assert content[0] == payload["messages"][1]["content"][0]
+    for part in content:
+        if part["type"] == "image_url":
+            assert len(part["image_url"]["url"]) < 100
 
 
 def test_user_text_is_not_rewritten() -> None:
@@ -62,7 +90,7 @@ def test_user_text_is_not_rewritten() -> None:
         model="openai/test-model",
         system_prompt="  keep surrounding spaces  ",
         request="  exact request  ",
-        image_png=PNG,
+        images=IMAGES,
         extents=[1.0, 0.5, 0.25],
     )
     assert payload["messages"][0]["content"] == "  keep surrounding spaces  "
@@ -111,18 +139,24 @@ def test_save_run_writes_exact_inputs(tmp_path: Path) -> None:
         tmp_path,
         source_name="part.stl",
         source_bytes=b"solid part\nendsolid part\n",
-        image_png=PNG,
+        images=dict(IMAGES),
         payload=payload,
         response=response,
         code="r = 3",
+        extra_images={"top-rgb": PNG},
     )
     assert (folder / "request.json").is_file()
     assert (folder / "response.json").is_file()
     assert (folder / "code.py").read_text(encoding="utf-8") == "r = 3\n"
     assert (folder / "source.stl").is_file()
-    assert (folder / "llm-input-512.png").is_file()
+    for label in dict(IMAGES):
+        assert (folder / "llm-images" / f"{label}.png").is_file()
+    assert (folder / "renders" / "top-rgb.png").is_file()
     saved = json.loads((folder / "request.json").read_text(encoding="utf-8"))
     assert saved == payload
+    meta = json.loads((folder / "meta.json").read_text(encoding="utf-8"))
+    assert set(meta["images"]) == set(dict(IMAGES))
+    assert set(meta["renders"]) == {"top-rgb"}
     assert "api_key" not in (folder / "meta.json").read_text(encoding="utf-8").lower()
 
 

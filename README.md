@@ -8,7 +8,7 @@
 
 ```text
 app.py                    Streamlit: импорт STL, 3D-просмотр, pipeline
-mesh2cad/geometry.py      загрузка STL, нормализация, изображение 512×512, IoU
+mesh2cad/geometry.py      загрузка STL, нормализация, RGB/depth 512×512, IoU
 mesh2cad/pipeline.py      точный запрос к OpenRouter, разбор ответа, артефакты
 mesh2cad/prompts.py       system prompt и запрос по умолчанию
 mesh2cad/executor.py      запуск кода в macOS Seatbelt
@@ -46,9 +46,11 @@ UV_PROJECT_ENVIRONMENT=.venv-mesh2cad uv sync --extra dev
 2. **Pipeline.** Находится сразу под просмотром:
    - **1 · Нормализация** — центр bounding box в 0, длиннейшая сторона в 1;
      матрица, границы и normalized STL показаны полностью.
-   - **2 · Изображение для LLM** — ровно **512 × 512** PNG: четыре ортографических
-     вида в сетке 2×2 с подписями front / side / top / isometric. Размер, SHA-256
-     и готовая картинка видны и скачиваются.
+   - **2 · Изображения для LLM** — три вида: top (+Z), left (−X), right (+X).
+     Для каждого есть RGB и карта глубины **512 × 512**, фон чёрный; в depth
+     ближе — светлее, дальше — темнее. Все шесть тайлов плюс один общий
+     contact sheet **1536 × 1024** (3 колонки, сверху RGB, снизу depth) показаны
+     и скачиваются. В LLM уходит именно один общий `llm-input.png`.
    - **3 · Ввод** — редактируемые system prompt и запрос пользователя, модель,
      reasoning effort. Ниже показан точный JSON запроса; base64 сокращён только
      в предпросмотре, в скачиваемом `request.json` он полный.
@@ -63,8 +65,16 @@ UV_PROJECT_ENVIRONMENT=.venv-mesh2cad uv sync --extra dev
 
 ```text
 source.stl
-llm-input-512.png
-request.json      # точный запрос, включая base64
+llm-images/
+  llm-input.png   # один contact sheet 1536×1024, уходит в LLM
+renders/
+  top-rgb.png     # отдельные тайлы 512×512
+  top-depth.png
+  left-rgb.png
+  left-depth.png
+  right-rgb.png
+  right-depth.png
+request.json      # точный запрос с base64 одного llm-input.png
 response.json     # сырой ответ
 code.py
 meta.json         # SHA-256, модель, usage, время
@@ -117,6 +127,7 @@ IoU считается через `manifold3d`; если тела не замк�
 .venv/bin/ruff check app.py mesh2cad tests
 ```
 
-Тесты проверяют нормализацию, точный размер PNG 512×512, структуру запроса,
-извлечение кода, сохранение артефактов, настоящий CadQuery-экспорт в песочнице и
-IoU на совпадающих, сдвинутых, разъединённых и незамкнутых телах. Сеть не используется.
+Тесты проверяют нормализацию, шесть тайлов 512×512 (RGB + depth, чёрный фон),
+общий sheet 1536×1024, структуру запроса, извлечение кода, сохранение артефактов,
+настоящий CadQuery-экспорт в песочнице и IoU на совпадающих, сдвинутых,
+разъединённых и незамкнутых телах. Сеть не используется.

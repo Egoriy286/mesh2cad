@@ -7,6 +7,7 @@ import importlib.util
 import io
 import json
 import platform
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -17,11 +18,12 @@ from PIL import Image
 from mesh2cad.executor import execute_code
 from mesh2cad.geometry import (
     VIEW_SIZE,
+    compose_views,
     evaluate_iou,
     load_mesh,
     mesh_stats,
     normalize_mesh,
-    render_views_bytes,
+    render_llm_images,
 )
 from mesh2cad.pipeline import (
     DEFAULT_MODEL,
@@ -100,7 +102,7 @@ def read_source() -> tuple[str, bytes] | None:
 def prepare(payload: bytes) -> dict:
     source = load_mesh(payload)
     normalized, normalization = normalize_mesh(source)
-    image = render_views_bytes(normalized, VIEW_SIZE)
+    images = render_llm_images(normalized, VIEW_SIZE)
     return {
         "source_vertices": source.vertices,
         "source_faces": source.faces,
@@ -109,7 +111,8 @@ def prepare(payload: bytes) -> dict:
         "source_stats": mesh_stats(source),
         "normalized_stats": mesh_stats(normalized),
         "normalization": normalization,
-        "image": image,
+        "images": images,
+        "sheet": compose_views(images, VIEW_SIZE),
         "normalized_stl": normalized.export(file_type="stl"),
     }
 
@@ -252,33 +255,80 @@ st.download_button(
 )
 
 # ---------------------------------------------------------------------------
-# 2. Image for the LLM
+# 2. Images for the LLM: three views, RGB + depth
 # ---------------------------------------------------------------------------
-st.subheader("2 · Изображение для LLM — 512 × 512")
-image_bytes = data["image"]
-with Image.open(io.BytesIO(image_bytes)) as image:
-    image_size = image.size
-image_sha = hashlib.sha256(image_bytes).hexdigest()
-i1, i2 = st.columns([1, 1], gap="large")
-with i1:
-    st.image(image_bytes, width=VIEW_SIZE, caption="llm-input-512.png")
-with i2:
-    st.markdown(
-        f"**Фактический размер:** {image_size[0]} × {image_size[1]} px  \n"
-        f"**Формат:** PNG, {len(image_bytes):,} байт  \n"
-        "**Раскладка:** 2×2 — front, side, top, isometric."
-    )
-    st.code(image_sha, language=None)
+st.subheader(f"2 · Изображение для LLM — один sheet {VIEW_SIZE * 3}×{VIEW_SIZE * 2}")
+images = data["images"]
+image_meta: dict[str, dict] = {}
+for label, blob in images.items():
+    with Image.open(io.BytesIO(blob)) as image:
+        image_size = image.size
+    if image_size != (VIEW_SIZE, VIEW_SIZE):
+        raise RuntimeError(f"{label}: {image_size}, expected {VIEW_SIZE}x{VIEW_SIZE}")
+    image_meta[label] = {
+        "size": list(image_size),
+        "bytes": len(blob),
+        "sha256": hashlib.sha256(blob).hexdigest(),
+    }
+st.caption(
+    "Три ортографических вида: top (+Z), left (−X), right (+X). "
+    "Для каждого — RGB и карта глубины; depth уже включён в общий лист."
+)
+sheet = data["sheet"]
+with Image.open(io.BytesIO(sheet)) as image:
+    sheet_size = image.size
+image_meta["llm-input"] = {
+    "size": list(sheet_size),
+    "bytes": len(sheet),
+    "sha256": hashlib.sha256(sheet).hexdigest(),
+}
+st.image(
+    sheet,
+    width="stretch",
+    caption=f"llm-input · {sheet_size[0]}×{sheet_size[1]}",
+)
+st.caption(
+    "Одно изображение: 3 колонки top / left / right. В каждой колонке сверху RGB, "
+    f"снизу её depth. Каждый тайл {VIEW_SIZE}×{VIEW_SIZE}, фон чёрный; "
+    "ближе — светлее, дальше — темнее; чистый чёрный — пустота."
+)
+download_col, archive_col = st.columns(2)
+with download_col:
     st.download_button(
-        "Скачать PNG 512×512",
-        image_bytes,
-        file_name="llm-input-512.png",
+        "Скачать llm-input.png",
+        sheet,
+        file_name="llm-input.png",
         mime="image/png",
+        width="stretch",
     )
-    st.caption(
-        "Одинаковый кадр [-0.6, 0.6] для всех четырёх ортографических видов. "
-        "Подписи видов впечатаны в изображение."
+archive_buffer = io.BytesIO()
+with zipfile.ZipFile(archive_buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+    for label, blob in images.items():
+        archive.writestr(f"{label}.png", blob)
+    archive.writestr("llm-input.png", sheet)
+with archive_col:
+    st.download_button(
+        "Скачать 6 тайлов + llm-input.png",
+        archive_buffer.getvalue(),
+        file_name="llm-images-512.zip",
+        mime="application/zip",
+        width="stretch",
     )
+with st.expander("Отдельные тайлы и метаданные"):
+    tile_columns = st.columns(3)
+    for column, view in zip(tile_columns, ("top", "left", "right"), strict=True):
+        with column:
+            st.image(
+                images[f"{view}-rgb"],
+                width="stretch",
+                caption=f"{view} RGB · {VIEW_SIZE}×{VIEW_SIZE}",
+            )
+            st.image(
+                images[f"{view}-depth"],
+                width="stretch",
+                caption=f"{view} depth · {VIEW_SIZE}×{VIEW_SIZE}",
+            )
+    st.json(image_meta)
 
 # ---------------------------------------------------------------------------
 # 3. Text input and exact request
@@ -306,17 +356,24 @@ payload = build_payload(
     model=st.session_state["model"],
     system_prompt=st.session_state["system_prompt"],
     request=st.session_state["request_text"],
-    image_png=image_bytes,
+    images=[("views-rgb-depth", sheet)],
     extents=normalized_stats["extents"],
     reasoning_effort=st.session_state["reasoning_effort"],
 )
 request_sha = payload_digest(payload)
 request_json = json.dumps(payload, ensure_ascii=False, indent=2)
+image_chars = sum(
+    len(part["image_url"]["url"])
+    for message in payload["messages"]
+    if isinstance(message["content"], list)
+    for part in message["content"]
+    if isinstance(part, dict) and part.get("type") == "image_url"
+)
 st.markdown("**Точный запрос к LLM** (base64 сокращён только в этом предпросмотре)")
 st.json(preview_payload(payload))
 st.caption(
     f"Полный JSON: {len(request_json.encode('utf-8')):,} байт; "
-    f"base64-изображение: {len(payload['messages'][1]['content'][1]['image_url']['url']):,} символов. "
+    f"одно изображение {sheet_size[0]}×{sheet_size[1]} в base64: {image_chars:,} символов. "
     f"SHA-256 запроса: {request_sha}"
 )
 st.download_button(
@@ -363,7 +420,8 @@ if send:
                         RUNS_DIR,
                         source_name=source_name,
                         source_bytes=source_bytes,
-                        image_png=image_bytes,
+                        images={"views-rgb-depth": sheet},
+                        extra_images=images,
                         payload=payload,
                         response=response,
                         code=code,
@@ -548,6 +606,6 @@ if result:
 
 st.divider()
 st.caption(
-    "Сохранённый запуск лежит в runs/ui/<время>/: source.stl, llm-input-512.png, "
-    "request.json, response.json, code.py, meta.json."
+    "Сохранённый запуск лежит в runs/ui/<время>/: source.stl, llm-images/llm-input.png, "
+    "renders/*.png, request.json, response.json, code.py, meta.json."
 )

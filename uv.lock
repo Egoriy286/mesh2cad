@@ -628,14 +628,13 @@ wheels = [
 
 [[package]]
 name = "msu-ai-school"
-version = "0.3.0"
+version = "0.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "cadquery" },
     { name = "httpx" },
     { name = "huggingface-hub" },
     { name = "manifold3d" },
-    { name = "matplotlib" },
     { name = "numpy" },
     { name = "pillow" },
     { name = "plotly" },
@@ -655,7 +654,6 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28,<1" },
     { name = "huggingface-hub", specifier = ">=0.27,<2" },
     { name = "manifold3d", specifier = ">=3,<4" },
-    { name = "matplotlib", specifier = ">=3.9,<4" },
     { name = "numpy", specifier = ">=2,<3" },
     { name = "pillow", specifier = ">=10,<13" },
     { name = "plotly", specifier = ">=6,<7" },
