@@ -80,6 +80,9 @@ def test_solid_overlay_is_isolated_cached_and_uses_actual_coordinates(tmp_path, 
     metadata = render_saved_overlay(target, candidate, folder)
     assert metadata["volumes"] == pytest.approx({"covered": 0.5, "excess": 0.5, "missing": 0.5})
     assert "за пределами" in metadata["legend"]
+    assert "светлее — ближе" in metadata["legend"]
+    assert metadata["depth_calibration"]["brightness_range"] == [0.35, 1.0]
+    assert metadata["depth_calibration"]["views"][0]["near"] == pytest.approx(-0.55)
     figure = solid_overlay_figure(folder / "overlay-solid.npz")
     assert [t.name for t in figure.data] == [
         "Совпадение",

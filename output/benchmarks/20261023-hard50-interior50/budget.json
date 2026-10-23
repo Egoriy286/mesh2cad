@@ -1,0 +1,22 @@
+{
+  "cap": 3.37146141,
+  "spent": 0.7508398650000001,
+  "reserved": {},
+  "unknown_cost_calls": 6,
+  "prices": {
+    "prompt": "0.0000001",
+    "completion": "0.0000005",
+    "web_search": "0.01",
+    "input_cache_read": "0.00000001",
+    "input_cache_write": "0.000000125",
+    "overrides": [
+      {
+        "min_prompt_tokens": 272000,
+        "prompt": "0.0000002",
+        "completion": "0.00000075",
+        "input_cache_read": "0.00000002",
+        "input_cache_write": "0.00000025"
+      }
+    ]
+  }
+}

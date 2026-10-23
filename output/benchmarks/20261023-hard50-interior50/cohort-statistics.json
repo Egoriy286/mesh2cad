@@ -1,0 +1,68 @@
+{
+  "deepcad_selected": {
+    "n": 50,
+    "faces": {
+      "mean": 1398.36,
+      "median": 1008.0
+    },
+    "supporting_planes": {
+      "mean": 329.78,
+      "median": 254.5
+    },
+    "bodies": {
+      "mean": 1.1,
+      "median": 1.0
+    },
+    "concavity": {
+      "mean": 0.423697489959003,
+      "median": 0.3578562672195664
+    },
+    "complexity_score": {
+      "mean": 6.8720301279895235,
+      "median": 6.605834608254544
+    }
+  },
+  "previous_deepcad_15": {
+    "n": 15,
+    "faces": {
+      "mean": 496.53333333333336,
+      "median": 48.0
+    },
+    "supporting_planes": {
+      "mean": 109.46666666666667,
+      "median": 12.0
+    },
+    "bodies": {
+      "mean": 1.0,
+      "median": 1.0
+    },
+    "concavity": {
+      "mean": 0.34921699179285254,
+      "median": 0.2857142747664938
+    },
+    "complexity_score": {
+      "mean": 4.4194735827599,
+      "median": 4.489680815319312
+    }
+  },
+  "eligible_test_pool": 99,
+  "overlap_with_previous_15": 6,
+  "interior_sources": {
+    "indoorcad": 40,
+    "polyhaven": 10
+  },
+  "interior_categories": {
+    "desktop_object": 5,
+    "lamp": 6,
+    "sofa": 5,
+    "table": 5,
+    "kitchen": 4,
+    "chair": 5,
+    "other_furniture": 5,
+    "bed": 5,
+    "cabinet": 5,
+    "decor": 3,
+    "furniture": 2
+  },
+  "difficulty_definition": "Input geometry proxy, not an official manufacturing complexity label"
+}

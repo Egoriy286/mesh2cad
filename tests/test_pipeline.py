@@ -109,6 +109,8 @@ def test_overlay_repair_prompt_adds_the_scheme_and_code() -> None:
     assert "red" in prompt
     assert "Green is the volume intersection" in prompt
     assert "excess CAD outside the target mesh" in prompt
+    assert "brighter means nearer and darker means farther" in prompt
+    assert "not error magnitude" in prompt
     assert "Previous CadQuery program" in prompt
     assert 'r = cq.Workplane("XY").box(1, 1, 1)' in prompt
 

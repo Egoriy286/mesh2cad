@@ -1,0 +1,128 @@
+{
+  "runs": {
+    "deepcad": {
+      "2bd8330b6c0bbaae": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/2bd8330b6c0bbaae/cheap_harness/20261023T012115Z-21ec1394",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/2bd8330b6c0bbaae/expensive_one_prompt/20261023T012115Z-420f0b26"
+      },
+      "23b855249a18d0f1": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/23b855249a18d0f1/cheap_harness/20261023T012437Z-2c11bd67",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/23b855249a18d0f1/expensive_one_prompt/20261023T012437Z-2b0123d2"
+      },
+      "3376e6b0a71b3a98": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/expensive_one_prompt/20261023T013008Z-435de3b5"
+      },
+      "fe06896782f584a6": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/expensive_one_prompt/20261023T013346Z-7c2738d7"
+      },
+      "bc69e26be07daf52": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/cheap_harness/20261023T013346Z-d374018b",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/expensive_one_prompt/20261023T013346Z-6989983a"
+      },
+      "a1a9b84d5aaa6a8d": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/a1a9b84d5aaa6a8d/cheap_harness/20261023T013732Z-4535a56a",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/a1a9b84d5aaa6a8d/expensive_one_prompt/20261023T013732Z-34a235b9"
+      },
+      "8b1771a9fe4ffd63": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/cheap_harness/20261023T013732Z-127e7c6f",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/expensive_one_prompt/20261023T013732Z-22bcb753"
+      },
+      "b1c579bb63128696": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/b1c579bb63128696/cheap_harness/20261023T013733Z-bea41a68",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/b1c579bb63128696/expensive_one_prompt/20261023T013733Z-b8368f65"
+      },
+      "8340c60a461b7253": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/8340c60a461b7253/cheap_harness/20261023T013733Z-73bf0cbf",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/8340c60a461b7253/expensive_one_prompt/20261023T013733Z-6c0146ec"
+      },
+      "a978d5400272f027": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/a978d5400272f027/cheap_harness/20261023T013734Z-3177c369",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/a978d5400272f027/expensive_one_prompt/20261023T013734Z-9c1b0716"
+      },
+      "f2bb8530e68b55fd": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/f2bb8530e68b55fd/cheap_harness/20261023T014458Z-4cd63a63",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/f2bb8530e68b55fd/expensive_one_prompt/20261023T014458Z-09aec576"
+      },
+      "fcca9059a93b8cb3": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/fcca9059a93b8cb3/cheap_harness/20261023T014458Z-25895717",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/fcca9059a93b8cb3/expensive_one_prompt/20261023T014458Z-029c4fd1"
+      },
+      "8ee25e42f2289c86": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/8ee25e42f2289c86/cheap_harness/20261023T014459Z-dc74240f",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/8ee25e42f2289c86/expensive_one_prompt/20261023T014459Z-40b6a9aa"
+      },
+      "26f58c206980f734": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/26f58c206980f734/cheap_harness/20261023T014459Z-02c16536",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/26f58c206980f734/expensive_one_prompt/20261023T014459Z-eb7baa88"
+      },
+      "824ea4712581cf17": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/824ea4712581cf17/cheap_harness/20261023T014500Z-bf682b94",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/deepcad/824ea4712581cf17/expensive_one_prompt/20261023T014500Z-6b146e30"
+      }
+    },
+    "interior300": {
+      "indoorcad_d01348b6804e1b": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/expensive_one_prompt/20261023T012115Z-86a25233"
+      },
+      "indoorcad_bb795b17ea76b9": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/expensive_one_prompt/20261023T012438Z-a1cdf5a3"
+      },
+      "indoorcad_bc313e18aa95b3": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/cheap_harness/20261023T013009Z-6e3286d4",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/expensive_one_prompt/20261023T013009Z-8dd0f0da"
+      },
+      "indoorcad_c120864ce3d53c": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/expensive_one_prompt/20261023T013346Z-670c39ea"
+      },
+      "polyhaven_plastic_monobloc_chair_01": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/expensive_one_prompt/20261023T013347Z-4b7a57a7"
+      },
+      "indoorcad_6de14bb6a45df0": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/expensive_one_prompt/20261023T013732Z-31cc69e9"
+      },
+      "indoorcad_56c740edad3c68": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/expensive_one_prompt/20261023T013733Z-9706c1ee"
+      },
+      "indoorcad_0a7e4d58c1f613": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/expensive_one_prompt/20261023T013733Z-e25403f5"
+      },
+      "indoorcad_cd093c25223f9d": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/expensive_one_prompt/20261023T013734Z-f71dcb21"
+      },
+      "polyhaven_planter_pot_clay": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/expensive_one_prompt/20261023T013734Z-1af1ccdb"
+      },
+      "indoorcad_2d1ec9288139ae": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/expensive_one_prompt/20261023T014458Z-72a8217f"
+      },
+      "indoorcad_bbc1675e07ca30": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/expensive_one_prompt/20261023T014459Z-425b97bb"
+      },
+      "indoorcad_307532cfedaede": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/expensive_one_prompt/20261023T014459Z-adae722d"
+      },
+      "indoorcad_2553762c6e0ff0": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/cheap_harness/20261023T014459Z-00705ae9",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/expensive_one_prompt/20261023T014500Z-cde15091"
+      },
+      "polyhaven_carved_wooden_elephant": {
+        "cheap_harness": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/cheap_harness/20261023T014500Z-3a9350e7",
+        "expensive_one_prompt": "/Users/egoriy/Projects/msu-ai-school/output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/expensive_one_prompt/20261023T014500Z-9055a7b3"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "3376e6b0a71b3a98",
+  "domain": "deepcad",
+  "scores": {
+    "first": 0.5128897731215714,
+    "best": 0.7379577194055603,
+    "expensive": 0.9731254334730716
+  },
+  "camera": {
+    "elevation": -25.0,
+    "azimuth": -55.0,
+    "frame_width": 1.8
+  },
+  "source_meshes": {
+    "target": {
+      "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/target.stl",
+      "sha256": "aa3cc0106ab037a9f59929015dcc548883bacc9685368fce52939008d5264850",
+      "image_sha256": "e701f1bfe80d67aac737905ee88a2bbb8f632ecb98150be402426258fdac5e5d"
+    },
+    "first": {
+      "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-001/cadquery/candidate.stl",
+      "sha256": "0d809265c4f2c5f84dc8607bd463a9b1b16832b518f78959ff41b7298746d800",
+      "image_sha256": "bb269b01f8fcecfa838f54e7076560547a4f9a5cdc6cf9ea08f1cccaee4080aa"
+    },
+    "best": {
+      "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-004/cadquery/candidate.stl",
+      "sha256": "7fd82d563d18d2f647326902c9a1529f01ef1c18dfcb087b254debbdc37cda74",
+      "image_sha256": "f19d70df552fa6f278f089cf819694ae27f88f31e9a187939edd62ad4b722320"
+    },
+    "expensive": {
+      "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/expensive_one_prompt/20261023T013008Z-435de3b5/items/3376e6b0a71b3a98/attempt-001/cadquery/candidate.stl",
+      "sha256": "f8910006ea4815b506b6de41ca264a5f9346acbe3dab83aa5ca50c3d178fc3dd",
+      "image_sha256": "f8fb84e091fa7cf32e2438ab5bf93c8dc2c7703d8e2341ebb2b00a2e31f1baf9"
+    }
+  },
+  "input-sheet": {
+    "source": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/target.png",
+    "sha256": "461293036f913bc809b12c73789cff25e7497399704ce467aaef148a83df5d4c"
+  },
+  "feedback-sheet": {
+    "source": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-001/overlay-feedback-v3.png",
+    "sha256": "91c96324ac7ab09bcff30cb3b8acd6cf66c96924a13f84ba66d42c0a5d4c7622"
+  },
+  "exact_input_and_feedback_verified_in_second_request": true
+}

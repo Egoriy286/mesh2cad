@@ -22,6 +22,7 @@ class AgentContext:
     analysis: dict | None = None
     target_evidence: dict | None = None
     visual_feedback: dict | None = None
+    overlay_calibration: dict | None = None
 
 
 class CadAgent(Protocol):
@@ -95,6 +96,10 @@ class OpenRouterAgent:
                     "Contrast overlay of the BEST program above: green = volume intersection, "
                     "blue = excess CAD outside the target mesh (candidate minus target), "
                     "red = missing CAD (target minus candidate). Tile order matches the original. "
+                    "Within every hue, brighter means nearer and darker means farther: linear depth "
+                    "using the target's FIXED near/far planes for each view, with no directional lighting. "
+                    "Hue identifies the region; brightness is depth, NOT error magnitude. "
+                    "Depth calibration: " + json.dumps(context.overlay_calibration) + "\n"
                     "Use the original target image for dimensions. Remove blue and restore red geometry."
                 ),
                 images=[("best-contrast-overlay", context.overlay)],

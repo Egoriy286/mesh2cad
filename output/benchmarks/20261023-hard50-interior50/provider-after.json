@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-10-23T05:22:04.826919+00:00",
+  "limit": 5,
+  "limit_remaining": 2.687356305,
+  "usage": 2.312643695,
+  "model": "openai/gpt-6-luna",
+  "pricing": {
+    "prompt": "0.0000001",
+    "completion": "0.0000005",
+    "web_search": "0.01",
+    "input_cache_read": "0.00000001",
+    "input_cache_write": "0.000000125",
+    "overrides": [
+      {
+        "min_prompt_tokens": 272000,
+        "prompt": "0.0000002",
+        "completion": "0.00000075",
+        "input_cache_read": "0.00000002",
+        "input_cache_write": "0.00000025"
+      }
+    ]
+  }
+}

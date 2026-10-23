@@ -9,11 +9,12 @@ from pathlib import Path
 import numpy as np
 
 from .geometry import (
-    OVERLAY_LEGEND,
+    OVERLAY_DEPTH_LEGEND,
     OVERLAY_VERSION,
     evaluate_iou,
     load_mesh,
     normalize_mesh,
+    overlay_depth_calibration,
     render_overlay_sheet,
     solid_difference_parts,
 )
@@ -61,7 +62,8 @@ def main() -> None:
             folder / "overlay-solid.json",
             {
                 "version": OVERLAY_VERSION,
-                "legend": OVERLAY_LEGEND,
+                "legend": OVERLAY_DEPTH_LEGEND,
+                "depth_calibration": overlay_depth_calibration(target),
                 "target_sha256": file_digest(args.target),
                 "candidate_sha256": file_digest(args.candidate),
                 "normalize_target": args.normalize_target,

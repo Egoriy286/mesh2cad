@@ -1,0 +1,106 @@
+% Generated from output/benchmarks/20261023/summary.json and items.csv.
+\begin{frame}{DeepCAD: механические детали}\relax
+\textbf{N = 15, одинаковые входы}
+\par\medskip
+{\smalltext
+\begin{tabular}{@{}L{.33\textwidth}rrrr@{}}
+\toprule
+\textbf{Постановка} & \textbf{Mean IoU} & \textbf{Объём} & \textbf{IoU $\geq.9$} & \textbf{USD/объект}\\
+\midrule
+Дешёвая, один промпт & 0.7874 & 14/15 & 11/15 & 0.001364 \\
+Дешёвая + harness & 0.9336 & 15/15 & 13/15 & 0.003040 \\
+Дорогая, один промпт & 0.9404 & 15/15 & 13/15 & 0.016818 \\
+\bottomrule
+\end{tabular}}
+\par\bigskip
+\textbf{$\Delta$IoU к первому ответу Luna: +0.1461}
+\par\smallskip
+95\% CI [+0.0126; +0.3261]. Улучшены 4/15.
+\par\medskip{\smalltext
+$\Delta$IoU к Sol: -0.0068. 95\% CI [-0.0473; +0.0241].}
+\source{Парный bootstrap, 95\% CI. Неудачи: IoU = 0. Цена включает все попытки.}
+\end{frame}
+\begin{frame}{Interior300: предметы интерьера}\relax
+\textbf{N = 15, одинаковые входы}
+\par\medskip
+{\smalltext
+\begin{tabular}{@{}L{.33\textwidth}rrrr@{}}
+\toprule
+\textbf{Постановка} & \textbf{Mean IoU} & \textbf{Объём} & \textbf{IoU $\geq.9$} & \textbf{USD/объект}\\
+\midrule
+Дешёвая, один промпт & 0.3262 & 14/15 & 0/15 & 0.002408 \\
+Дешёвая + harness & 0.4234 & 15/15 & 0/15 & 0.011174 \\
+Дорогая, один промпт & 0.4546 & 13/15 & 2/15 & 0.041776 \\
+\bottomrule
+\end{tabular}}
+\par\bigskip
+\textbf{$\Delta$IoU к первому ответу Luna: +0.0972}
+\par\smallskip
+95\% CI [+0.0389; +0.1673]. Улучшены 12/15.
+\par\medskip{\smalltext
+$\Delta$IoU к Sol: -0.0312. 95\% CI [-0.1842; +0.1120].}
+\source{Парный bootstrap, 95\% CI. Неудачи: IoU = 0. Цена включает все попытки.}
+\end{frame}
+\begin{frame}{Эффект по отдельным объектам}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.48\textwidth}
+\centering\textbf{DeepCAD}
+\begin{tikzpicture}\begin{axis}[width=\linewidth,height=49mm,
+xmin=0,xmax=1.03,ymin=0,ymax=1.03,axis lines=left,
+xlabel={IoU одного промпта},ylabel={IoU с harness},
+label style={font=\scriptsize},tick label style={font=\scriptsize},
+xtick={0,.5,1},ytick={0,.5,1},grid=major,grid style={gray!15}]
+\addplot[gray,dashed,domain=0:1,samples=2]{x};
+\addplot[only marks,mark=*,mark size=2,Blue,opacity=.75]
+table[x=first,y=best]{images/benchmark-deepcad.dat};
+\end{axis}\end{tikzpicture}\end{column}
+\begin{column}{.48\textwidth}
+\centering\textbf{Interior300}
+\begin{tikzpicture}\begin{axis}[width=\linewidth,height=49mm,
+xmin=0,xmax=1.03,ymin=0,ymax=1.03,axis lines=left,
+xlabel={IoU одного промпта},ylabel={IoU с harness},
+label style={font=\scriptsize},tick label style={font=\scriptsize},
+xtick={0,.5,1},ytick={0,.5,1},grid=major,grid style={gray!15}]
+\addplot[gray,dashed,domain=0:1,samples=2]{x};
+\addplot[only marks,mark=*,mark size=2,Blue,opacity=.75]
+table[x=first,y=best]{images/benchmark-interior300.dat};
+\end{axis}\end{tikzpicture}\end{column}
+\end{columns}
+\source{Точка: один объект. Выше диагонали: улучшение. Совпадающие точки накладываются.}
+\end{frame}
+\begin{frame}{Ресурсы и границы сравнения}\relax
+\begin{itemize}
+\item Обработано 15 + 15 объектов из плана 50 + 50.
+\par\medskip
+\item Первый ответ Luna общий для baseline и harness.
+\par\medskip
+\item Полный расход API: \textbf{\$1.0921}.
+\par\medskip
+\item Повторные ответы модели пока не оценены.
+\end{itemize}
+\source{Локальные подвыборки, не новый holdout. Промпт mechanical part в обоих доменах. Лимит памяти 2048 МиБ.}
+\end{frame}
+\begin{frame}{Выводы из результатов}\relax
+\begin{itemize}
+\item DeepCAD: IoU 0.9336 против 0.9404.
+API дешевле Sol в 5.53 раза.
+\par\medskip
+\item Interior300: IoU 0.4234 против 0.4546.
+API дешевле Sol в 3.74 раза.
+\par\medskip
+\item Интерьеры остаются сложными: 0/15 с IoU $\geq0.9$ у harness.
+\end{itemize}
+\source{Качество не доказано эквивалентным. Цена API не включает локальные вычисления.}
+\end{frame}
+\begin{frame}{Планы на будущее}\relax
+\begin{enumerate}
+\item Расширить до 50 + 50 и повторить генерации.
+\par\medskip
+\item Сравнить с генерациями без обратной связи при том же числе вызовов.
+\par\medskip
+\item Измерить вклад IoU, карты ошибок и памяти.
+\par\medskip
+\item Добавить метрики поверхности и общий бенчмарк с методами обзора.
+\end{enumerate}
+\source{При дополнительном бюджете: Sol с харнессом.}
+\end{frame}

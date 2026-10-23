@@ -1,0 +1,159 @@
+{
+  "updated_at": "2026-10-23T01:57:05.742117+00:00",
+  "groups": {
+    "deepcad": {
+      "cheap_one_prompt": {
+        "n": 15,
+        "mean_iou": 0.7874468719107065,
+        "median_iou": 0.9948677231039935,
+        "mean_iou_scored": 0.8436930770471855,
+        "median_iou_scored": 0.9974336786741,
+        "cad_valid": 15,
+        "scorable": 14,
+        "success_0_9": 11,
+        "calls": 15,
+        "cost_usd": 0.02046525,
+        "unknown_cost_calls": 0,
+        "tokens": 65523,
+        "memory_failures": 0,
+        "mean_seconds": 23.554890402800325
+      },
+      "cheap_harness": {
+        "n": 15,
+        "mean_iou": 0.9335610654266386,
+        "median_iou": 0.9948677231039935,
+        "mean_iou_scored": 0.9335610654266386,
+        "median_iou_scored": 0.9948677231039935,
+        "cad_valid": 15,
+        "scorable": 15,
+        "success_0_9": 13,
+        "calls": 27,
+        "cost_usd": 0.045597359999999997,
+        "unknown_cost_calls": 0,
+        "tokens": 181352,
+        "memory_failures": 0,
+        "mean_seconds": 47.5001931833307
+      },
+      "expensive_one_prompt": {
+        "n": 15,
+        "mean_iou": 0.9403965796684677,
+        "median_iou": 0.9960252329384002,
+        "mean_iou_scored": 0.9403965796684677,
+        "median_iou_scored": 0.9960252329384002,
+        "cad_valid": 15,
+        "scorable": 15,
+        "success_0_9": 13,
+        "calls": 15,
+        "cost_usd": 0.25227499999999997,
+        "unknown_cost_calls": 0,
+        "tokens": 49820,
+        "memory_failures": 0,
+        "mean_seconds": 20.898122577661223
+      },
+      "harness_minus_cheap_one_prompt": {
+        "mean": 0.14611419351593188,
+        "ci95": [
+          0.012571859845068523,
+          0.32605651856044526
+        ],
+        "improved": 4,
+        "n": 15
+      },
+      "harness_minus_expensive_one_prompt": {
+        "mean": -0.006835514241829329,
+        "ci95": [
+          -0.04726385162292688,
+          0.024064043368796015
+        ],
+        "improved": 3,
+        "n": 15
+      }
+    },
+    "interior300": {
+      "cheap_one_prompt": {
+        "n": 15,
+        "mean_iou": 0.326196168061088,
+        "median_iou": 0.29409076239464493,
+        "mean_iou_scored": 0.3494958943511657,
+        "median_iou_scored": 0.31311108602481397,
+        "cad_valid": 14,
+        "scorable": 14,
+        "success_0_9": 0,
+        "calls": 15,
+        "cost_usd": 0.03611825,
+        "unknown_cost_calls": 0,
+        "tokens": 96835,
+        "memory_failures": 1,
+        "mean_seconds": 43.51190368981334
+      },
+      "cheap_harness": {
+        "n": 15,
+        "mean_iou": 0.42335052516970634,
+        "median_iou": 0.4584741323482671,
+        "mean_iou_scored": 0.42335052516970634,
+        "median_iou_scored": 0.4584741323482671,
+        "cad_valid": 15,
+        "scorable": 15,
+        "success_0_9": 0,
+        "calls": 72,
+        "cost_usd": 0.16760521,
+        "unknown_cost_calls": 0,
+        "tokens": 704052,
+        "memory_failures": 4,
+        "mean_seconds": 171.388493264971
+      },
+      "expensive_one_prompt": {
+        "n": 15,
+        "mean_iou": 0.4545990865181305,
+        "median_iou": 0.3241297287127251,
+        "mean_iou_scored": 0.5245374075209198,
+        "median_iou_scored": 0.5425178616296118,
+        "cad_valid": 14,
+        "scorable": 13,
+        "success_0_9": 2,
+        "calls": 15,
+        "cost_usd": 0.626645,
+        "unknown_cost_calls": 0,
+        "tokens": 87263,
+        "memory_failures": 1,
+        "mean_seconds": 52.41597915502595
+      },
+      "harness_minus_cheap_one_prompt": {
+        "mean": 0.09715435710861839,
+        "ci95": [
+          0.038896328415890156,
+          0.16727580782803597
+        ],
+        "improved": 12,
+        "n": 15
+      },
+      "harness_minus_expensive_one_prompt": {
+        "mean": -0.03124856134842424,
+        "ci95": [
+          -0.1842489849492476,
+          0.11196879843246649
+        ],
+        "improved": 5,
+        "n": 15
+      }
+    }
+  },
+  "incomplete": [],
+  "budget": {
+    "cap": 1.35,
+    "spent": 1.0921225700000003,
+    "reserved": {},
+    "unknown_cost_calls": 0,
+    "prices": {
+      "openai/gpt-6-luna": {
+        "prompt": 1e-07,
+        "completion": 5e-07
+      },
+      "openai/gpt-6-sol": {
+        "prompt": 2e-06,
+        "completion": 1e-05
+      }
+    }
+  },
+  "protocol": "protocol.json"
+}

@@ -1,0 +1,12 @@
+{
+  "python": "3.12.15",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "packages": {
+    "cadquery": "2.8.0",
+    "trimesh": "4.12.2",
+    "numpy": "2.5.4",
+    "manifold3d": "3.5.4",
+    "httpx": "0.28.1",
+    "psutil": "7.2.2"
+  }
+}

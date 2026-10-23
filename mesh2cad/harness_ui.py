@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from .dataset import read_catalogue
-from .geometry import OVERLAY_LEGEND
+from .geometry import OVERLAY_DEPTH_LEGEND, OVERLAY_LEGEND
 from .harness import (
     HarnessConfig,
     cancel_run,
@@ -277,7 +277,7 @@ def _run_preview(root: Path, item: dict, attempt: dict | None = None) -> None:
                 st.image(
                     str(overlay_folder / "overlay-solid.png"),
                     width="stretch",
-                    caption=OVERLAY_LEGEND,
+                    caption=OVERLAY_DEPTH_LEGEND,
                 )
         if attempt.get("overlay_error"):
             st.warning(attempt["overlay_error"])

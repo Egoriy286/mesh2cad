@@ -9,332 +9,428 @@
   \setsansfont{LiberationSans}[
     Path=fonts/,Extension=.ttf,UprightFont=*-Regular,
     BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]
+  \setmonofont{LiberationMono}[
+    Path=fonts/,Extension=.ttf,UprightFont=*-Regular,
+    BoldFont=*-Bold,ItalicFont=*-Italic,BoldItalicFont=*-BoldItalic]
   \usepackage[russian]{babel}
 \fi
-\usepackage{amsmath,amssymb,booktabs,array,graphicx}
+\usepackage{amsmath,amssymb,booktabs,array,graphicx,tikz,pgfplots,listings}
+\usetikzlibrary{arrows.meta,positioning}
+\pgfplotsset{compat=1.18}
 \usefonttheme{professionalfonts}
-\definecolor{Navy}{HTML}{183E55}
-\definecolor{Accent}{HTML}{008A96}
-\definecolor{Muted}{HTML}{647887}
-\setbeamercolor{normal text}{fg=Navy,bg=white}
-\setbeamercolor{frametitle}{fg=Navy,bg=white}
-\setbeamercolor{alerted text}{fg=Accent}
-\setbeamercolor{structure}{fg=Accent}
+\definecolor{Ink}{HTML}{172330}
+\definecolor{Blue}{HTML}{245B89}
+\definecolor{Muted}{HTML}{68727C}
+\definecolor{Good}{HTML}{13953B}
+\definecolor{Extra}{HTML}{2E7ECB}
+\definecolor{Missing}{HTML}{CC2529}
+\setbeamercolor{normal text}{fg=Ink,bg=white}
+\setbeamercolor{frametitle}{fg=Ink,bg=white}
+\setbeamercolor{alerted text}{fg=Blue}
+\setbeamercolor{structure}{fg=Ink}
 \setbeamercolor{footline}{fg=Muted,bg=white}
-\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
 \setbeamerfont{footline}{size=\tiny}
-\setbeamersize{text margin left=7mm,text margin right=7mm}
+\setbeamersize{text margin left=8mm,text margin right=8mm}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{itemize item}{\raisebox{0.1ex}{\scriptsize$\blacktriangleright$}}
-\setbeamertemplate{itemize subitem}{\scriptsize$\bullet$}
-\setbeamertemplate{frametitle}{%
-  \vspace{1.5mm}\insertframetitle\par\vspace{1.7mm}%
-  {\color{Accent}\hrule height 0.35pt}\vspace{0.5mm}}
+\setbeamertemplate{itemize item}{\raisebox{0.2ex}{\scriptsize$\bullet$}}
+\setbeamertemplate{frametitle}{\vspace{2mm}\insertframetitle\par\vspace{2.5mm}}
 \setbeamertemplate{footline}{%
-  \begin{beamercolorbox}[wd=\paperwidth,ht=3ex,dp=1.2ex,leftskip=7mm,rightskip=7mm]{footline}
-    Mesh2CAD: метод и пилотные эксперименты\hfill\insertframenumber\,/\,\inserttotalframenumber
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3ex,dp=1.2ex,leftskip=8mm,rightskip=8mm]{footline}
+    Mesh2CAD\hfill\insertframenumber\,/\,\inserttotalframenumber
   \end{beamercolorbox}}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.18}
-\hypersetup{colorlinks=true,urlcolor=Accent,linkcolor=Navy,
-  pdftitle={Mesh2CAD: оркестратор визуальной реконструкции CAD},
-  pdfsubject={Реализованный метод и предварительные эксперименты, 22.10.2026}}
-\newcommand{\source}[1]{\par\vspace{1mm}\vfill{\fontsize{7.2}{8.7}\selectfont\color{Muted}#1\par}}
-\newcommand{\figlabel}[1]{\par\vspace{1mm}{\fontsize{9}{10.5}\selectfont#1\par}}
-\newcommand{\smalltext}{\fontsize{9.6}{11.8}\selectfont}
+\setlength{\tabcolsep}{5pt}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.28}
+\hypersetup{colorlinks=true,urlcolor=Blue,linkcolor=Ink,
+  pdftitle={Эффективный харнесс для Mesh2CAD},
+  pdfsubject={Метод, два домена и протокол сравнения, 23.10.2026}}
+\newcommand{\source}[1]{\par\vfill{\fontsize{7.2}{8.8}\selectfont\color{Muted}#1\par}}
+\newcommand{\captiontext}[1]{\par\vspace{1.5mm}{\fontsize{9}{11}\selectfont#1\par}}
+\newcommand{\smalltext}{\fontsize{9.7}{12}\selectfont}
 \newcommand{\IoU}{\operatorname{IoU}}
+\lstset{language=Python,basicstyle=\ttfamily\fontsize{9.5}{11.5}\selectfont,
+  keywordstyle=\color{Blue}\bfseries,stringstyle=\color{Good},
+  showstringspaces=false,columns=fullflexible,keepspaces=true,
+  aboveskip=0pt,belowskip=0pt}
 \input{results.tex}
+\input{authors.tex}
+\title{Эффективный харнесс для Mesh2CAD}
+\author{\TeamNames}
 
 \begin{document}
 
-% 1
+% 1. Название и состав команды
 \begin{frame}[plain]
-\vspace{11mm}
-{\fontsize{24}{28}\selectfont\bfseries Mesh2CAD\par
-Оркестратор визуальной\par
-реконструкции CAD\par}
 \vspace{6mm}
-{\large\color{Accent}STL $\longrightarrow$ редактируемая программа CadQuery и STEP\par}
+{\fontsize{30}{34}\selectfont\bfseries Эффективный харнесс\par
+для Mesh2CAD\par}
 \vspace{3mm}
-{\normalsize Метод и предварительные эксперименты\par}
+{\fontsize{17}{20}\selectfont Реконструкция CAD\par
+по треугольной сетке\par}
+\vspace{6mm}
+{\fontsize{14}{17}\selectfont\TeamNames\par}
+\vspace{2mm}
+{\fontsize{12}{15}\selectfont Ментор: \MentorName\par}
 \vfill
-{\small\color{Muted}Исследовательский проект\hfill22 октября 2026\par}
+{\small\color{Muted}MSU AI School\hfill23 октября 2026\par}
 \vspace{4mm}
 \end{frame}
 
-% 2
-\begin{frame}{Задача и исследовательский вопрос}
-\textbf{Вход:} треугольная сетка одного объекта $M=(V,F)$.
-
-\medskip
-\textbf{Выход:} программа $P$, CAD-тело $S$, его STL $\widehat M$ и STEP.
-\[
-  M \ \longmapsto\ P
-  \ \xrightarrow{\ \mathrm{CadQuery}\ }\ S,\ \widehat M .
-\]
-Программа должна воспроизводить геометрию; исходная история
-построения по поверхности однозначно не восстанавливается.
-
-\medskip
-\alert{\textbf{Вопрос:}} может ли визуальный контекст с измерениями и
-обратной связью повысить IoU при ограниченном бюджете API?
-
-\medskip
-{\smalltext
-CAD-Recode [1] обучает перевод геометрии в код; cadrille [2] использует
-мультимодальное обучение и RL. Здесь исследуется оркестрация готовой модели
-на этапе инференса; дообучение не выполняется.}
-\source{[1] \href{https://arxiv.org/abs/2412.14042}{CAD-Recode, arXiv:2412.14042}.
-\quad [2] \href{https://arxiv.org/abs/2505.22914}{cadrille, arXiv:2505.22914}.
-\quad Полные записи: references.bib.}
+% Неформальная постановка и актуальность
+\begin{frame}{Задача и её актуальность}\relax
+\textbf{Задача:} по сетке STL восстановить редактируемую CAD-программу.
+\par\bigskip
+\textbf{Актуальность:} меньше ручной работы при изменении готовой формы.
+\par\bigskip
+\textbf{Проверяем:} качество и цену недорогой модели с обратной связью.
+\par\medskip
+Два домена: механические детали и предметы интерьера.
+\source{Исходную историю построения восстанавливать не требуется.}
 \end{frame}
 
-% 3
-\begin{frame}{Итеративный оркестратор}
-\[
- O(M)\ \xrightarrow{\ \text{агент}\ }\ P_k\
- \xrightarrow{\ \text{исполнение}\ }\widehat M_k\
- \xrightarrow{\ \text{оценка}\ } f_k
-\]
-\begin{enumerate}
-  \item Нормализовать STL, получить виды и измерения $O(M)$.
-  \item Получить полный CadQuery-код и исполнить в отдельном процессе.
-  \item Передать агенту $f_k$: метрики, схему ошибок либо traceback.
-  \item Повторить до условия остановки; сохранить лучший CAD.
-\end{enumerate}
-\vspace{-1mm}
-\[
- P^\star=\underset{P_k:\ \mathrm{valid}(P_k)}{\arg\max}\;
-            \IoU(M,\widehat M_k).
-\]
-{\smalltext
-Агент предлагает конструкцию; оркестратор управляет исполнением и оценкой.
-Остановка: целевой IoU, отсутствие прироста, лимиты или отмена.
-\alert{Численного поиска параметров после ответа агента нет.}}
-\source{Реализация: mesh2cad/harness.py, harness2.py, agent.py и executor.py.
-Первый оркестратор использует смешанные RGB/depth-виды; второй разделяет модальности.}
-\end{frame}
-
-% 4
-\begin{frame}{Оркестратор 2: калиброванный визуальный вход}
+\begin{frame}{Формальная постановка задачи}\relax
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{.317\textwidth}
-    \centering\includegraphics[width=.84\linewidth]{images/interior-target-rgb.png}
-    \figlabel{\textbf{RGB}: границы и форма}
-  \end{column}
-  \begin{column}{.317\textwidth}
-    \centering\includegraphics[width=.84\linewidth]{images/interior-target-depth.png}
-    \figlabel{\textbf{Depth}: положение поверхности}
-  \end{column}
-  \begin{column}{.317\textwidth}
-    \centering\includegraphics[width=.84\linewidth]{images/interior-target-blueprint.png}
-    \figlabel{\textbf{Чертёж}: контуры, оси, сетка}
-  \end{column}
+\begin{column}{.48\textwidth}
+  \textbf{Вход: треугольная сетка}
+  \[
+  M=(V,F),\quad V\in\mathbb R^{n\times3},
+  \]
+  \[
+  F\in\{1,\ldots,n\}^{m\times3}.
+  \]
+  {\smalltext Замкнутая ориентированная сетка задаёт
+  объём $\Omega_M\subset\mathbb R^3$, $\operatorname{Vol}(\Omega_M)>0$.}
+\end{column}
+\begin{column}{.48\textwidth}
+  \textbf{Выход: исполнимая программа}
+  \[
+  p\in\mathcal P_{\mathrm{CadQuery}},\quad E(p)=B_p.
+  \]
+  {\smalltext $B_p$ задаёт объём $\Omega_p$.
+  Требования: валидное твёрдое тело, положительный объём,
+  координаты и масштаб входа.}
+\end{column}
 \end{columns}
-\medskip
-{\smalltext
-Шесть видов; исходник и CAD используют общие камеры и шкалу глубины.
-Отдельный вызов составляет план геометрии перед генерацией кода.
-
-\smallskip
-Дополнительный контекст: габариты, девять сечений, объём и центр масс STL.
-Каждый вызов анализа входит в стоимость.}
-\source{Показан один из шести видов. Depth и чертёж получены из STL; произвольные фотографии
-и внешние карты глубины в этот pipeline не подключены. Источник: vision.py, harness2.py.}
+\par\medskip
+\[
+\max_{p:\,E(p)\ \text{валиден}} J(M,p),\qquad
+J(M,p)=\frac{\operatorname{Vol}(\Omega_M\cap\Omega_p)}
+{\operatorname{Vol}(\Omega_M\cup\Omega_p)}.
+\]
+{\smalltext Лимиты: $K\leq5$ генераций и бюджет вычислений.
+Цель $J\geq0.9$ не гарантируется.}
+\source{Выход поиска: лучшая проверенная программа или статус ошибки.}
 \end{frame}
 
-% 5
-\begin{frame}{Основная метрика и визуальная обратная связь}
-\begin{columns}[T,onlytextwidth]
-  \begin{column}{.58\textwidth}
-    \textbf{Объёмный IoU}
-    \[
-      \IoU(M,\widehat M)=
-      \frac{\operatorname{Vol}(M\cap\widehat M)}
-           {\operatorname{Vol}(M\cup\widehat M)} .
-    \]
-    {\smalltext
-    Булевы операции \texttt{manifold3d} над полными STL.
-    Оценка доступна для корректных замкнутых объёмов.
-
-    \smallskip
-    Исходник центрируется; максимальный габарит равен 1.
-    CAD оценивается без выравнивания и подгонки масштаба.
-
-    \medskip
-    \textbf{Вспомогательные показатели:}
-    silhouette IoU, depth MAE на общих видимых пикселях,
-    доля missing-граней поверхности.}
-  \end{column}
-  \begin{column}{.38\textwidth}
-    \centering\includegraphics[width=.67\linewidth]{images/interior-difference.png}
-    \figlabel{\textbf{Схема глубины}\\
-      Красный: нет поверхности / дальше\\
-      Синий: лишняя поверхность / ближе}
-    \vspace{2mm}
-    {\smalltext\alert{Метрики видов не заменяют объёмный IoU.}}
-  \end{column}
-\end{columns}
-\source{Источник: geometry.py, vision.py. Missing считается по размеченным граням, не по объёму.
-Удаляются только вырожденные грани; отверстия STL не заполняются.}
-\end{frame}
-
-% 6
-\begin{frame}{Данные и протокол пилотных экспериментов}\relax
+% Обзор с явной классификацией и ограничениями
+\begin{frame}{Классы методов и их ограничения}\relax
 {\smalltext
-\begin{tabular}{@{}p{.23\textwidth}p{.36\textwidth}p{.34\textwidth}@{}}
+\begin{tabular}{@{}L{.23\textwidth}L{.22\textwidth}L{.48\textwidth}@{}}
 \toprule
-\textbf{Набор} & \textbf{В манифесте} & \textbf{В экспериментах}\\
+\textbf{Класс} & \textbf{Методы} & \textbf{Механизм и ограничение}\\
 \midrule
-DeepCAD & 10 dev + 100 test; seed 42 & 3 dev: оркестратор 1;\newline 1 dev: оркестратор 2\\
-Interior300 & 300 STL: 240 IndoorCAD,\newline 60 Poly Haven; 118 объёмных & 1 объект: оркестратор 2;\newline локальный split \texttt{all}\\
+Полная программа & CAD-Recode [1], cadrille [2] & SFT, у cadrille ещё RL. Ограничение: перенос домена.\\
+По одной операции & CADENA [3] & Обратная связь по шагам. Ограничение: ранние ошибки построения.\\
+Агент с инструментами & CADFather [4] & Поиск и оптимизация. Ограничение: вычислительные затраты.\\
 \bottomrule
 \end{tabular}}
-\medskip
-\begin{itemize}
-  \item \texttt{openai/gpt-6-luna}; код: \texttt{medium}, анализ: \texttt{low}.
-  \item Оркестратор 1: до пяти программ; второй: до двух
-        программ и один анализ геометрии.
-  \item Стоимость берётся из provider usage и включает все вызовы,
-        в том числе неудачные ответы.
-\end{itemize}
-\source{SHA-256 входов и снимки manifest сохранены. DeepCAD: локальная STL-выборка,
-не полный официальный benchmark. 182 модели Interior300 не имеют объёмного IoU.
-Результаты ниже относятся к выбранным объектам; пакетная test-оценка здесь не выполнена.}
+\par\medskip
+{\smalltext Вход: точки, виды или mesh. Выход: программа построения CAD.}
+\source{[1] \href{https://arxiv.org/abs/2412.14042}{CAD-Recode, 2025};
+[2] \href{https://arxiv.org/abs/2505.22914}{cadrille, ICLR 2026};
+[3] \href{https://arxiv.org/abs/2608.00799}{CADENA, 2026, §6};
+[4] \href{https://arxiv.org/abs/2610.09127}{CADFather, 2026, §5}.}
 \end{frame}
 
-% 7
-\begin{frame}{DeepCAD: предварительное сравнение}\relax
-{\small\textbf{Одна dev-деталь:} \texttt{274a034e5c4ac827} / \texttt{00189070.stl}}
-\medskip
-\begin{columns}[T,onlytextwidth]
-  \begin{column}{.57\textwidth}
-    {\smalltext
-    \begin{tabular}{@{}lrr@{}}
-    \toprule
-      & \textbf{Орк. 1} & \textbf{Орк. 2}\\
-    \midrule
-    Лучший IoU & \ClassicIoU & \textbf{\DeepIoU}\\
-    Валидные программы & 5/5 & 1/2\\
-    Вызовы LLM & 5 & 3\\
-    Все вызовы, USD & \ClassicCost & \DeepCost\\
-    \bottomrule
-    \end{tabular}
-
-    \medskip
-    Во втором режиме лучший CAD получен с первой программы.
-    Следующий ответ не исполнился; лучший результат сохранён.
-
-    \medskip
-    \alert{Различаются визуальный контекст и бюджеты.
-    Это пилот, а не контролируемая абляция.}}
-  \end{column}
-  \begin{column}{.39\textwidth}
-    \begin{columns}[T,onlytextwidth]
-      \begin{column}{.485\textwidth}
-        \includegraphics[width=\linewidth]{images/deepcad-target.png}
-        \figlabel{Исходник}
-      \end{column}
-      \begin{column}{.485\textwidth}
-        \includegraphics[width=\linewidth]{images/deepcad-v2.png}
-        \figlabel{CAD, орк. 2}
-      \end{column}
-    \end{columns}
-    \vspace{3mm}
-    {\smalltext Орк. 2: \DeepSeconds\,с;\newline
-    пик RSS \DeepMemory\,МиБ;\newline
-    цель IoU $0.95$ не достигнута.}
-  \end{column}
-\end{columns}
-\source{Источник: run.json запусков 20261022T184742Z-b4c867e2 и 20261022T184705Z-7cef923e.
-Для оркестратора 1 указаны затраты только этой детали, не всей очереди из трёх STL.}
-\end{frame}
-
-% 8
-\begin{frame}{Interior300: исправление по обратной связи}\relax
-{\small \textbf{Объект:} \texttt{indoorcad\_d8441ba72f8641} / \texttt{baby bed\_SLDPRT}}
-\medskip
-\begin{columns}[T,onlytextwidth]
-  \begin{column}{.317\textwidth}
-    \centering\includegraphics[width=.79\linewidth]{images/interior-target-right.png}
-    \figlabel{Исходный STL}
-  \end{column}
-  \begin{column}{.317\textwidth}
-    \centering\includegraphics[width=.79\linewidth]{images/interior-first-right.png}
-    \figlabel{Программа 1: IoU \InteriorFirst}
-  \end{column}
-  \begin{column}{.317\textwidth}
-    \centering\includegraphics[width=.79\linewidth]{images/interior-second-right.png}
-    \figlabel{Программа 2: IoU \textbf{\InteriorBest}}
-  \end{column}
-\end{columns}
-\medskip
+\begin{frame}{Бенчмарки в литературе}\relax
 {\smalltext
-\textbf{Две валидные программы; прирост IoU \InteriorGain.}
-Агент изменил конструкцию по метрикам и схеме ошибок.
-Численная оптимизация не использовалась.
-
-\smallskip
-Полный цикл: 3 вызова LLM; \$\InteriorCost;
-\InteriorSeconds\,с; пик RSS \InteriorMemory\,МиБ.}
-\source{Источник: run.json, код и STL запуска 20261022T185141Z-59366e3d.
-Один объект, общий вид и координаты; вывод о всём наборе не делается.
-Missing surface: 22.9\% → 51.5\%; прирост IoU не означает улучшения всех метрик.}
+\begin{tabular}{@{}L{.22\textwidth}L{.34\textwidth}L{.37\textwidth}@{}}
+\toprule
+\textbf{Бенчмарк} & \textbf{Что проверяет} & \textbf{Граница применимости}\\
+\midrule
+DeepCAD [5] & Эскизы и экструзии & Преимущественно детали\\
+Fusion360, CC3D [2] & Сложные CAD и реальные сканы & Шум и неполнота сканов\\
+CADENA-Bench [3] & Семейства механических деталей & Не покрывает интерьер\\
+\bottomrule
+\end{tabular}}
+\par\bigskip
+\textbf{Наша оценка:} DeepCAD и Interior300, три режима на одинаковых входах.
+\source{[5] \href{https://arxiv.org/abs/2105.09492}{DeepCAD, ICCV 2021};
+[2] \href{https://arxiv.org/html/2505.22914v3}{cadrille, §5};
+[3] \href{https://arxiv.org/html/2608.00799v1}{CADENA, §4}.
+Наш протокол локальный, без прямого рейтинга относительно статей.}
 \end{frame}
 
-% 9
-\begin{frame}{Реализация и воспроизводимость}
+% 4. Бенчмарки
+\begin{frame}{Наши данные: детали и объекты}\relax
 \begin{columns}[T,onlytextwidth]
-  \begin{column}{.52\textwidth}
-    \textbf{Сохранение эксперимента}
-    \begin{itemize}
-      \item Снимок STL, SHA-256 и нормализация.
-      \item Точные запросы, ответы, код, STEP/STL.
-      \item IoU, метрики видов, usage и причины отказов.
-      \item Checkpoint и повторное использование сохранённых ответов.
-    \end{itemize}
-  \end{column}
-  \begin{column}{.44\textwidth}
-    \textbf{Исполнение и наблюдение}
-    \begin{itemize}
-      \item Один тяжёлый worker; очередь.
-      \item RSS worker и дочерних CAD-процессов: лимит 2048 МиБ.
-      \item Streamlit: preview и выбранная итерация.
-      \item Консоль проекта и журнал событий этапов.
-    \end{itemize}
-  \end{column}
+\begin{column}{.48\textwidth}
+  \textbf{Детали: DeepCAD}
+  \par\smallskip
+  \includegraphics[width=\linewidth]{images/new-domains-deepcad.png}
+  {\smalltext
+  \textbf{15 test-деталей} из плана 50.}
+\end{column}
+\begin{column}{.48\textwidth}
+  \textbf{Объекты: Interior300}
+  \par\smallskip
+  \includegraphics[width=\linewidth]{images/new-domains-interior.png}
+  {\smalltext
+  IndoorCAD и Poly Haven.
+  \par\medskip
+  \textbf{15 замкнутых объектов} из плана 50.}
+\end{column}
 \end{columns}
-\medskip
+\source{\href{https://arxiv.org/abs/2105.09492}{DeepCAD};
+\href{https://huggingface.co/datasets/maksimko123/deepcad_test_mesh}{STL-источник};
+\href{https://huggingface.co/datasets/anon-neurips-2026/IndoorCAD}{IndoorCAD};
+\href{https://polyhaven.com/license}{Poly Haven, CC0}.
+Локальные подвыборки, только корректные объёмы.}
+\end{frame}
+
+\begin{frame}{Проблема и наш подход}\relax
+\textbf{Проблема:} исполнимый код может давать неверную геометрию.
+\par\medskip
+\textbf{Решение:} модель исправляет код по IoU, карте расхождений
+и ошибкам исполнения.
+\par\medskip
+Готовая модель, без обучения весов. До пяти генераций.
+\par\medskip
+\alert{Гипотеза: качество близко к дорогой модели, цена API ниже.}
+\source{Обратную связь уже используют CADENA и CADFather.
+Наш вклад: ограниченный цикл и парная оценка в двух доменах.}
+\end{frame}
+
+% 5. Вход и выход с реальными визуализациями
+\begin{frame}{Вход и выход метода}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.59\textwidth}
+  \textbf{Вход: STL и размеры}
+  \par\medskip
+  \centering\includegraphics[width=\linewidth,height=37mm,keepaspectratio]{images/benchmark-input-sheet.png}
+  \captiontext{Шесть видов: цвет и глубина.}
+\end{column}
+\begin{column}{.35\textwidth}
+  \textbf{Выход: программа и CAD}
+  \par\medskip
+  \centering\includegraphics[width=.66\linewidth,height=26mm,keepaspectratio]{images/benchmark-example-best.png}
+  \captiontext{CadQuery: редактирование\newline
+  STEP: обмен геометрией\newline STL: оценка}
+\end{column}
+\end{columns}
+\par\medskip
 {\smalltext
-Оплаченный ответ сохраняется до разбора кода. При обрыве HTTP до сохранения
-повторная оплата возможна. RSS проверяется опросом: краткий выход за лимит
-между замерами возможен.}
-\source{Источник: harness.py, harness\_worker.py, resources.py, harness\_ui.py и observability.py.
-Метрики и SHA-256 источников этой презентации: evidence.json; описание протокола: README.md.}
+Центр сетки в нуле, максимальный габарит равен 1.}
+\source{Модель получает виды и габариты. Полный mesh доступен системе оценки.}
 \end{frame}
 
-% 10
-\begin{frame}{Выводы и проверка гипотезы}
-\textbf{Получено}
-\begin{itemize}
-  \item Реализован цикл генерации, исполнения и оценки CAD с визуальной
-        обратной связью и сохранением лучшего результата.
-  \item Два пилота показывают работоспособность; на интерьерном объекте
-        вторая программа повысила объёмный IoU.
-\end{itemize}
-
-\medskip
-\textbf{Следующий эксперимент}
-\begin{itemize}
-  \item Зафиксировать общие ID, бюджеты и конфигурации моделей.
-  \item Сравнить одну генерацию, независимые кандидаты и исправления.
-  \item Разделить вклад измерений, анализа, depth и чертежа;
-        оценить IoU, отказы, полную стоимость и время по доменам.
-\end{itemize}
-\medskip
-\alert{Сравнение с Qwen / Opus и экономия API в 5--10 раз пока не доказаны.}
-\source{Текущие результаты не устанавливают среднее качество на DeepCAD test / Interior300
-и не доказывают перенос на сканы или фотографии. Подробности и источники: speaker-notes.md, references.bib.}
+\begin{frame}[fragile]{Пример программы CadQuery}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.57\textwidth}
+  \lstinputlisting{examples/frame.py}
+\end{column}
+\begin{column}{.39\textwidth}
+  \centering
+  \includegraphics[width=.92\linewidth,height=24mm,keepaspectratio]{images/cadquery-code-example.png}
+  \par\smallskip
+  \raggedright
+  {\smalltext
+  \texttt{box}: заготовка и проём.\par
+  \texttt{cut}: вычитание проёма.
+  \par\medskip
+  \texttt{inner\_x} меняет ширину проёма.\par
+  Результат: \texttt{r}.}
+\end{column}
+\end{columns}
+\source{Ответ Luna, bc69e26be07daf52, IoU 1.0000. Код проверен исполнением.
+\href{https://cadquery.readthedocs.io/en/latest/quickstart.html}{Документация CadQuery}.}
 \end{frame}
 
+\begin{frame}{Подготовка входа и контракт программы}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.48\textwidth}
+  \textbf{До первого запроса}
+  \begin{enumerate}
+    \item Проверить замкнутость STL.
+    \item Центрировать и нормализовать.
+    \item Построить шесть видов.
+  \end{enumerate}
+  \par\medskip
+  {\smalltext Запрос: виды, габариты XYZ, контракт CadQuery.}
+\end{column}
+\begin{column}{.47\textwidth}
+  \textbf{Ответ и исполнение}
+  \par\medskip
+  JSON: \texttt{\{"code": "..."\}}.
+  \par\medskip
+  Полная программа создаёт \texttt{cq.Workplane r}.
+  \par\medskip
+  Изолированное исполнение, экспорт STEP и STL.
+\end{column}
+\end{columns}
+\source{Оценка в координатах входа, без подгонки положения и масштаба.}
+\end{frame}
+
+% 6. Полный цикл
+\begin{frame}{Цикл работы harness}\relax
+\centering
+\begin{tikzpicture}[>=Stealth,node distance=3mm,
+  stage/.style={draw=Muted,line width=.5pt,align=center,minimum height=12mm,
+  text width=22mm,inner sep=1.2mm,font=\fontsize{9}{11}\selectfont},
+  edge/.style={font=\fontsize{7.5}{9}\selectfont,fill=white,inner sep=1mm}]
+  \node[stage,text width=12mm] (input) {Вход\\STL};
+  \node[stage,text width=25mm,right=of input] (prep) {Подготовка\\6 видов, XYZ};
+  \node[stage,text width=21mm,right=of prep] (agent) {Модель\\CadQuery-код};
+  \node[stage,text width=20mm,right=of agent] (exec) {Исполнение\\CadQuery};
+  \node[stage,right=of exec] (eval) {Оценка\\IoU};
+  \node[stage,below=14mm of eval] (best) {Выход\\лучший CAD};
+  \draw[->] (input)--(prep);
+  \draw[->] (prep)--(agent);
+  \draw[->] (agent)--(exec);
+  \draw[->] (exec)--(eval);
+  \draw[->,dashed,Muted] (prep.north)--++(0,7mm)-|
+    node[pos=.48,above,edge] {Эталонный mesh}(eval.north);
+  \draw[->] (exec.south)--++(0,-5mm)-|
+    node[pos=.45,below,edge] {ошибка}(agent.south east);
+  \draw[->,Blue] (eval.south west)--++(0,-11mm)-|
+    node[pos=.5,below,edge] {IoU, карта, лучший код}(agent.south);
+  \draw[->] (eval.east)--++(4mm,0)|-
+    node[pos=.45,right,edge] {стоп}(best.east);
+\end{tikzpicture}
+\par\vspace{4mm}
+\raggedright
+После каждой попытки сохраняем лучший валидный CAD.
+\source{Стоп: IoU $\geq0.9$, три попытки без прироста $0.001$
+или лимит пяти генераций. Ошибка исполнения возвращается как traceback.}
+\end{frame}
+
+% 7. Точный смысл уточнения
+\begin{frame}{Геометрическая обратная связь}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.62\textwidth}
+  \includegraphics[width=\linewidth,height=46mm,keepaspectratio]{images/benchmark-feedback-sheet.png}
+\end{column}
+\begin{column}{.34\textwidth}
+  {\smalltext
+  \textcolor{Good}{\textbf{Совпадение}}\par
+  Сохранить.
+  \par\smallskip
+  \textcolor{Extra}{\textbf{Лишнее}}\par
+  Убрать.
+  \par\smallskip
+  \textcolor{Missing}{\textbf{Не хватает}}\par
+  Добавить.
+  \par\medskip
+  \textbf{Яркость: глубина}\par
+  Светлее --- ближе.}
+\end{column}
+\end{columns}
+\par\medskip
+{\smalltext
+Карта показывает, где добавить или убрать материал.}
+\source{Реальная обратная связь из эксперимента. Шкала глубины фиксирована по исходнику.}
+\end{frame}
+
+\begin{frame}{Что меняется при уточнении геометрии}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.49\textwidth}
+  \textbf{Контекст модели}
+  \begin{itemize}
+    \item виды и габариты;
+    \item лучший код и IoU;
+    \item карта расхождений;
+    \item последние ошибки.
+  \end{itemize}
+\end{column}
+\begin{column}{.46\textwidth}
+  \textbf{Что меняет модель}
+  \begin{itemize}
+    \item размеры;
+    \item положение элементов;
+    \item операции построения.
+  \end{itemize}
+  \par\medskip
+  Ответ: полная новая программа.
+\end{column}
+\end{columns}
+\par\bigskip
+{\smalltext Каждый вариант снова проходит исполнение и оценку.}
+\source{Уточнение через код, без численной оптимизации параметров.
+В истории: до трёх последних попыток.}
+\end{frame}
+
+% 8. Реальный пример уточнения
+\begin{frame}{Пример уточнения геометрии}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.235\textwidth}
+  \centering\includegraphics[width=\linewidth,height=38mm,keepaspectratio]{images/benchmark-example-target.png}
+  \captiontext{\textbf{Исходный mesh}}
+\end{column}
+\begin{column}{.235\textwidth}
+  \centering\includegraphics[width=\linewidth,height=38mm,keepaspectratio]{images/benchmark-example-first.png}
+  \captiontext{Luna, один промпт\newline IoU 0.5129}
+\end{column}
+\begin{column}{.235\textwidth}
+  \centering\includegraphics[width=\linewidth,height=38mm,keepaspectratio]{images/benchmark-example-best.png}
+  \captiontext{Luna + harness\newline IoU \textbf{0.7380}}
+\end{column}
+\begin{column}{.235\textwidth}
+  \centering\includegraphics[width=\linewidth,height=38mm,keepaspectratio]{images/benchmark-example-expensive.png}
+  \captiontext{Sol, один промпт\newline IoU 0.9731}
+\end{column}
+\end{columns}
+\par\medskip
+Правки: ободок, рельеф и дуга. Лучшая версия: попытка 4.
+\source{Деталь 3376e6b0a71b3a98. Одинаковые камера и координаты, без выравнивания.}
+\end{frame}
+
+% 9. Требуемый дизайн сравнения
+\begin{frame}{Постановки эксперимента}\relax
+{\smalltext
+\begin{tabular}{@{}L{.26\textwidth}L{.29\textwidth}L{.38\textwidth}@{}}
+\toprule
+\textbf{Модель} & \textbf{Режим} & \textbf{Вызовы на объект}\\
+\midrule
+Luna, дешёвая & Один промпт & 1\\
+Luna, дешёвая & Harness & До 5\\
+Sol, дорогая & Один промпт & 1\\
+\bottomrule
+\end{tabular}}
+\par\medskip
+Одинаковые входы и оценка. Первый ответ Luna общий для двух режимов.
+\source{\texttt{gpt-6-luna}, \texttt{gpt-6-sol}; reasoning medium, максимум 16000 токенов.
+Sol + harness в этот запуск не включён.}
+\end{frame}
+
+% 10. Метрики
+\begin{frame}{Метрики и правила подсчёта}\relax
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.52\textwidth}
+  \textbf{Качество формы}
+  \[
+  \IoU(M,\widehat M)=
+  \frac{\operatorname{Vol}(M\cap\widehat M)}{\operatorname{Vol}(M\cup\widehat M)}.
+  \]
+  {\smalltext
+  Полные объёмы, без выравнивания.
+  \par\medskip
+  Неудачная реконструкция: IoU = 0.}
+\end{column}
+\begin{column}{.43\textwidth}
+  \textbf{Дополнительно}
+  \begin{itemize}
+    \item Валидность CAD.
+    \item Доля IoU $\geq0.9$.
+    \item Цена API, вызовы и время.
+  \end{itemize}
+  \par\smallskip
+  {\smalltext Harness: лучший IoU, цена всех попыток.}
+\end{column}
+\end{columns}
+\source{Непригодные входы отобраны до запуска. Не начатые объекты не включены в среднее.}
+\end{frame}
+
+% New matched three-condition benchmark; generated from saved provider responses.
+\input{benchmark-results.tex}
 \end{document}

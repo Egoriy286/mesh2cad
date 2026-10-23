@@ -1,0 +1,129 @@
+{
+  "pdf": "/Users/egoriy/Projects/msu-ai-school/output/pdf/mesh2cad-research.pdf",
+  "pdf_sha256": "77ea979e813533892be174362b979d16c9f0d7f4821654183f48f56e7b11d916",
+  "latex_archive": "/Users/egoriy/Projects/msu-ai-school/output/latex/mesh2cad-research.zip",
+  "archive_sha256": "416136c50bccc26d019598b21eb2e63e2187b648f9be3ab2a26d4741b67abf0a",
+  "pages": 22,
+  "n_per_domain": 15,
+  "new_spend_usd": 1.0921225700000003,
+  "validation": {
+    "unit_tests": {
+      "passed": 116,
+      "skipped": 1,
+      "new_benchmark_tests": 6
+    },
+    "ruff": "passed",
+    "git_diff_check": "passed",
+    "latex": "compiled_successfully_without_overfull_or_missing_glyph_warnings",
+    "pdf_pages": 22,
+    "visual_review": "All 22 pages inspected; final task and corrected cycle additionally inspected at full size; no clipping or overlaps",
+    "paired_input_audit": "passed_for_all_30_inputs",
+    "provider_billing_matches_saved_usage": true,
+    "presentation_title": "Эффективный харнесс для Mesh2CAD",
+    "title_revision": "Title preserved; confirmed authors and mentor displayed on the cover",
+    "presentation_revision": {
+      "source_pdf": "/Users/egoriy/Downloads/mesh2cad-research (1).pdf",
+      "source_pdf_sha256": "ad3ca42a7726ebb9915c2be73b6b1b2eb04ed65a76f177a24c412d7689034414",
+      "authors": [
+        "Монастырев Егорий",
+        "Егорова Данаайа"
+      ],
+      "mentor": "Дроздов Никита",
+      "requirements_coverage": {
+        "informal_task_and_relevance": [
+          2
+        ],
+        "formal_input_output_and_requirements": [
+          3
+        ],
+        "benchmarks_methods_classification_and_limits": [
+          4,
+          5,
+          6
+        ],
+        "problem_and_solution": [
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "benchmark_results": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "conclusions_and_future_work": [
+          21,
+          22
+        ]
+      },
+      "cadquery_example": {
+        "source_code": "output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/cheap_harness/20261023T013346Z-d374018b/items/bc69e26be07daf52/attempt-001/cadquery/code.py",
+        "source_code_sha256": "be9f7189e6a4449fad86c1452c6216f9831ffb131c318787628e5825755bd71f",
+        "display_code": "examples/frame.py",
+        "display_code_sha256": "2a8de8bb97de99efc4bd1fc5182ac0e0a790e88c9f73d4d4d679a30cdc1c7e16",
+        "render": "images/cadquery-code-example.png",
+        "render_sha256": "e07b2b21f29b7d67db26570c894b37cf71e6cf8cfcb3f64e412c2665fcc7b07e",
+        "valid_solid": true,
+        "cadquery_volume": 0.007161459395832822,
+        "stl_watertight": true,
+        "operations_unchanged": true,
+        "bidirectional_shape_difference_volume": 0.0,
+        "parameter_edit_verified": "inner_x 0.50 to 0.45 increases frame volume",
+        "benchmark_item_id": "bc69e26be07daf52",
+        "condition": "cheap_one_prompt",
+        "iou": 0.9999996342442066
+      },
+      "all_pdf_text_inside_page_bounds": true,
+      "speaker_notes_sections": 22,
+      "source_metrics_unchanged": true,
+      "new_paid_calls": 0,
+      "desktop_compilation": "success"
+    },
+    "concise_revision": {
+      "text_reduction": {
+        "before_word_tokens": 1476,
+        "after_word_tokens": 909,
+        "reduction_percent": 38.4,
+        "method": "Alphabetic tokens of at least two characters, including titles, labels, code and footers",
+        "previous_pdf_sha256": "adb276c48e2c9bd0cbabef2234d0a443515785b58e610b0b97bbabf948a7c980"
+      },
+      "cycle_has_explicit_input_and_output": true,
+      "feedback_returns_to_model": true,
+      "reference_mesh_enters_evaluation": true,
+      "result_table_values_unchanged": true,
+      "all_pdf_text_inside_page_bounds": true,
+      "speaker_notes_preserved": true,
+      "new_paid_calls": 0
+    }
+  },
+  "presentation_title": "Эффективный харнесс для Mesh2CAD",
+  "presentation_authors": [
+    "Монастырев Егорий",
+    "Егорова Данаайа"
+  ],
+  "presentation_mentor": "Дроздов Никита",
+  "concise_revision": {
+    "text_reduction": {
+      "before_word_tokens": 1476,
+      "after_word_tokens": 909,
+      "reduction_percent": 38.4,
+      "method": "Alphabetic tokens of at least two characters, including titles, labels, code and footers",
+      "previous_pdf_sha256": "adb276c48e2c9bd0cbabef2234d0a443515785b58e610b0b97bbabf948a7c980"
+    },
+    "cycle_has_explicit_input_and_output": true,
+    "feedback_returns_to_model": true,
+    "reference_mesh_enters_evaluation": true,
+    "result_table_values_unchanged": true,
+    "all_pdf_text_inside_page_bounds": true,
+    "speaker_notes_preserved": true,
+    "new_paid_calls": 0
+  }
+}

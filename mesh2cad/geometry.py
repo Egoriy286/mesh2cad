@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import itertools
 import math
 from pathlib import Path
 from typing import Any, BinaryIO
@@ -369,6 +370,7 @@ def _raster_buffers(
     cancel_check=None,
     frame_width=_FRAME_SCALE,
     render_color=True,
+    color_depth_range: tuple[float, float] | None = None,
 ):
     """Rasterize bounded NumPy batches instead of allocating a grid per triangle."""
     render_size = size * _SUPERSAMPLE
@@ -387,8 +389,13 @@ def _raster_buffers(
         lengths = np.linalg.norm(normals, axis=1)
         valid = lengths > 1e-12
         if render_color:
-            normals[valid] /= lengths[valid, None]
-            brightness = 0.55 + 0.45 * np.abs(normals @ light)
+            if color_depth_range is None:
+                normals[valid] /= lengths[valid, None]
+                brightness = 0.55 + 0.45 * np.abs(normals @ light)
+            else:
+                # Depth overlays encode distance alone; surface lighting must
+                # not make equally distant regions appear to have different depth.
+                brightness = np.ones(len(faces))
             colors.append(
                 (np.asarray(base_color)[None, :] * brightness[:, None]).astype(np.float32)
             )
@@ -462,6 +469,12 @@ def _raster_buffers(
     color = np.zeros((render_size * render_size, 3), dtype=np.float32)
     covered = winners != empty
     color[covered] = face_colors[winners[covered]]
+    if color_depth_range is not None:
+        near, far = color_depth_range
+        if not np.isfinite([near, far]).all() or far <= near:
+            raise ValueError("Color depth planes must be finite and increasing")
+        proximity = np.clip((far - zbuffer[covered]) / (far - near), 0, 1)
+        color[covered] *= (0.35 + 0.65 * proximity[:, None]).astype(np.float32)
     image = Image.fromarray(
         np.clip(color.reshape(render_size, render_size, 3) * 255, 0, 255).astype(np.uint8)
     )
@@ -519,11 +532,45 @@ def _rasterize_parts(parts, elevation, azimuth, size, *, cancel_check=None):
     return _raster_buffers(parts, elevation, azimuth, size, cancel_check=cancel_check)[0]
 
 
-OVERLAY_VERSION = 2
+OVERLAY_VERSION = 3
 OVERLAY_LEGEND = (
     "Зелёный — совпадение; синий — CAD за пределами исходного mesh; "
     "красный — геометрия, которой не хватает в CAD."
 )
+OVERLAY_DEPTH_LEGEND = (
+    OVERLAY_LEGEND
+    + " В листе из шести видов оттенок кодирует глубину: светлее — ближе, темнее — дальше. "
+    "Шкала фиксирована по исходному mesh для каждого вида."
+)
+
+
+def overlay_depth_calibration(target) -> dict:
+    """Keep hue semantic and encode linear depth using the target's fixed planes."""
+    corners = np.array(list(itertools.product(*target.bounds.T)))
+    views = []
+    for name, elevation, azimuth in VIEWS:
+        forward, right, up = _camera_basis(elevation, azimuth)
+        projected = corners @ forward
+        views.append(
+            {
+                "view": name,
+                "forward": forward.round(8).tolist(),
+                "image_right": right.round(8).tolist(),
+                "image_up": up.round(8).tolist(),
+                "near": float(projected.min() - 0.05),
+                "far": float(projected.max() + 0.05),
+            }
+        )
+    return {
+        "version": OVERLAY_VERSION,
+        "frame_width": _FRAME_SCALE,
+        "brightness_range": [0.35, 1.0],
+        "encoding": "RGB=region_color*(0.35+0.65*clip((far-depth)/(far-near),0,1)); "
+        "depth=dot(world_point,forward); black=empty. No directional lighting. "
+        "Hue means solid region, brightness means depth, not error magnitude. "
+        "Planes are fixed by the target bounding box with 0.05 padding per view.",
+        "views": views,
+    }
 
 
 def solid_difference_parts(target, candidate, *, cancel_check=None) -> dict:
@@ -556,6 +603,7 @@ def render_overlay_sheet(
 
     Green is the solid intersection, blue is candidate minus target, red is
     target minus candidate. No pose/scale alignment or surface-distance proxy.
+    Each hue's brightness encodes linear depth using fixed target near/far planes.
     """
     validate_mesh(candidate)
     if not isinstance(size, int) or isinstance(size, bool) or size < 64:
@@ -574,6 +622,7 @@ def render_overlay_sheet(
         )
         if len(solids[name].faces)
     ]
+    calibration = overlay_depth_calibration(target)
     columns = 3
     rows = math.ceil(len(VIEWS) / columns)
     sheet = Image.new("RGB", (size * columns, size * rows), "black")
@@ -582,7 +631,15 @@ def render_overlay_sheet(
         with timed_stage(
             "render.overlay_view", view=_name, faces=sum(len(p[0].faces) for p in colored)
         ):
-            tile = _rasterize_parts(colored, elevation, azimuth, size, cancel_check=cancel_check)
+            planes = calibration["views"][index]
+            tile = _raster_buffers(
+                colored,
+                elevation,
+                azimuth,
+                size,
+                cancel_check=cancel_check,
+                color_depth_range=(planes["near"], planes["far"]),
+            )[0]
         sheet.paste(tile, (column * size, row * size))
     return _png_bytes(sheet)
 

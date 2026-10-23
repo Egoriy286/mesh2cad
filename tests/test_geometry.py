@@ -14,11 +14,15 @@ from mesh2cad.geometry import (
     VIEW_NAMES,
     VIEW_SIZE,
     GeometryCancelled,
+    _camera_basis,
+    _project,
+    _raster_buffers,
     evaluate_iou,
     load_mesh,
     mesh_difference,
     mesh_stats,
     normalize_mesh,
+    overlay_depth_calibration,
     render_llm_images,
     render_overlay_sheet,
     render_views,
@@ -195,6 +199,50 @@ def test_overlay_blue_includes_cad_filling_a_target_hole_not_just_bbox_excess():
     with Image.open(io.BytesIO(render_overlay_sheet(target, cube, size=128))) as image:
         p = np.array(image)
     assert ((p[..., 2] > 100) & (p[..., 0] < 80) & (p[..., 1] < p[..., 2] * 0.8)).any()
+
+
+def test_overlay_depth_changes_green_shade_between_parallel_surfaces():
+    base = trimesh.creation.box(extents=[1, 1, 0.4])
+    base.apply_translation([0, 0, -0.3])
+    step = trimesh.creation.box(extents=[0.4, 0.6, 0.7])
+    step.apply_translation([-0.25, 0, 0.15])
+    target = trimesh.boolean.union([base, step], engine="manifold")
+    original = target.vertices.copy()
+    size = 128
+    with Image.open(io.BytesIO(render_overlay_sheet(target, target, size=size))) as image:
+        top = np.array(image)[:size, :size]
+    _, right, up = _camera_basis(90, -90)
+    points = np.array([[-0.25, 0, 0.5], [0.25, 0, -0.1]])
+    x, y = _project(points, right, up, size)
+    near, far = top[np.rint(y).astype(int), np.rint(x).astype(int)].astype(float)
+    assert near[1] > far[1] + 70  # Same hue/normals; nearer green must be brighter.
+    np.testing.assert_allclose(near / near[1], far / far[1], atol=0.015)
+    planes = overlay_depth_calibration(target)["views"][0]
+    for color, point in zip((near, far), points, strict=True):
+        depth = point @ _camera_basis(90, -90)[0]
+        expected = 0.35 + 0.65 * (planes["far"] - depth) / (planes["far"] - planes["near"])
+        assert color[1] == pytest.approx(255 * 0.95 * expected, abs=2)
+    np.testing.assert_array_equal(target.vertices, original)
+
+
+def test_colored_depth_uses_fixed_planes_when_other_geometry_moves():
+    near = trimesh.creation.box(extents=[0.3, 0.3, 0.2])
+    near.apply_translation([-0.25, 0, 0.2])
+    far = near.copy()
+    far.apply_translation([0.5, 0, -0.4])
+    options = {"color_depth_range": (-0.55, 0.55)}
+    parts = [(near, (0.05, 0.95, 0.2), 0), (far, (0.05, 0.95, 0.2), 0)]
+    before = np.array(_raster_buffers(parts, 90, -90, 128, **options)[0])
+    outlier = trimesh.creation.box(extents=[0.1] * 3)
+    outlier.apply_translation([0, 0.4, 4])
+    after = np.array(
+        _raster_buffers(parts + [(outlier, (1, 0.05, 0.05), 0)], 90, -90, 128, **options)[0]
+    )
+    _, right, up = _camera_basis(90, -90)
+    x, y = _project(np.array([[-0.25, 0, 0.3], [0.25, 0, -0.1]]), right, up, 128)
+    indices = (np.rint(y).astype(int), np.rint(x).astype(int))
+    np.testing.assert_array_equal(before[indices], after[indices])
+    assert np.all(after[0, 0] == 0)
 
 
 def test_iou_of_identical_box_is_one() -> None:

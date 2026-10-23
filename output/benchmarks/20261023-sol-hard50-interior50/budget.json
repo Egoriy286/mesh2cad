@@ -1,0 +1,29 @@
+{
+  "cap": 4.673432480000001,
+  "spent": 2.184332599999999,
+  "reserved": {
+    "28404": 0.218486,
+    "28405": 0.225286,
+    "28411": 0.219742,
+    "28409": 0.186672,
+    "28408": 0.186928
+  },
+  "unknown_cost_calls": 0,
+  "prices": {
+    "prompt": "0.000002",
+    "completion": "0.00001",
+    "web_search": "0.01",
+    "input_cache_read": "0.0000002",
+    "input_cache_write": "0.0000025",
+    "overrides": [
+      {
+        "min_prompt_tokens": 272000,
+        "prompt": "0.000004",
+        "completion": "0.000015",
+        "input_cache_read": "0.0000004",
+        "input_cache_write": "0.000005"
+      }
+    ]
+  },
+  "authorized_key_limit": 7
+}

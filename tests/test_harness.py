@@ -163,6 +163,8 @@ def test_agent_repairs_execution_then_geometry_using_real_feedback(manifest, tmp
     assert item["attempts"][2]["iou"]["iou"] == pytest.approx(1)
     assert "broken sketch" in json.dumps(agent.requests[1])
     assert "best-contrast-overlay" in json.dumps(agent.requests[2])
+    assert "brightness is depth, NOT error magnitude" in json.dumps(agent.requests[2])
+    assert "Depth calibration:" in json.dumps(agent.requests[2])
     summary = state["summary"]
     assert summary["total_tokens"] == 360
     assert summary["cost_usd"] == pytest.approx(0.006)
@@ -171,6 +173,8 @@ def test_agent_repairs_execution_then_geometry_using_real_feedback(manifest, tmp
     best = root / item["attempts"][2]["path"]
     assert (best / "cadquery/candidate.step").is_file()
     assert (best / "overlay.png").is_file()
+    assert (best / "overlay-feedback-v3.png").is_file()
+    assert read_json(best / "overlay-depth-calibration.json")["brightness_range"] == [0.35, 1.0]
     assert read_json(best / "request.json") == agent.requests[2]
     assert "unit-test-key" not in (root / "run.json").read_text()
     assert "unit-test-key" not in (root / "events.jsonl").read_text()

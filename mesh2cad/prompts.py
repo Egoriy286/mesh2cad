@@ -1,5 +1,7 @@
 """Explicit prompt contracts for classic reconstruction and calibrated vision."""
 
+import json
+
 PROMPT_VERSION = 7
 VISION_PROMPT_VERSION = 2
 
@@ -124,7 +126,7 @@ def repair_prompt(system_prompt: str, code: str) -> str:
     )
 
 
-def overlay_repair_prompt(system_prompt: str, code: str) -> str:
+def overlay_repair_prompt(system_prompt: str, code: str, *, calibration: dict | None = None) -> str:
     """Prompt for the improvement pass, which receives the contrast overlay."""
     return (
         system_prompt.rstrip()
@@ -134,7 +136,12 @@ def overlay_repair_prompt(system_prompt: str, code: str) -> str:
         "bottom, front. Green is the volume intersection of target and CAD; blue "
         "is excess CAD outside the target mesh (CAD minus target); red is the "
         "missing CAD volume (target minus CAD). Restore red geometry and remove "
-        "blue geometry.\n\nPrevious CadQuery program:\n```python\n"
+        "blue geometry. Within every hue, brighter means nearer and darker means farther. "
+        "Brightness linearly encodes depth using the target's fixed near/far planes per view, "
+        "with no directional lighting. Hue identifies the region; brightness means depth, "
+        "not error magnitude.\n"
+        + ("Depth calibration: " + json.dumps(calibration) + "\n" if calibration else "")
+        + "\nPrevious CadQuery program:\n```python\n"
         + code.strip()
         + "\n```\nReturn the complete improved program in the same JSON format."
     )

@@ -28,12 +28,14 @@ from .agent import AgentContext, CadAgent, OpenRouterAgent
 from .dataset import load_manifest, read_catalogue
 from .executor import execute_code
 from .geometry import (
+    OVERLAY_VERSION,
     compose_views,
     evaluate_iou,
     load_mesh,
     mesh_difference,
     mesh_stats,
     normalize_mesh,
+    overlay_depth_calibration,
     render_llm_images,
     render_overlay_sheet,
 )
@@ -549,7 +551,7 @@ class Orchestrator:
         cfg = self.config
         best = item["attempts"][item["best_attempt"]] if item["best_attempt"] is not None else None
         overlay_path = (
-            self.root / best["path"] / "overlay-feedback-v2.png"
+            self.root / best["path"] / f"overlay-feedback-v{OVERLAY_VERSION}.png"
             if best and cfg.orchestrator == "classic"
             else None
         )
@@ -567,6 +569,7 @@ class Orchestrator:
             attempts=[a for a in item["attempts"] if a["status"] in FINISHED_ATTEMPTS],
             best_attempt=best,
             overlay=overlay_path.read_bytes() if overlay_path and overlay_path.is_file() else None,
+            overlay_calibration=overlay_depth_calibration(target) if overlay_path else None,
             max_tokens=min(
                 cfg.max_tokens,
                 max(1, cfg.total_token_budget - summarize(self.state)["total_tokens"]),
@@ -694,7 +697,8 @@ class Orchestrator:
             pixels = render_overlay_sheet(
                 target, candidate, cancel_check=lambda: self._stopped() is not None
             )
-            (folder / "overlay-feedback-v2.png").write_bytes(pixels)
+            (folder / f"overlay-feedback-v{OVERLAY_VERSION}.png").write_bytes(pixels)
+            write_json(folder / "overlay-depth-calibration.json", overlay_depth_calibration(target))
             (folder / "overlay.png").write_bytes(pixels)
 
     def _render_target(self, target, prepared: Path, item: dict) -> bytes:

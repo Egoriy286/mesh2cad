@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "domain": "deepcad",
+      "id": "39e6d36142177f5b",
+      "iteration": 1,
+      "saved_iou": 0.03383493415986163,
+      "recomputed_iou": 0.03383493415986163,
+      "candidate_sha256": "b11119dd5164225f59803e8aab4e996b234b411add53d38d2499f0c6086d6b48"
+    },
+    {
+      "domain": "deepcad",
+      "id": "39e6d36142177f5b",
+      "iteration": 2,
+      "saved_iou": 0.904029289994683,
+      "recomputed_iou": 0.904029289994683,
+      "candidate_sha256": "c370b554aeb439d7ebe12c579898669b768507059eabe7f67efde0cdb60364c2"
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_bb795b17ea76b9",
+      "iteration": 1,
+      "saved_iou": 0.08537525658392815,
+      "recomputed_iou": 0.08537525658392815,
+      "candidate_sha256": "6ef5b869b7cfa29ceb16455dce73fad9069ee788e0a40c10cda58249840352e6"
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_bb795b17ea76b9",
+      "iteration": 2,
+      "saved_iou": 0.3065383973060841,
+      "recomputed_iou": 0.3065383973060841,
+      "candidate_sha256": "de39f116c79e6aa147e425710347029ca3e37825e05ef7a62064904ab979a53a"
+    }
+  ],
+  "method": "Re-normalize input snapshot and recompute full Boolean IoU from saved candidate STL; no fitting"
+}

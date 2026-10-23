@@ -16,6 +16,7 @@ from PIL import Image
 
 from mesh2cad.executor import execute_code
 from mesh2cad.geometry import (
+    OVERLAY_DEPTH_LEGEND,
     OVERLAY_LEGEND,
     OVERLAY_VERSION,
     VIEW_NAMES,
@@ -226,7 +227,8 @@ def _format_volume(value) -> str:
 
 def refresh_overlay(state: dict, target_path: Path, candidate_path: Path) -> None:
     folder = Path(state["run_dir"])
-    render_saved_overlay(target_path, candidate_path, folder)
+    metadata = render_saved_overlay(target_path, candidate_path, folder)
+    state["overlay_calibration"] = metadata["depth_calibration"]
     state["overlay_sheet"] = (folder / "overlay-solid.png").read_bytes()
     state["overlay_version"] = OVERLAY_VERSION
     state["overlay_parts_path"] = str(folder / "overlay-solid.npz")
@@ -746,7 +748,7 @@ if result:
                         caption="overlay.png · 1536×1024 · 6 видов",
                     )
                     st.caption(
-                        OVERLAY_LEGEND
+                        OVERLAY_DEPTH_LEGEND
                         if cad.get("overlay_version") == OVERLAY_VERSION
                         else "Архивная схема: серый — покрытая поверхность, синий — весь CAD, красный — недостающая поверхность."
                     )
@@ -791,6 +793,7 @@ if result:
     st.caption(
         "В улучшение уходит не исходный лист, а контрастная схема overlay.png: "
         "зелёный — совпадение, синий — лишнее за пределами mesh, красный — чего не хватает. "
+        "В каждом цвете светлее означает ближе, темнее — дальше. "
         "В system prompt добавляется текущий CadQuery-код."
     )
     overlay = cad.get("overlay_sheet") if cad else None
@@ -798,7 +801,11 @@ if result:
         st.caption(f"Текущая итерация улучшения: {result.get('iteration', 1)}")
         with st.expander("Промпт, который был отправлен"):
             st.code(result.get("repair_prompt", ""), language="text")
-    next_prompt = overlay_repair_prompt(st.session_state["system_prompt"], result["code"])
+    next_prompt = overlay_repair_prompt(
+        st.session_state["system_prompt"],
+        result["code"],
+        calibration=(cad or {}).get("overlay_calibration"),
+    )
     with st.expander("Промпт следующего улучшения"):
         st.code(next_prompt, language="text")
     if not overlay:
@@ -818,7 +825,9 @@ if result:
         with st.spinner("Отправляю контрастную схему на улучшение…"):
             try:
                 repair_system = overlay_repair_prompt(
-                    st.session_state["system_prompt"], result["code"]
+                    st.session_state["system_prompt"],
+                    result["code"],
+                    calibration=(cad or {}).get("overlay_calibration"),
                 )
                 repair_payload = build_payload(
                     model=st.session_state["model"],

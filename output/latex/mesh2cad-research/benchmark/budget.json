@@ -1,0 +1,16 @@
+{
+  "cap": 1.35,
+  "spent": 1.0921225700000003,
+  "reserved": {},
+  "unknown_cost_calls": 0,
+  "prices": {
+    "openai/gpt-6-luna": {
+      "prompt": 1e-07,
+      "completion": 5e-07
+    },
+    "openai/gpt-6-sol": {
+      "prompt": 2e-06,
+      "completion": 1e-05
+    }
+  }
+}

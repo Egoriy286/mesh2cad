@@ -1,0 +1,1617 @@
+{
+  "schema_version": 1,
+  "status": "finished",
+  "seed": 42,
+  "cohort_fixed_on": "2026-10-23 Europe/Moscow",
+  "selection": {
+    "deepcad": "Reuse volume-eligible IDs from historical planned 50 test items in their saved order; fill any ineligible gap from other volume-eligible test IDs sorted then shuffled seed42. Never select on achieved quality.",
+    "interior": "Source-stratified random sample of manifest-marked volumes:40 IndoorCAD from95 marked,10 PolyHaven from23 marked. Within each stratum IDs sorted then shuffled seed42; verify each full STL volume and hash, skip rejected inputs and continue in the same pre-shuffled order until quota. Manifest flags alone do not establish eligibility.",
+    "limitation": "Protocol frozen after exploratory experiments, not a claim of untouched holdout. Original local DeepCAD dev/test split preserved; Interior300 has no official split."
+  },
+  "cohorts": {
+    "deepcad": [
+      {
+        "id": "2bd8330b6c0bbaae",
+        "mesh_path": "data/deepcad/meshes/2bd8330b6c0bbaae.stl",
+        "sha256": "fce06f392fbe0fbfc91d3214028a5c4017cd557e1cbbe6317f446c6429e61fb7",
+        "split": "test"
+      },
+      {
+        "id": "23b855249a18d0f1",
+        "mesh_path": "data/deepcad/meshes/23b855249a18d0f1.stl",
+        "sha256": "ba8e9fff3c149fa050261449dc9840237dae4c34d23df0d22ce60f54756cce39",
+        "split": "test"
+      },
+      {
+        "id": "3376e6b0a71b3a98",
+        "mesh_path": "data/deepcad/meshes/3376e6b0a71b3a98.stl",
+        "sha256": "975c6c24bbbf7cc5f31eda9e71b2216b29b0ddda53c6dfcd0770227aa4387760",
+        "split": "test"
+      },
+      {
+        "id": "fe06896782f584a6",
+        "mesh_path": "data/deepcad/meshes/fe06896782f584a6.stl",
+        "sha256": "bf1fade56911e4d1d7d7980ae030121ed6a8625aa75b0626c560762de7c6beef",
+        "split": "test"
+      },
+      {
+        "id": "bc69e26be07daf52",
+        "mesh_path": "data/deepcad/meshes/bc69e26be07daf52.stl",
+        "sha256": "13a66d84486379fce2078cd9f297ff1cb0c6452b38acaf963fef4baad1195a2c",
+        "split": "test"
+      },
+      {
+        "id": "a1a9b84d5aaa6a8d",
+        "mesh_path": "data/deepcad/meshes/a1a9b84d5aaa6a8d.stl",
+        "sha256": "43d21124610606793d247a5ecb32feeae987b8d4e1ab4d0ab7d841135e730e4e",
+        "split": "test"
+      },
+      {
+        "id": "8b1771a9fe4ffd63",
+        "mesh_path": "data/deepcad/meshes/8b1771a9fe4ffd63.stl",
+        "sha256": "0a8816cfa9ce56d5add5cbe38ca92f549ed957b600d0d8fdfa7fb80a24fa6110",
+        "split": "test"
+      },
+      {
+        "id": "b1c579bb63128696",
+        "mesh_path": "data/deepcad/meshes/b1c579bb63128696.stl",
+        "sha256": "c88db67515235d32fee3651350cff1f7a3fcfaebfbad7f2468f38101182e5313",
+        "split": "test"
+      },
+      {
+        "id": "8340c60a461b7253",
+        "mesh_path": "data/deepcad/meshes/8340c60a461b7253.stl",
+        "sha256": "53f96059738b645c7701f8278f4ab178d0720c2138c5917bea5dfa81f2160129",
+        "split": "test"
+      },
+      {
+        "id": "a978d5400272f027",
+        "mesh_path": "data/deepcad/meshes/a978d5400272f027.stl",
+        "sha256": "20cfe67d86b8e5cded7a3b887581271be7ffde61fa622d763403b0b969ed0a97",
+        "split": "test"
+      },
+      {
+        "id": "f2bb8530e68b55fd",
+        "mesh_path": "data/deepcad/meshes/f2bb8530e68b55fd.stl",
+        "sha256": "618b9806e19af1580b9c1c9ff499ca79b25456ca6afdb1e0ff6d8917614c003a",
+        "split": "test"
+      },
+      {
+        "id": "fcca9059a93b8cb3",
+        "mesh_path": "data/deepcad/meshes/fcca9059a93b8cb3.stl",
+        "sha256": "81621914fccf34523bd1276eef1e42df39e1ffd5da0538c627484a67be5849fb",
+        "split": "test"
+      },
+      {
+        "id": "8ee25e42f2289c86",
+        "mesh_path": "data/deepcad/meshes/8ee25e42f2289c86.stl",
+        "sha256": "fd5413d7f66a46b7dbfe8172265ea045184957201052d3b1d2c92fdecbf2b323",
+        "split": "test"
+      },
+      {
+        "id": "26f58c206980f734",
+        "mesh_path": "data/deepcad/meshes/26f58c206980f734.stl",
+        "sha256": "a53bb7467318d4d5197e583a83090c1cb483ab640f194468d87c9cba04cf5911",
+        "split": "test"
+      },
+      {
+        "id": "824ea4712581cf17",
+        "mesh_path": "data/deepcad/meshes/824ea4712581cf17.stl",
+        "sha256": "dac7137446d5910430890754631e2090f7e48317917c90f8d131d323ebd5488d",
+        "split": "test"
+      },
+      {
+        "id": "fc47d05119b67808",
+        "mesh_path": "data/deepcad/meshes/fc47d05119b67808.stl",
+        "sha256": "adcb8108359fc133f97ea687fbe64eaeff7cfad402104ccb883c2ff162e543f7",
+        "split": "test"
+      },
+      {
+        "id": "1543d26acf560209",
+        "mesh_path": "data/deepcad/meshes/1543d26acf560209.stl",
+        "sha256": "f41e4b0ddc466dee6b8c00339b3a8b4ae61ee640ede6d999f0bb8468c3205a34",
+        "split": "test"
+      },
+      {
+        "id": "77660463a5d995e2",
+        "mesh_path": "data/deepcad/meshes/77660463a5d995e2.stl",
+        "sha256": "461b4e0b8607b92c571f3b920217242d6e818e4a9850c7a53c1c3ab06eafc562",
+        "split": "test"
+      },
+      {
+        "id": "0720b81baaebe07b",
+        "mesh_path": "data/deepcad/meshes/0720b81baaebe07b.stl",
+        "sha256": "c55d75521dd399a9628b5b4d598f1b0d99d850f03ae8c1a4d738583b4f73e222",
+        "split": "test"
+      },
+      {
+        "id": "cc79eaafb34a73c5",
+        "mesh_path": "data/deepcad/meshes/cc79eaafb34a73c5.stl",
+        "sha256": "6991f1eb5e645613c0e5158161a105c355200338f2c558625c020902657890d3",
+        "split": "test"
+      },
+      {
+        "id": "39e6d36142177f5b",
+        "mesh_path": "data/deepcad/meshes/39e6d36142177f5b.stl",
+        "sha256": "ccd90247cc853700fa95ea742ccf4141ab40af7fdbe348b8716eb2645b22de10",
+        "split": "test"
+      },
+      {
+        "id": "0863599084984129",
+        "mesh_path": "data/deepcad/meshes/0863599084984129.stl",
+        "sha256": "005a8c39646f9a97a20d575978ce31f30f7903f841c42a23b6a1eb89f5e008d9",
+        "split": "test"
+      },
+      {
+        "id": "7caf1068ba1b7b0c",
+        "mesh_path": "data/deepcad/meshes/7caf1068ba1b7b0c.stl",
+        "sha256": "bbe1e75b3b985c25705427231244f75c677d408ad99b45b67d262f2de1d716c0",
+        "split": "test"
+      },
+      {
+        "id": "8999ab4eb92d0398",
+        "mesh_path": "data/deepcad/meshes/8999ab4eb92d0398.stl",
+        "sha256": "569f5ad19e2049a3157f4302c689463b9599a3530946aa83ac4c659f16f6b44d",
+        "split": "test"
+      },
+      {
+        "id": "090798a801addc2f",
+        "mesh_path": "data/deepcad/meshes/090798a801addc2f.stl",
+        "sha256": "13ff55a0a1286d099d14b974b6553e55630141b252a7af253e5f9fc2722df1d3",
+        "split": "test"
+      },
+      {
+        "id": "7a47b19b6013f335",
+        "mesh_path": "data/deepcad/meshes/7a47b19b6013f335.stl",
+        "sha256": "3bda624fb94cc15a7eaab3c6f11dff56d8d19b2fba163308356f1bc20ba616ed",
+        "split": "test"
+      },
+      {
+        "id": "8e7944c1cc0ed3a7",
+        "mesh_path": "data/deepcad/meshes/8e7944c1cc0ed3a7.stl",
+        "sha256": "7131496e156c86a81f8db946a3763f50a7afbdbf7863d56dbececf9b449fd5b9",
+        "split": "test"
+      },
+      {
+        "id": "827847d28ba12fce",
+        "mesh_path": "data/deepcad/meshes/827847d28ba12fce.stl",
+        "sha256": "5667c352ada5199efa211dc1479f68bb0bbab2ef6a048f1056c48109323bfa1c",
+        "split": "test"
+      },
+      {
+        "id": "64af8893f0dcfc90",
+        "mesh_path": "data/deepcad/meshes/64af8893f0dcfc90.stl",
+        "sha256": "996e0d188a3384c441e60a9f51f6dd7ab72556362bda1c0671f976a2f344aff3",
+        "split": "test"
+      },
+      {
+        "id": "ca3cfd440f80f418",
+        "mesh_path": "data/deepcad/meshes/ca3cfd440f80f418.stl",
+        "sha256": "b2184d20492c3658b766b082cd3b66a441951424838195c340e73c177ffb324b",
+        "split": "test"
+      },
+      {
+        "id": "db5574917a1b180e",
+        "mesh_path": "data/deepcad/meshes/db5574917a1b180e.stl",
+        "sha256": "d225cc0f7f6df6db9cd9c8f2ecf7e41f515182d08dfa947a4a4b0d7861b67353",
+        "split": "test"
+      },
+      {
+        "id": "c9cd954986e5bd94",
+        "mesh_path": "data/deepcad/meshes/c9cd954986e5bd94.stl",
+        "sha256": "3230240428178c4f7ae6a32a76eca5864229250c5575e041e7a287d1a55955cd",
+        "split": "test"
+      },
+      {
+        "id": "ed22ef4f266b62ea",
+        "mesh_path": "data/deepcad/meshes/ed22ef4f266b62ea.stl",
+        "sha256": "e17a9aa5eaa65a907b07698fa2d661378d19712cd9c35bc1efe12f4f36dbe9a4",
+        "split": "test"
+      },
+      {
+        "id": "967a46bd82855d2f",
+        "mesh_path": "data/deepcad/meshes/967a46bd82855d2f.stl",
+        "sha256": "2a15f6b170e323638d55800dafb069469f3b7501b38cc83417f4fc4f8486b663",
+        "split": "test"
+      },
+      {
+        "id": "ef4d58825e90bd63",
+        "mesh_path": "data/deepcad/meshes/ef4d58825e90bd63.stl",
+        "sha256": "d246c680a552808de3897db045efc920621198d0f43c7800c512a6f0e9c65bc5",
+        "split": "test"
+      },
+      {
+        "id": "5a9c93b9de212fb3",
+        "mesh_path": "data/deepcad/meshes/5a9c93b9de212fb3.stl",
+        "sha256": "071b5fb17046b369ba19d487115155bd19d71d60286b5699214b7c94f7068e3e",
+        "split": "test"
+      },
+      {
+        "id": "4fbd0002d037e9ba",
+        "mesh_path": "data/deepcad/meshes/4fbd0002d037e9ba.stl",
+        "sha256": "e8b614cbc4df56f439af04f937f474f73a97d550508c02d45cbfcc0ec1d03bb2",
+        "split": "test"
+      },
+      {
+        "id": "49315b39c76e73cd",
+        "mesh_path": "data/deepcad/meshes/49315b39c76e73cd.stl",
+        "sha256": "c17cde91e8d78e123c2b9d81aa763161f9e01c2dcf7b34ded543e9358020baad",
+        "split": "test"
+      },
+      {
+        "id": "8c8613bfba62e7ee",
+        "mesh_path": "data/deepcad/meshes/8c8613bfba62e7ee.stl",
+        "sha256": "546ff73ec654a55540ac810f9b69cb4e1fa42d6d2d311b2eef409efb700be78a",
+        "split": "test"
+      },
+      {
+        "id": "dc35ca441133fd3d",
+        "mesh_path": "data/deepcad/meshes/dc35ca441133fd3d.stl",
+        "sha256": "d52c070536299efde1d7dee49a15387f23201344c0911943993370131c38fc64",
+        "split": "test"
+      },
+      {
+        "id": "ca1f55d49d5f949a",
+        "mesh_path": "data/deepcad/meshes/ca1f55d49d5f949a.stl",
+        "sha256": "317b581f52022dc300eb0cedbbca47a9df211903abc2fe08334ee532ea7143d8",
+        "split": "test"
+      },
+      {
+        "id": "cd02c3ef80f4de30",
+        "mesh_path": "data/deepcad/meshes/cd02c3ef80f4de30.stl",
+        "sha256": "4734a2d8c4633e6be61eafab1ba0a0da46e71d3d1be18e011cc5a6747e8c12d8",
+        "split": "test"
+      },
+      {
+        "id": "ff7069b49424c61e",
+        "mesh_path": "data/deepcad/meshes/ff7069b49424c61e.stl",
+        "sha256": "754e0232c12c290fe373407996b24ef21e4570ebb4f97431cb89c450e3cb9e35",
+        "split": "test"
+      },
+      {
+        "id": "95b8ad9e98798f32",
+        "mesh_path": "data/deepcad/meshes/95b8ad9e98798f32.stl",
+        "sha256": "7a6366d7b18d059d3f83e29bdc4956c6c379cab116be4e365421a682a16e5300",
+        "split": "test"
+      },
+      {
+        "id": "e047ff1f8bb703bb",
+        "mesh_path": "data/deepcad/meshes/e047ff1f8bb703bb.stl",
+        "sha256": "22d15b975c73ee96ff184b8b2627d35697d0c5f36214686e3bacd085c88ec1cb",
+        "split": "test"
+      },
+      {
+        "id": "7d5cae83a93ede44",
+        "mesh_path": "data/deepcad/meshes/7d5cae83a93ede44.stl",
+        "sha256": "e218d116ba75448fd0623c0fe5dc75a7547475a8b307ff6f09ca359aca6a77cf",
+        "split": "test"
+      },
+      {
+        "id": "76c9db912f4bdb47",
+        "mesh_path": "data/deepcad/meshes/76c9db912f4bdb47.stl",
+        "sha256": "a0f17d4bcdcca5f1aa7fe5b59438fe5960e57ee571a9a2bb6b039b6c963f30a2",
+        "split": "test"
+      },
+      {
+        "id": "b0510685e6403f80",
+        "mesh_path": "data/deepcad/meshes/b0510685e6403f80.stl",
+        "sha256": "3a285f251ca2b2487fc2fba4dc3636f721e3a98fa767a9370b0e4fb7bdd43dc2",
+        "split": "test"
+      },
+      {
+        "id": "82766e1efc2c2682",
+        "mesh_path": "data/deepcad/meshes/82766e1efc2c2682.stl",
+        "sha256": "65d1028c910fcc82b2949dac56a8f32d631b558da2fb5c1601d5732956d3f082",
+        "split": "test"
+      },
+      {
+        "id": "c67e4a467e6f24e1",
+        "mesh_path": "data/deepcad/meshes/c67e4a467e6f24e1.stl",
+        "sha256": "4401d99bc3911113b6500a47a4b85ecc8f825b792871fa560b04416de471f826",
+        "split": "test"
+      }
+    ],
+    "interior300": [
+      {
+        "id": "indoorcad_d01348b6804e1b",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_d01348b6804e1b.stl",
+        "sha256": "11d7d340938095fc679cfa0c5974e412ca1c8d2261e039447518811ebeeb056d",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_bb795b17ea76b9",
+        "mesh_path": "data/interior300/meshes/desktop_object/indoorcad_bb795b17ea76b9.stl",
+        "sha256": "518f369a0888b7dce41dad56ea678f441dbc6cdfc83864cc3c91727540a88e4d",
+        "source": "indoorcad",
+        "category": "desktop_object",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_bc313e18aa95b3",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_bc313e18aa95b3.stl",
+        "sha256": "dd3271453f684c8d24c06ae980dcc9b71d064674d38de8a2fd9f6f7d71686099",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_c120864ce3d53c",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_c120864ce3d53c.stl",
+        "sha256": "641602d424ff51766993e6953ac656da63d4a02f5891df22b35afe85b6f71ca0",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_6de14bb6a45df0",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_6de14bb6a45df0.stl",
+        "sha256": "cdd337414954dee11d810b1cfad84bb44758010bf370464fd4e9af4e7f8ed407",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_56c740edad3c68",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_56c740edad3c68.stl",
+        "sha256": "e3d9bb5a49c55c28fd6b45a5df67ad6d6523948f214c82c18b04bea2411c35a8",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_0a7e4d58c1f613",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_0a7e4d58c1f613.stl",
+        "sha256": "d4ce26db5a253c2f7597b3221f22af583e74e6b05dd1106f7e104c1af0ffd29a",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_cd093c25223f9d",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_cd093c25223f9d.stl",
+        "sha256": "65a443a15dca6598a2ed4dc0ffde6d4510ec618610646f0da831186b3d729140",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_2d1ec9288139ae",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_2d1ec9288139ae.stl",
+        "sha256": "2ebeb174bf8d1923569c86e46bb2a20df64ebe991e7875861ec823faaf26c0f2",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_bbc1675e07ca30",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_bbc1675e07ca30.stl",
+        "sha256": "949545893ef1683618dd80783e3a2233fdf1fe7c3a2ef82f5c954cbe37e00782",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_307532cfedaede",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_307532cfedaede.stl",
+        "sha256": "c434873f5fdb98a4c7bcfc80eb3ce8101228f682d444ce6658d876d91b5f20e4",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_2553762c6e0ff0",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_2553762c6e0ff0.stl",
+        "sha256": "a4f9bd4f108bbf89af961f4a83013951ab7dce510d7139cd7fbf3d4b9b2fa6c9",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_adb01f831d60e8",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_adb01f831d60e8.stl",
+        "sha256": "817c2e4bcd7457ecf4112bd797e05e8a20124f95dda587b0bcd1f5aa8f906b55",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_ac68db1f657ad3",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_ac68db1f657ad3.stl",
+        "sha256": "8b5045d3c139878d775e32fb88b94d7a3ec12f1d66eda5bed7d8513cfbaaf504",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_f4b18c11e8f4ab",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_f4b18c11e8f4ab.stl",
+        "sha256": "277bd1d50af54080e07b61484aac97303ba40759baf4389d4c1fd3d3b862b692",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_a7117de72ded11",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_a7117de72ded11.stl",
+        "sha256": "0764a966c661aa589c09437d6280032c6dad8e8432d7d070efe89bce2b3d5112",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_8eae91b9f8a098",
+        "mesh_path": "data/interior300/meshes/cabinet/indoorcad_8eae91b9f8a098.stl",
+        "sha256": "1054aee8dbb754991e0d666ef32a554bb3aceee25158e6246da0c471cde8754f",
+        "source": "indoorcad",
+        "category": "cabinet",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_d857bf7a780e97",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_d857bf7a780e97.stl",
+        "sha256": "36e8f645863c1cdb23b3de2832e73fbca9374561db661a46b7b49f82702c1a21",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_6394141c9fdd04",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_6394141c9fdd04.stl",
+        "sha256": "7aedee27b12da1fae115c25cb2ad881fa30c1cb962541e0ce66eb283c1210ce9",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_b3c1d89b2ebe48",
+        "mesh_path": "data/interior300/meshes/lamp/indoorcad_b3c1d89b2ebe48.stl",
+        "sha256": "e55371709ecdaf9ca4fda372269b179d893feedfc6a69a9967f229752b441bbc",
+        "source": "indoorcad",
+        "category": "lamp",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_d6c7b21e3568e2",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_d6c7b21e3568e2.stl",
+        "sha256": "c00fdf224cdc0063b04ee4e7d5f6d74d21f7835370d4479d28c9edcab4084c84",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_98ba6375223977",
+        "mesh_path": "data/interior300/meshes/cabinet/indoorcad_98ba6375223977.stl",
+        "sha256": "d1a74c809d84c7389ece6d8671c5b96930544ea5178ca71c0aab05d389c7c419",
+        "source": "indoorcad",
+        "category": "cabinet",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_6d254132d4cff1",
+        "mesh_path": "data/interior300/meshes/lamp/indoorcad_6d254132d4cff1.stl",
+        "sha256": "f619ec4b776964b0d8aea43527c5af6b36ab97b18eb52db66487dc208f7b71f2",
+        "source": "indoorcad",
+        "category": "lamp",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_e279d77f685f4e",
+        "mesh_path": "data/interior300/meshes/cabinet/indoorcad_e279d77f685f4e.stl",
+        "sha256": "d5a71fdbadb862cc5e1ef7d7ca19b5974bfab96ce8dc682a2f8388d43be2b6a8",
+        "source": "indoorcad",
+        "category": "cabinet",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_cb5de8ab0d2867",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_cb5de8ab0d2867.stl",
+        "sha256": "6a43715495c447cc8595c6accf1f310540c73d00a32dd58c757bc4d29f98c110",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_f71b80868b2fb8",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_f71b80868b2fb8.stl",
+        "sha256": "25d27e11f8f4f1d374bf79a32303dbe8cf96df35612117b002b5ccc1f24ad281",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_1ff5e2c5adc9a5",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_1ff5e2c5adc9a5.stl",
+        "sha256": "83d3116afefafeb4c875b83edb2eb06c9def7f2758cc407142c3511d0a0d2992",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_7741479051016e",
+        "mesh_path": "data/interior300/meshes/desktop_object/indoorcad_7741479051016e.stl",
+        "sha256": "67aa9622aeddb23932c79dd2889778775f1288e1f2a2479476b0388f37fe50ea",
+        "source": "indoorcad",
+        "category": "desktop_object",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_e7e1f2e434d50a",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_e7e1f2e434d50a.stl",
+        "sha256": "d0159fe742fcab1c58678dcf04227e344eda44db72b283aa8981022081e98a23",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_dd9addc5c226b7",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_dd9addc5c226b7.stl",
+        "sha256": "080119c356f78951254e534beb92c377805e2b8d21042d4373cfbb364cfad270",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_a143c70108e1cf",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_a143c70108e1cf.stl",
+        "sha256": "8dba09bbadbaf693407be71a23e4571dd9559edc60c82abaaaf86e75a5615274",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_97bd3c7d51d976",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_97bd3c7d51d976.stl",
+        "sha256": "c75d5c8bfde489ea64c54b9f871331def515524bff7473ff21502e82e71e4a05",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_90eddef565b83c",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_90eddef565b83c.stl",
+        "sha256": "9a0532272c6e57f0757a636623cee4e38ad3acb2288b18ba2856682b60727ed2",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_fbd70d1415089a",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_fbd70d1415089a.stl",
+        "sha256": "f0ff5a3961035b8a1447edf487bfc62815f538afee632e0eeb660931b0f7aed9",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_aba4484cc5811f",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_aba4484cc5811f.stl",
+        "sha256": "743bdfa4e947d39e9a4239de9635e59eb69e6d56ae87236277720a6a2b2b7370",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_fe35cdd735382c",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_fe35cdd735382c.stl",
+        "sha256": "057733612a6505b900343a7bb726f593cdcd7d423f356a3783e1a86bf4837e0f",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_2aa4168a90ffa9",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_2aa4168a90ffa9.stl",
+        "sha256": "55e12f4a6b7c163eebb980019b3b34ebf975b0083471acc5ce8209190f39bf9d",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_76e6b86471ab83",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_76e6b86471ab83.stl",
+        "sha256": "55de001aa929ba1658f281d12ce165a527ac00c2ce324cdc5c05fceed9fb2de2",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_446fa66a463fad",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_446fa66a463fad.stl",
+        "sha256": "e20b97e56d65bc69c3acbc4d0f267da7d6745c7beaf710008ef7d8dd5ea12e38",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_7fe9f37b7767a0",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_7fe9f37b7767a0.stl",
+        "sha256": "1c0fdb997970816a645f7e0fcf92b37960a9db65d32d5a8434b6cdac0709bcee",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_plastic_monobloc_chair_01",
+        "mesh_path": "data/interior300/meshes/furniture/polyhaven_plastic_monobloc_chair_01.stl",
+        "sha256": "b4a968676758ff4a4184ddfd10d48ca9cf06648b5f241fb93a40a362646761c2",
+        "source": "polyhaven",
+        "category": "furniture",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_planter_pot_clay",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_planter_pot_clay.stl",
+        "sha256": "ffa6714e3403d4b05236cdd7a8831f5bfb735fae6d5431f61ee779e9d747f43d",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_carved_wooden_elephant",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_carved_wooden_elephant.stl",
+        "sha256": "c4d5dab4703da50ff0f9ceb77d3c14dc4b3059e71c8d9e08d702cb7335f4c3ca",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_marble_bust_01",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_marble_bust_01.stl",
+        "sha256": "0ebb3627d6506cb594c9900668f8c122b03ac01e0e98da748e8d127e3ac30bd8",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_ceramic_vase_01",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_ceramic_vase_01.stl",
+        "sha256": "ad0bab1a165c421eb9a78ffb8e27fb859dab81c9faeafff7335f15e170e3dd66",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_lion_head",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_lion_head.stl",
+        "sha256": "e8839edb8a486fc722c6466729cd771de784d1242cfd8fe661610c8f07183d07",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_pot_enamel_01",
+        "mesh_path": "data/interior300/meshes/kitchen/polyhaven_pot_enamel_01.stl",
+        "sha256": "761505186ab1327401bd37ee3b70a4e30f68e7adbc669cc0005ebe00328f80c0",
+        "source": "polyhaven",
+        "category": "kitchen",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_lambis_shell",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_lambis_shell.stl",
+        "sha256": "4efe4f049bffa1bf32a9e1d5b0b5a80d104e4ac0171cb2d71f13d0792e4d1990",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_wooden_spoon",
+        "mesh_path": "data/interior300/meshes/kitchen/polyhaven_wooden_spoon.stl",
+        "sha256": "b13445f84fe1647964eafa3c7a7cef72a9b774635d2057957c3fb6b9deec2fa5",
+        "source": "polyhaven",
+        "category": "kitchen",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_ceramic_vase_02",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_ceramic_vase_02.stl",
+        "sha256": "37a76ad414a0ec1e9e44bbfede764d30eac902485a254af5689bcf42b38747f1",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      }
+    ]
+  },
+  "input_eligibility_rejections": [
+    {
+      "id": "indoorcad_d4512b598141c5",
+      "reason": "not_volume_in_current_full_STL_loader_despite_manifest_flag"
+    }
+  ],
+  "deepcad_verified_volume_test_pool": 99,
+  "required_conditions": [
+    {
+      "name": "cheap_one_prompt",
+      "model": "openai/gpt-6-luna",
+      "cad_generations": 1,
+      "analysis_calls": 0,
+      "feedback": false
+    },
+    {
+      "name": "cheap_harness",
+      "model": "openai/gpt-6-luna",
+      "orchestrator": "classic",
+      "cad_generations_max": 5,
+      "analysis_calls": 0,
+      "feedback": true
+    },
+    {
+      "name": "expensive_one_prompt",
+      "model": "openai/gpt-6-sol",
+      "cad_generations": 1,
+      "analysis_calls": 0,
+      "feedback": false
+    }
+  ],
+  "optional_conditions": [
+    {
+      "name": "expensive_harness",
+      "enabled": false,
+      "reason": "only if budget remains"
+    }
+  ],
+  "shared_settings": {
+    "input": "same six-view target sheet, normalized extents, request and base system prompt for all three conditions; classic repair adds measured feedback",
+    "reasoning_effort": "medium",
+    "max_output_tokens": 16000,
+    "cad_execution_timeout_seconds": 60,
+    "request_timeout_seconds": 180,
+    "memory_limit_mib": 2048,
+    "target_iou": 0.9,
+    "patience": 3,
+    "min_improvement": 0.001,
+    "numerical_optimization": false,
+    "independent_alignment_or_scale_fit": false,
+    "total_token_budget": 100000,
+    "max_wall_seconds": 600,
+    "max_workers": 4
+  },
+  "before_paid_run": {
+    "fixed_expensive_model": "openai/gpt-6-sol",
+    "maximum_total_usd": 1.35,
+    "harness_time_budget_per_object_seconds": 600,
+    "harness_token_budget_per_object": 100000,
+    "status": "resolved; settings frozen before first paid generation"
+  },
+  "metrics": {
+    "primary": "mean best full-volume IoU over all50 eligible targets per domain; exhausted/failed prediction unavailable treated0 in primary mean, also report availability",
+    "secondary": [
+      "valid CAD rate",
+      "mean/median IoU on scored outputs",
+      "fraction IoU>=0.9",
+      "provider calls",
+      "all provider-reported USD including failed generations and analysis if any",
+      "unknown cost count",
+      "mean elapsed seconds per item"
+    ],
+    "paired": "Report per-ID first versus best difference and bootstrapped paired95%CI; first historical attempt is only a diagnostic proxy, not a separately randomized baseline",
+    "failures": "Input eligibility fixed before generation; do not treat unprocessed or partial jobs as measured failures. Report incomplete coverage separately."
+  },
+  "started_at": "2026-10-23T01:21:15.144755+00:00",
+  "model_pair": {
+    "cheap": "openai/gpt-6-luna",
+    "expensive": "openai/gpt-6-sol"
+  },
+  "maximum_new_spend_usd": 1.35,
+  "resource_ladder": "matched prefixes in steps of 5",
+  "shared_first_answer": true,
+  "eligible_prefix_order": {
+    "deepcad": [
+      {
+        "id": "2bd8330b6c0bbaae",
+        "mesh_path": "data/deepcad/meshes/2bd8330b6c0bbaae.stl",
+        "sha256": "fce06f392fbe0fbfc91d3214028a5c4017cd557e1cbbe6317f446c6429e61fb7",
+        "split": "test"
+      },
+      {
+        "id": "23b855249a18d0f1",
+        "mesh_path": "data/deepcad/meshes/23b855249a18d0f1.stl",
+        "sha256": "ba8e9fff3c149fa050261449dc9840237dae4c34d23df0d22ce60f54756cce39",
+        "split": "test"
+      },
+      {
+        "id": "3376e6b0a71b3a98",
+        "mesh_path": "data/deepcad/meshes/3376e6b0a71b3a98.stl",
+        "sha256": "975c6c24bbbf7cc5f31eda9e71b2216b29b0ddda53c6dfcd0770227aa4387760",
+        "split": "test"
+      },
+      {
+        "id": "fe06896782f584a6",
+        "mesh_path": "data/deepcad/meshes/fe06896782f584a6.stl",
+        "sha256": "bf1fade56911e4d1d7d7980ae030121ed6a8625aa75b0626c560762de7c6beef",
+        "split": "test"
+      },
+      {
+        "id": "bc69e26be07daf52",
+        "mesh_path": "data/deepcad/meshes/bc69e26be07daf52.stl",
+        "sha256": "13a66d84486379fce2078cd9f297ff1cb0c6452b38acaf963fef4baad1195a2c",
+        "split": "test"
+      },
+      {
+        "id": "a1a9b84d5aaa6a8d",
+        "mesh_path": "data/deepcad/meshes/a1a9b84d5aaa6a8d.stl",
+        "sha256": "43d21124610606793d247a5ecb32feeae987b8d4e1ab4d0ab7d841135e730e4e",
+        "split": "test"
+      },
+      {
+        "id": "8b1771a9fe4ffd63",
+        "mesh_path": "data/deepcad/meshes/8b1771a9fe4ffd63.stl",
+        "sha256": "0a8816cfa9ce56d5add5cbe38ca92f549ed957b600d0d8fdfa7fb80a24fa6110",
+        "split": "test"
+      },
+      {
+        "id": "b1c579bb63128696",
+        "mesh_path": "data/deepcad/meshes/b1c579bb63128696.stl",
+        "sha256": "c88db67515235d32fee3651350cff1f7a3fcfaebfbad7f2468f38101182e5313",
+        "split": "test"
+      },
+      {
+        "id": "8340c60a461b7253",
+        "mesh_path": "data/deepcad/meshes/8340c60a461b7253.stl",
+        "sha256": "53f96059738b645c7701f8278f4ab178d0720c2138c5917bea5dfa81f2160129",
+        "split": "test"
+      },
+      {
+        "id": "a978d5400272f027",
+        "mesh_path": "data/deepcad/meshes/a978d5400272f027.stl",
+        "sha256": "20cfe67d86b8e5cded7a3b887581271be7ffde61fa622d763403b0b969ed0a97",
+        "split": "test"
+      },
+      {
+        "id": "f2bb8530e68b55fd",
+        "mesh_path": "data/deepcad/meshes/f2bb8530e68b55fd.stl",
+        "sha256": "618b9806e19af1580b9c1c9ff499ca79b25456ca6afdb1e0ff6d8917614c003a",
+        "split": "test"
+      },
+      {
+        "id": "fcca9059a93b8cb3",
+        "mesh_path": "data/deepcad/meshes/fcca9059a93b8cb3.stl",
+        "sha256": "81621914fccf34523bd1276eef1e42df39e1ffd5da0538c627484a67be5849fb",
+        "split": "test"
+      },
+      {
+        "id": "8ee25e42f2289c86",
+        "mesh_path": "data/deepcad/meshes/8ee25e42f2289c86.stl",
+        "sha256": "fd5413d7f66a46b7dbfe8172265ea045184957201052d3b1d2c92fdecbf2b323",
+        "split": "test"
+      },
+      {
+        "id": "26f58c206980f734",
+        "mesh_path": "data/deepcad/meshes/26f58c206980f734.stl",
+        "sha256": "a53bb7467318d4d5197e583a83090c1cb483ab640f194468d87c9cba04cf5911",
+        "split": "test"
+      },
+      {
+        "id": "824ea4712581cf17",
+        "mesh_path": "data/deepcad/meshes/824ea4712581cf17.stl",
+        "sha256": "dac7137446d5910430890754631e2090f7e48317917c90f8d131d323ebd5488d",
+        "split": "test"
+      },
+      {
+        "id": "fc47d05119b67808",
+        "mesh_path": "data/deepcad/meshes/fc47d05119b67808.stl",
+        "sha256": "adcb8108359fc133f97ea687fbe64eaeff7cfad402104ccb883c2ff162e543f7",
+        "split": "test"
+      },
+      {
+        "id": "1543d26acf560209",
+        "mesh_path": "data/deepcad/meshes/1543d26acf560209.stl",
+        "sha256": "f41e4b0ddc466dee6b8c00339b3a8b4ae61ee640ede6d999f0bb8468c3205a34",
+        "split": "test"
+      },
+      {
+        "id": "77660463a5d995e2",
+        "mesh_path": "data/deepcad/meshes/77660463a5d995e2.stl",
+        "sha256": "461b4e0b8607b92c571f3b920217242d6e818e4a9850c7a53c1c3ab06eafc562",
+        "split": "test"
+      },
+      {
+        "id": "0720b81baaebe07b",
+        "mesh_path": "data/deepcad/meshes/0720b81baaebe07b.stl",
+        "sha256": "c55d75521dd399a9628b5b4d598f1b0d99d850f03ae8c1a4d738583b4f73e222",
+        "split": "test"
+      },
+      {
+        "id": "cc79eaafb34a73c5",
+        "mesh_path": "data/deepcad/meshes/cc79eaafb34a73c5.stl",
+        "sha256": "6991f1eb5e645613c0e5158161a105c355200338f2c558625c020902657890d3",
+        "split": "test"
+      },
+      {
+        "id": "39e6d36142177f5b",
+        "mesh_path": "data/deepcad/meshes/39e6d36142177f5b.stl",
+        "sha256": "ccd90247cc853700fa95ea742ccf4141ab40af7fdbe348b8716eb2645b22de10",
+        "split": "test"
+      },
+      {
+        "id": "0863599084984129",
+        "mesh_path": "data/deepcad/meshes/0863599084984129.stl",
+        "sha256": "005a8c39646f9a97a20d575978ce31f30f7903f841c42a23b6a1eb89f5e008d9",
+        "split": "test"
+      },
+      {
+        "id": "7caf1068ba1b7b0c",
+        "mesh_path": "data/deepcad/meshes/7caf1068ba1b7b0c.stl",
+        "sha256": "bbe1e75b3b985c25705427231244f75c677d408ad99b45b67d262f2de1d716c0",
+        "split": "test"
+      },
+      {
+        "id": "8999ab4eb92d0398",
+        "mesh_path": "data/deepcad/meshes/8999ab4eb92d0398.stl",
+        "sha256": "569f5ad19e2049a3157f4302c689463b9599a3530946aa83ac4c659f16f6b44d",
+        "split": "test"
+      },
+      {
+        "id": "090798a801addc2f",
+        "mesh_path": "data/deepcad/meshes/090798a801addc2f.stl",
+        "sha256": "13ff55a0a1286d099d14b974b6553e55630141b252a7af253e5f9fc2722df1d3",
+        "split": "test"
+      },
+      {
+        "id": "7a47b19b6013f335",
+        "mesh_path": "data/deepcad/meshes/7a47b19b6013f335.stl",
+        "sha256": "3bda624fb94cc15a7eaab3c6f11dff56d8d19b2fba163308356f1bc20ba616ed",
+        "split": "test"
+      },
+      {
+        "id": "8e7944c1cc0ed3a7",
+        "mesh_path": "data/deepcad/meshes/8e7944c1cc0ed3a7.stl",
+        "sha256": "7131496e156c86a81f8db946a3763f50a7afbdbf7863d56dbececf9b449fd5b9",
+        "split": "test"
+      },
+      {
+        "id": "827847d28ba12fce",
+        "mesh_path": "data/deepcad/meshes/827847d28ba12fce.stl",
+        "sha256": "5667c352ada5199efa211dc1479f68bb0bbab2ef6a048f1056c48109323bfa1c",
+        "split": "test"
+      },
+      {
+        "id": "64af8893f0dcfc90",
+        "mesh_path": "data/deepcad/meshes/64af8893f0dcfc90.stl",
+        "sha256": "996e0d188a3384c441e60a9f51f6dd7ab72556362bda1c0671f976a2f344aff3",
+        "split": "test"
+      },
+      {
+        "id": "ca3cfd440f80f418",
+        "mesh_path": "data/deepcad/meshes/ca3cfd440f80f418.stl",
+        "sha256": "b2184d20492c3658b766b082cd3b66a441951424838195c340e73c177ffb324b",
+        "split": "test"
+      },
+      {
+        "id": "db5574917a1b180e",
+        "mesh_path": "data/deepcad/meshes/db5574917a1b180e.stl",
+        "sha256": "d225cc0f7f6df6db9cd9c8f2ecf7e41f515182d08dfa947a4a4b0d7861b67353",
+        "split": "test"
+      },
+      {
+        "id": "c9cd954986e5bd94",
+        "mesh_path": "data/deepcad/meshes/c9cd954986e5bd94.stl",
+        "sha256": "3230240428178c4f7ae6a32a76eca5864229250c5575e041e7a287d1a55955cd",
+        "split": "test"
+      },
+      {
+        "id": "ed22ef4f266b62ea",
+        "mesh_path": "data/deepcad/meshes/ed22ef4f266b62ea.stl",
+        "sha256": "e17a9aa5eaa65a907b07698fa2d661378d19712cd9c35bc1efe12f4f36dbe9a4",
+        "split": "test"
+      },
+      {
+        "id": "967a46bd82855d2f",
+        "mesh_path": "data/deepcad/meshes/967a46bd82855d2f.stl",
+        "sha256": "2a15f6b170e323638d55800dafb069469f3b7501b38cc83417f4fc4f8486b663",
+        "split": "test"
+      },
+      {
+        "id": "ef4d58825e90bd63",
+        "mesh_path": "data/deepcad/meshes/ef4d58825e90bd63.stl",
+        "sha256": "d246c680a552808de3897db045efc920621198d0f43c7800c512a6f0e9c65bc5",
+        "split": "test"
+      },
+      {
+        "id": "5a9c93b9de212fb3",
+        "mesh_path": "data/deepcad/meshes/5a9c93b9de212fb3.stl",
+        "sha256": "071b5fb17046b369ba19d487115155bd19d71d60286b5699214b7c94f7068e3e",
+        "split": "test"
+      },
+      {
+        "id": "4fbd0002d037e9ba",
+        "mesh_path": "data/deepcad/meshes/4fbd0002d037e9ba.stl",
+        "sha256": "e8b614cbc4df56f439af04f937f474f73a97d550508c02d45cbfcc0ec1d03bb2",
+        "split": "test"
+      },
+      {
+        "id": "49315b39c76e73cd",
+        "mesh_path": "data/deepcad/meshes/49315b39c76e73cd.stl",
+        "sha256": "c17cde91e8d78e123c2b9d81aa763161f9e01c2dcf7b34ded543e9358020baad",
+        "split": "test"
+      },
+      {
+        "id": "8c8613bfba62e7ee",
+        "mesh_path": "data/deepcad/meshes/8c8613bfba62e7ee.stl",
+        "sha256": "546ff73ec654a55540ac810f9b69cb4e1fa42d6d2d311b2eef409efb700be78a",
+        "split": "test"
+      },
+      {
+        "id": "dc35ca441133fd3d",
+        "mesh_path": "data/deepcad/meshes/dc35ca441133fd3d.stl",
+        "sha256": "d52c070536299efde1d7dee49a15387f23201344c0911943993370131c38fc64",
+        "split": "test"
+      },
+      {
+        "id": "ca1f55d49d5f949a",
+        "mesh_path": "data/deepcad/meshes/ca1f55d49d5f949a.stl",
+        "sha256": "317b581f52022dc300eb0cedbbca47a9df211903abc2fe08334ee532ea7143d8",
+        "split": "test"
+      },
+      {
+        "id": "cd02c3ef80f4de30",
+        "mesh_path": "data/deepcad/meshes/cd02c3ef80f4de30.stl",
+        "sha256": "4734a2d8c4633e6be61eafab1ba0a0da46e71d3d1be18e011cc5a6747e8c12d8",
+        "split": "test"
+      },
+      {
+        "id": "ff7069b49424c61e",
+        "mesh_path": "data/deepcad/meshes/ff7069b49424c61e.stl",
+        "sha256": "754e0232c12c290fe373407996b24ef21e4570ebb4f97431cb89c450e3cb9e35",
+        "split": "test"
+      },
+      {
+        "id": "95b8ad9e98798f32",
+        "mesh_path": "data/deepcad/meshes/95b8ad9e98798f32.stl",
+        "sha256": "7a6366d7b18d059d3f83e29bdc4956c6c379cab116be4e365421a682a16e5300",
+        "split": "test"
+      },
+      {
+        "id": "e047ff1f8bb703bb",
+        "mesh_path": "data/deepcad/meshes/e047ff1f8bb703bb.stl",
+        "sha256": "22d15b975c73ee96ff184b8b2627d35697d0c5f36214686e3bacd085c88ec1cb",
+        "split": "test"
+      },
+      {
+        "id": "7d5cae83a93ede44",
+        "mesh_path": "data/deepcad/meshes/7d5cae83a93ede44.stl",
+        "sha256": "e218d116ba75448fd0623c0fe5dc75a7547475a8b307ff6f09ca359aca6a77cf",
+        "split": "test"
+      },
+      {
+        "id": "76c9db912f4bdb47",
+        "mesh_path": "data/deepcad/meshes/76c9db912f4bdb47.stl",
+        "sha256": "a0f17d4bcdcca5f1aa7fe5b59438fe5960e57ee571a9a2bb6b039b6c963f30a2",
+        "split": "test"
+      },
+      {
+        "id": "b0510685e6403f80",
+        "mesh_path": "data/deepcad/meshes/b0510685e6403f80.stl",
+        "sha256": "3a285f251ca2b2487fc2fba4dc3636f721e3a98fa767a9370b0e4fb7bdd43dc2",
+        "split": "test"
+      },
+      {
+        "id": "82766e1efc2c2682",
+        "mesh_path": "data/deepcad/meshes/82766e1efc2c2682.stl",
+        "sha256": "65d1028c910fcc82b2949dac56a8f32d631b558da2fb5c1601d5732956d3f082",
+        "split": "test"
+      },
+      {
+        "id": "c67e4a467e6f24e1",
+        "mesh_path": "data/deepcad/meshes/c67e4a467e6f24e1.stl",
+        "sha256": "4401d99bc3911113b6500a47a4b85ecc8f825b792871fa560b04416de471f826",
+        "split": "test"
+      }
+    ],
+    "interior300": [
+      {
+        "id": "indoorcad_d01348b6804e1b",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_d01348b6804e1b.stl",
+        "sha256": "11d7d340938095fc679cfa0c5974e412ca1c8d2261e039447518811ebeeb056d",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_bb795b17ea76b9",
+        "mesh_path": "data/interior300/meshes/desktop_object/indoorcad_bb795b17ea76b9.stl",
+        "sha256": "518f369a0888b7dce41dad56ea678f441dbc6cdfc83864cc3c91727540a88e4d",
+        "source": "indoorcad",
+        "category": "desktop_object",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_bc313e18aa95b3",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_bc313e18aa95b3.stl",
+        "sha256": "dd3271453f684c8d24c06ae980dcc9b71d064674d38de8a2fd9f6f7d71686099",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_c120864ce3d53c",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_c120864ce3d53c.stl",
+        "sha256": "641602d424ff51766993e6953ac656da63d4a02f5891df22b35afe85b6f71ca0",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_plastic_monobloc_chair_01",
+        "mesh_path": "data/interior300/meshes/furniture/polyhaven_plastic_monobloc_chair_01.stl",
+        "sha256": "b4a968676758ff4a4184ddfd10d48ca9cf06648b5f241fb93a40a362646761c2",
+        "source": "polyhaven",
+        "category": "furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_6de14bb6a45df0",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_6de14bb6a45df0.stl",
+        "sha256": "cdd337414954dee11d810b1cfad84bb44758010bf370464fd4e9af4e7f8ed407",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_56c740edad3c68",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_56c740edad3c68.stl",
+        "sha256": "e3d9bb5a49c55c28fd6b45a5df67ad6d6523948f214c82c18b04bea2411c35a8",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_0a7e4d58c1f613",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_0a7e4d58c1f613.stl",
+        "sha256": "d4ce26db5a253c2f7597b3221f22af583e74e6b05dd1106f7e104c1af0ffd29a",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_cd093c25223f9d",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_cd093c25223f9d.stl",
+        "sha256": "65a443a15dca6598a2ed4dc0ffde6d4510ec618610646f0da831186b3d729140",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_planter_pot_clay",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_planter_pot_clay.stl",
+        "sha256": "ffa6714e3403d4b05236cdd7a8831f5bfb735fae6d5431f61ee779e9d747f43d",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_2d1ec9288139ae",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_2d1ec9288139ae.stl",
+        "sha256": "2ebeb174bf8d1923569c86e46bb2a20df64ebe991e7875861ec823faaf26c0f2",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_bbc1675e07ca30",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_bbc1675e07ca30.stl",
+        "sha256": "949545893ef1683618dd80783e3a2233fdf1fe7c3a2ef82f5c954cbe37e00782",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_307532cfedaede",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_307532cfedaede.stl",
+        "sha256": "c434873f5fdb98a4c7bcfc80eb3ce8101228f682d444ce6658d876d91b5f20e4",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_2553762c6e0ff0",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_2553762c6e0ff0.stl",
+        "sha256": "a4f9bd4f108bbf89af961f4a83013951ab7dce510d7139cd7fbf3d4b9b2fa6c9",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_carved_wooden_elephant",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_carved_wooden_elephant.stl",
+        "sha256": "c4d5dab4703da50ff0f9ceb77d3c14dc4b3059e71c8d9e08d702cb7335f4c3ca",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_adb01f831d60e8",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_adb01f831d60e8.stl",
+        "sha256": "817c2e4bcd7457ecf4112bd797e05e8a20124f95dda587b0bcd1f5aa8f906b55",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_ac68db1f657ad3",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_ac68db1f657ad3.stl",
+        "sha256": "8b5045d3c139878d775e32fb88b94d7a3ec12f1d66eda5bed7d8513cfbaaf504",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_f4b18c11e8f4ab",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_f4b18c11e8f4ab.stl",
+        "sha256": "277bd1d50af54080e07b61484aac97303ba40759baf4389d4c1fd3d3b862b692",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_a7117de72ded11",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_a7117de72ded11.stl",
+        "sha256": "0764a966c661aa589c09437d6280032c6dad8e8432d7d070efe89bce2b3d5112",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_marble_bust_01",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_marble_bust_01.stl",
+        "sha256": "0ebb3627d6506cb594c9900668f8c122b03ac01e0e98da748e8d127e3ac30bd8",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_8eae91b9f8a098",
+        "mesh_path": "data/interior300/meshes/cabinet/indoorcad_8eae91b9f8a098.stl",
+        "sha256": "1054aee8dbb754991e0d666ef32a554bb3aceee25158e6246da0c471cde8754f",
+        "source": "indoorcad",
+        "category": "cabinet",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_d857bf7a780e97",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_d857bf7a780e97.stl",
+        "sha256": "36e8f645863c1cdb23b3de2832e73fbca9374561db661a46b7b49f82702c1a21",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_6394141c9fdd04",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_6394141c9fdd04.stl",
+        "sha256": "7aedee27b12da1fae115c25cb2ad881fa30c1cb962541e0ce66eb283c1210ce9",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_b3c1d89b2ebe48",
+        "mesh_path": "data/interior300/meshes/lamp/indoorcad_b3c1d89b2ebe48.stl",
+        "sha256": "e55371709ecdaf9ca4fda372269b179d893feedfc6a69a9967f229752b441bbc",
+        "source": "indoorcad",
+        "category": "lamp",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_ceramic_vase_01",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_ceramic_vase_01.stl",
+        "sha256": "ad0bab1a165c421eb9a78ffb8e27fb859dab81c9faeafff7335f15e170e3dd66",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_d6c7b21e3568e2",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_d6c7b21e3568e2.stl",
+        "sha256": "c00fdf224cdc0063b04ee4e7d5f6d74d21f7835370d4479d28c9edcab4084c84",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_98ba6375223977",
+        "mesh_path": "data/interior300/meshes/cabinet/indoorcad_98ba6375223977.stl",
+        "sha256": "d1a74c809d84c7389ece6d8671c5b96930544ea5178ca71c0aab05d389c7c419",
+        "source": "indoorcad",
+        "category": "cabinet",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_6d254132d4cff1",
+        "mesh_path": "data/interior300/meshes/lamp/indoorcad_6d254132d4cff1.stl",
+        "sha256": "f619ec4b776964b0d8aea43527c5af6b36ab97b18eb52db66487dc208f7b71f2",
+        "source": "indoorcad",
+        "category": "lamp",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_e279d77f685f4e",
+        "mesh_path": "data/interior300/meshes/cabinet/indoorcad_e279d77f685f4e.stl",
+        "sha256": "d5a71fdbadb862cc5e1ef7d7ca19b5974bfab96ce8dc682a2f8388d43be2b6a8",
+        "source": "indoorcad",
+        "category": "cabinet",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_lion_head",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_lion_head.stl",
+        "sha256": "e8839edb8a486fc722c6466729cd771de784d1242cfd8fe661610c8f07183d07",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_cb5de8ab0d2867",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_cb5de8ab0d2867.stl",
+        "sha256": "6a43715495c447cc8595c6accf1f310540c73d00a32dd58c757bc4d29f98c110",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_f71b80868b2fb8",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_f71b80868b2fb8.stl",
+        "sha256": "25d27e11f8f4f1d374bf79a32303dbe8cf96df35612117b002b5ccc1f24ad281",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_1ff5e2c5adc9a5",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_1ff5e2c5adc9a5.stl",
+        "sha256": "83d3116afefafeb4c875b83edb2eb06c9def7f2758cc407142c3511d0a0d2992",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_7741479051016e",
+        "mesh_path": "data/interior300/meshes/desktop_object/indoorcad_7741479051016e.stl",
+        "sha256": "67aa9622aeddb23932c79dd2889778775f1288e1f2a2479476b0388f37fe50ea",
+        "source": "indoorcad",
+        "category": "desktop_object",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_pot_enamel_01",
+        "mesh_path": "data/interior300/meshes/kitchen/polyhaven_pot_enamel_01.stl",
+        "sha256": "761505186ab1327401bd37ee3b70a4e30f68e7adbc669cc0005ebe00328f80c0",
+        "source": "polyhaven",
+        "category": "kitchen",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_e7e1f2e434d50a",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_e7e1f2e434d50a.stl",
+        "sha256": "d0159fe742fcab1c58678dcf04227e344eda44db72b283aa8981022081e98a23",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_dd9addc5c226b7",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_dd9addc5c226b7.stl",
+        "sha256": "080119c356f78951254e534beb92c377805e2b8d21042d4373cfbb364cfad270",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_a143c70108e1cf",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_a143c70108e1cf.stl",
+        "sha256": "8dba09bbadbaf693407be71a23e4571dd9559edc60c82abaaaf86e75a5615274",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_97bd3c7d51d976",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_97bd3c7d51d976.stl",
+        "sha256": "c75d5c8bfde489ea64c54b9f871331def515524bff7473ff21502e82e71e4a05",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_lambis_shell",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_lambis_shell.stl",
+        "sha256": "4efe4f049bffa1bf32a9e1d5b0b5a80d104e4ac0171cb2d71f13d0792e4d1990",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_90eddef565b83c",
+        "mesh_path": "data/interior300/meshes/table/indoorcad_90eddef565b83c.stl",
+        "sha256": "9a0532272c6e57f0757a636623cee4e38ad3acb2288b18ba2856682b60727ed2",
+        "source": "indoorcad",
+        "category": "table",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_fbd70d1415089a",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_fbd70d1415089a.stl",
+        "sha256": "f0ff5a3961035b8a1447edf487bfc62815f538afee632e0eeb660931b0f7aed9",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_aba4484cc5811f",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_aba4484cc5811f.stl",
+        "sha256": "743bdfa4e947d39e9a4239de9635e59eb69e6d56ae87236277720a6a2b2b7370",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_fe35cdd735382c",
+        "mesh_path": "data/interior300/meshes/chair/indoorcad_fe35cdd735382c.stl",
+        "sha256": "057733612a6505b900343a7bb726f593cdcd7d423f356a3783e1a86bf4837e0f",
+        "source": "indoorcad",
+        "category": "chair",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_wooden_spoon",
+        "mesh_path": "data/interior300/meshes/kitchen/polyhaven_wooden_spoon.stl",
+        "sha256": "b13445f84fe1647964eafa3c7a7cef72a9b774635d2057957c3fb6b9deec2fa5",
+        "source": "polyhaven",
+        "category": "kitchen",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_2aa4168a90ffa9",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_2aa4168a90ffa9.stl",
+        "sha256": "55e12f4a6b7c163eebb980019b3b34ebf975b0083471acc5ce8209190f39bf9d",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_76e6b86471ab83",
+        "mesh_path": "data/interior300/meshes/other_furniture/indoorcad_76e6b86471ab83.stl",
+        "sha256": "55de001aa929ba1658f281d12ce165a527ac00c2ce324cdc5c05fceed9fb2de2",
+        "source": "indoorcad",
+        "category": "other_furniture",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_446fa66a463fad",
+        "mesh_path": "data/interior300/meshes/bed/indoorcad_446fa66a463fad.stl",
+        "sha256": "e20b97e56d65bc69c3acbc4d0f267da7d6745c7beaf710008ef7d8dd5ea12e38",
+        "source": "indoorcad",
+        "category": "bed",
+        "split": "all"
+      },
+      {
+        "id": "indoorcad_7fe9f37b7767a0",
+        "mesh_path": "data/interior300/meshes/sofa/indoorcad_7fe9f37b7767a0.stl",
+        "sha256": "1c0fdb997970816a645f7e0fcf92b37960a9db65d32d5a8434b6cdac0709bcee",
+        "source": "indoorcad",
+        "category": "sofa",
+        "split": "all"
+      },
+      {
+        "id": "polyhaven_ceramic_vase_02",
+        "mesh_path": "data/interior300/meshes/decor/polyhaven_ceramic_vase_02.stl",
+        "sha256": "37a76ad414a0ec1e9e44bbfede764d30eac902485a254af5689bcf42b38747f1",
+        "source": "polyhaven",
+        "category": "decor",
+        "split": "all"
+      }
+    ]
+  },
+  "source_sha256": {
+    "mesh2cad/preview.py": "b60f92c52418433a39337600d05fd2b67925025c12a725d0b1c9fe79ae8f9479",
+    "mesh2cad/harness_ui.py": "f343a88ba6156a8795cd96751057d040860c7a0ef4b4d9615ff33501e9bed3f0",
+    "mesh2cad/harness2.py": "bc60186802ceb62d5d792e2d8b182f4fbae59f36ef4edea00e97945fdeeadcef",
+    "mesh2cad/harness.py": "4ec00146c5e40b0be1d89db828e47856876628b350b608f618092cf1ba228902",
+    "mesh2cad/benchmark.py": "3621f3c20f45e5947d18f43946c86b4083e4f9c6a57f355389d3cd8290ad0df4",
+    "mesh2cad/vision.py": "2684e8d39d137380490d16ee0e8fd959e454d70e60b654801dce89a2474e1764",
+    "mesh2cad/__init__.py": "0832054a54c3edcf5b59daba83817bd310bd798c73609aeb5b022a68521084f2",
+    "mesh2cad/observability.py": "4b00f75f437f865398b55bfa957d9d697013205f4bc07dd13885a841734aee0f",
+    "mesh2cad/geometry_worker.py": "aded14410277cdf7a25ee0114a955d3eb24894f150ebeb2bfb32682d158530ab",
+    "mesh2cad/prompts.py": "21218de0a30c4fcbce37db28ce050b0c8659f6b5a097c510eb8f9fd327c5ce1e",
+    "mesh2cad/dataset.py": "d3d54aa7d9a16efc5a853c12f54dc85fbc08bab9628488c4ef17cccb654c085e",
+    "mesh2cad/harness_worker.py": "79b038db44d25d3a984350cc988b73f3b649fd2e0212d7af7b5469eb4e8625bb",
+    "mesh2cad/pipeline.py": "f63ec58c8c21441e273f9c7097f4d1a4666f03fcb2c2030125a0277a2536a873",
+    "mesh2cad/geometry.py": "b8669dd4c880b65a5307eceaca05738f880b94555981378fe26312c1b71247e6",
+    "mesh2cad/storage.py": "220ab2d68889fc9793958ab6123b0f63116a38c51f46af1f32dabd7911751f6c",
+    "mesh2cad/agent.py": "7e9db7e015441dab4817ba7b352465f23f3fd460445eadb21750c65e2e93cd17",
+    "mesh2cad/resources.py": "7d1d04da8eff42cb9f6c259047be548187114f3246900601a2290ad688b4aee9",
+    "mesh2cad/_worker.py": "93290219bf93def38b8de12fe30c808529f91170fc5913bddfafcc08c2dc4b30",
+    "mesh2cad/executor.py": "81b4f9b5e715b8f3296d5e96a189de60404f2fcf216084efaf10f2bec61da40a"
+  },
+  "source_revisions": [
+    {
+      "reason": "increase independent worker concurrency from 2 to 4 and serialize budget lock acquisition; model prompts and geometry unchanged",
+      "source_sha256": {
+        "mesh2cad/benchmark.py": "3339fb8a45cb30c727e699739fc0d4fd9ddbcb2659ce871b97455db5583f2b38"
+      }
+    }
+  ],
+  "execution_policy": "Complete matched batches of five per domain with four independent workers. Next batch admitted using observed mean spend per matched rank plus $0.20 headroom, never quality. Each call reserves its entire output allowance; reservations wait for other calls to release unused capacity.",
+  "active_runner_sha256": "3f9f03e2b3d5e87c3c1ee4325b92fb8bd61d24dcf5ce9c309cb1b3a683dc7012",
+  "stop_reason": "insufficient_budget_for_next_matched_batch",
+  "finished_at": "2026-10-23T01:54:33.864049+00:00",
+  "resource_failure_policy": "Whole-worker watchdog termination during generated CadQuery execution is recorded as a failed execution attempt with the observed fixed 2048MiB limit; the paid response is retained. One-prompt ends with a failed output; harness may repair within its original five-generation limit. No generated code was manually edited and no memory limit was raised.",
+  "measured_cohorts": {
+    "deepcad": [
+      "2bd8330b6c0bbaae",
+      "23b855249a18d0f1",
+      "3376e6b0a71b3a98",
+      "fe06896782f584a6",
+      "bc69e26be07daf52",
+      "a1a9b84d5aaa6a8d",
+      "8b1771a9fe4ffd63",
+      "b1c579bb63128696",
+      "8340c60a461b7253",
+      "a978d5400272f027",
+      "f2bb8530e68b55fd",
+      "fcca9059a93b8cb3",
+      "8ee25e42f2289c86",
+      "26f58c206980f734",
+      "824ea4712581cf17"
+    ],
+    "interior300": [
+      "indoorcad_d01348b6804e1b",
+      "indoorcad_bb795b17ea76b9",
+      "indoorcad_bc313e18aa95b3",
+      "indoorcad_c120864ce3d53c",
+      "polyhaven_plastic_monobloc_chair_01",
+      "indoorcad_6de14bb6a45df0",
+      "indoorcad_56c740edad3c68",
+      "indoorcad_0a7e4d58c1f613",
+      "indoorcad_cd093c25223f9d",
+      "polyhaven_planter_pot_clay",
+      "indoorcad_2d1ec9288139ae",
+      "indoorcad_bbc1675e07ca30",
+      "indoorcad_307532cfedaede",
+      "indoorcad_2553762c6e0ff0",
+      "polyhaven_carved_wooden_elephant"
+    ]
+  },
+  "measured_n_per_domain": {
+    "deepcad": 15,
+    "interior300": 15
+  },
+  "physical_spend_usd": 1.0921225700000003,
+  "decoding": {
+    "reasoning_effort": "medium",
+    "max_output_tokens": 16000,
+    "model_seed": null,
+    "temperature": "provider default; not explicitly set",
+    "generations_per_baseline": 1
+  },
+  "final_source_sha256": {
+    "mesh2cad/benchmark.py": "3f9f03e2b3d5e87c3c1ee4325b92fb8bd61d24dcf5ce9c309cb1b3a683dc7012",
+    "scripts/summarize_benchmark.py": "3e70e04a11483945af86c7f4b92239200029fe52939f726f763bba7c22db699a",
+    "scripts/audit_benchmark.py": "6c1d36096f1403bc2f7d339c40dd06dae7b334734fb100e8a1b739fa26602ac5",
+    "output/latex/mesh2cad-research/speaker-notes.template.md": "c4ae9048e79fca10a43ad99f28996117e1ea01affc328489630dcbf2f40a8b0c",
+    "output/latex/mesh2cad-research/main.tex": "76c678712394038e1a7e8c0df88370160b020c63541cacf5a9d789f11fbf2cb8",
+    "output/latex/mesh2cad-research/authors.tex": "0957705611f971298b4e74a392b413cd753af2e21f71e8a26ca08ca36b87fb7a",
+    "output/latex/mesh2cad-research/examples/frame.py": "2a8de8bb97de99efc4bd1fc5182ac0e0a790e88c9f73d4d4d679a30cdc1c7e16"
+  },
+  "reporting_source_revisions": [
+    {
+      "reason": "Presentation title renamed; experiment unchanged",
+      "path": "scripts/summarize_benchmark.py",
+      "before_sha256": "7cdf6e61856dbd9700dd65f1ec57790e06d2a230228c2c7912dfc05890936993",
+      "after_sha256": "5229b3267fcb8b4b8cbeb2db9fa19cf0061101d4ac7fe79acc471f3e4b725edb"
+    },
+    {
+      "reason": "Presentation expanded to required research structure, authors and mentor added, verified CadQuery example and updated speaker notes; experiment and metrics unchanged",
+      "path": "scripts/summarize_benchmark.py",
+      "before_sha256": "5229b3267fcb8b4b8cbeb2db9fa19cf0061101d4ac7fe79acc471f3e4b725edb",
+      "after_sha256": "6937933b8ce934a059b59834c8376a3fc1be3b74fd092ffbdff06e7bc1bad7f1"
+    },
+    {
+      "reason": "Slide text shortened; cycle diagram now shows STL entry, preparation, reference mesh, feedback, execution error and final CAD exit. Experiment unchanged.",
+      "path": "scripts/summarize_benchmark.py",
+      "before_sha256": "6937933b8ce934a059b59834c8376a3fc1be3b74fd092ffbdff06e7bc1bad7f1",
+      "after_sha256": "3e70e04a11483945af86c7f4b92239200029fe52939f726f763bba7c22db699a"
+    }
+  ]
+}

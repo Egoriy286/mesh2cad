@@ -1,0 +1,17 @@
+{
+  "source_code": "output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/cheap_harness/20261023T013346Z-d374018b/items/bc69e26be07daf52/attempt-001/cadquery/code.py",
+  "source_code_sha256": "be9f7189e6a4449fad86c1452c6216f9831ffb131c318787628e5825755bd71f",
+  "display_code": "examples/frame.py",
+  "display_code_sha256": "2a8de8bb97de99efc4bd1fc5182ac0e0a790e88c9f73d4d4d679a30cdc1c7e16",
+  "render": "images/cadquery-code-example.png",
+  "render_sha256": "e07b2b21f29b7d67db26570c894b37cf71e6cf8cfcb3f64e412c2665fcc7b07e",
+  "valid_solid": true,
+  "cadquery_volume": 0.007161459395832822,
+  "stl_watertight": true,
+  "operations_unchanged": true,
+  "bidirectional_shape_difference_volume": 0.0,
+  "parameter_edit_verified": "inner_x 0.50 to 0.45 increases frame volume",
+  "benchmark_item_id": "bc69e26be07daf52",
+  "condition": "cheap_one_prompt",
+  "iou": 0.9999996342442066
+}

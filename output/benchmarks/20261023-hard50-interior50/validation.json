@@ -1,0 +1,37 @@
+{
+  "validated_at": "2026-10-23T05:31:31.986815+00:00",
+  "processed_stl": 100,
+  "batch_count": 8,
+  "source_hashes_unchanged": true,
+  "tests": {
+    "passed": 125,
+    "skipped": 1,
+    "log": "/Users/egoriy/Projects/msu-ai-school/.cache/hard50-pytest.log"
+  },
+  "xlsx": {
+    "zip_integrity": "passed",
+    "sheets": 2,
+    "native_formula_checks": "passed",
+    "saved_file_import_and_recalculation": "passed",
+    "visual_checks": [
+      "summary",
+      "detail",
+      "longest_name"
+    ]
+  },
+  "audit_status": "passed_with_unattributed_transport_billing",
+  "sha256": {
+    "protocol.json": "d53fd8ff0dbb3c3f980660eee024e3c812ffce62771bfeb03ba36f8f095381cf",
+    "summary.json": "ab002986d8382e3c8ff2696bf747032643c2028f586670950c5711c8689e14fe",
+    "audit.json": "0b51bfb8651ca30f769004c61de9352867f0c6583dd0568e3e2f94235eba1fe1",
+    "items.csv": "8253fc2ea4387b14c2c6e9e297f452e8bf2490d19f399557d3f5f7537c73badc",
+    "table.csv": "4294f407726eb4064c8111b21fc24246ebd81bcd5e60abfba0c0ef049c28d8c9",
+    "table.xlsx": "14f18d19b9146ed4b03cdad6f97ef8fdf63886b701aa9b59714495f9fa0e9e0f",
+    "billing.json": "3bd822e1d78ab2e53a9ef15f68b2b02bef8eceb6dad1d56203094c28cc7d2814",
+    "geometry-crosscheck.json": "c34731e56dffea58bc0e25a623a7a4b260cc351cc3e7f8bdd00c54ed2042c1fd",
+    "paired-analysis.json": "86b785ab56dcd1b1c5331deb091e13b3fa5a084404336380f8e1aca033cca143",
+    "cohort-statistics.json": "8b26475411d2511e5f21466ce68f9cf0f6b8cd8b483470b8a5f4e540897f2f21",
+    "environment.json": "417585a486403eacbaa82e1caeae47b7ff4113994f6d5448c211b7c4c6516f31",
+    "README.md": "3bd7f8ce052c863c7df820e1100cc9934af27f2d36b68c7b3510df113207422e"
+  }
+}

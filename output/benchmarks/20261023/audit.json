@@ -1,0 +1,4159 @@
+{
+  "status": "passed",
+  "n_paired_inputs": 30,
+  "physical_spend_usd": 1.0921225700000001,
+  "items": [
+    {
+      "domain": "deepcad",
+      "id": "23b855249a18d0f1",
+      "same_initial_request_except_model": true,
+      "input_sha256": "ba8e9fff3c149fa050261449dc9840237dae4c34d23df0d22ce60f54756cce39",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/23b855249a18d0f1/cheap_harness/20261023T012437Z-2c11bd67/run.json",
+          "sha256": "ed325debed079d3c55069d64d37b0068364c822669b534dc76ef7aa78ac00231"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/23b855249a18d0f1/expensive_one_prompt/20261023T012437Z-2b0123d2/run.json",
+          "sha256": "cc4cb4b9ac06acd6c1bfc6e6dcede4020508334e7d1e5a3836e34dea7870c197"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/23b855249a18d0f1/cheap_harness/20261023T012437Z-2c11bd67/items/23b855249a18d0f1/attempt-001/response.json",
+          "sha256": "23c636cb842c65ef43e2c3de3966d8e16cb201ee6f9e61540088512bb99aa7b4",
+          "provider_id": "gen-1792718679-JSGCINyr82PN5LxzTFKx",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 1973,
+            "total_tokens": 4160,
+            "cost": 0.0012598,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0012598,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0009865
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1832,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/23b855249a18d0f1/expensive_one_prompt/20261023T012437Z-2b0123d2/items/23b855249a18d0f1/attempt-001/response.json",
+          "sha256": "a25281295b3779af534df1a08c34c869f2b5327427528c606f65279a7f96d1fd",
+          "provider_id": "gen-1792718679-PpaxXxlYeCTNle9uYfEI",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 615,
+            "total_tokens": 2802,
+            "cost": 0.011616,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.011616,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00615
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 470,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "26f58c206980f734",
+      "same_initial_request_except_model": true,
+      "input_sha256": "a53bb7467318d4d5197e583a83090c1cb483ab640f194468d87c9cba04cf5911",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/cheap_harness/20261023T014459Z-02c16536/run.json",
+          "sha256": "48576dd0f2a4a52aeaf9a2a337c1318a71414037f700a2853477d6dfce387b6e"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/expensive_one_prompt/20261023T014459Z-eb7baa88/run.json",
+          "sha256": "03991a4b3a96fb0132c28557400b8db032b50b210de4396c8b42ae732398b57f"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/cheap_harness/20261023T014459Z-02c16536/items/26f58c206980f734/attempt-001/response.json",
+          "sha256": "f6caa7a15540e7c440f3a0cbcb61af1de4858b6bcf8cba5ca0166ab1eb1b4ebb",
+          "provider_id": "gen-1792719987-rL5yOjNP02wvV2fGxq9x",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 5494,
+            "total_tokens": 7681,
+            "cost": 0.0030203,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0030203,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.002747
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4899,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/cheap_harness/20261023T014459Z-02c16536/items/26f58c206980f734/attempt-002/response.json",
+          "sha256": "3f29f5b6b5aa45ef8bc8a7825160737a93f789cb76a7a397743ba8b3cf137510",
+          "provider_id": "gen-1792720035-QdcznTnsaEQYnHf6Y2ml",
+          "usage": {
+            "prompt_tokens": 2921,
+            "completion_tokens": 2934,
+            "total_tokens": 5855,
+            "cost": 0.00158089,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 734,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00158089,
+              "upstream_inference_prompt_cost": 0.00011389,
+              "upstream_inference_completions_cost": 0.001467
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2397,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/cheap_harness/20261023T014459Z-02c16536/items/26f58c206980f734/attempt-003/response.json",
+          "sha256": "5d7a434ea4823c806bf3a87b738b191ec1d56c4e9cc7526ba7cb31edad835365",
+          "provider_id": "gen-1792720064-3nvYsTjDLavC18xCFo67",
+          "usage": {
+            "prompt_tokens": 6790,
+            "completion_tokens": 4083,
+            "total_tokens": 10873,
+            "cost": 0.002554605,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2918,
+              "cache_write_tokens": 3869,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002554605,
+              "upstream_inference_prompt_cost": 0.000513105,
+              "upstream_inference_completions_cost": 0.0020415
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3536,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/cheap_harness/20261023T014459Z-02c16536/items/26f58c206980f734/attempt-004/response.json",
+          "sha256": "f48a499e241d2bc6ee38796b57a1a08544939a7b9c3d854ccedebb333fc14b98",
+          "provider_id": "gen-1792720101-myVfZaeW9KLZq878xpi4",
+          "usage": {
+            "prompt_tokens": 7505,
+            "completion_tokens": 2609,
+            "total_tokens": 10114,
+            "cost": 0.00190698,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2918,
+              "cache_write_tokens": 4584,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00190698,
+              "upstream_inference_prompt_cost": 0.00060248,
+              "upstream_inference_completions_cost": 0.0013045
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2070,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/26f58c206980f734/expensive_one_prompt/20261023T014459Z-eb7baa88/items/26f58c206980f734/attempt-001/response.json",
+          "sha256": "4b522276e333a64933968de31d8b39941a673ae2ff889e58026d15f289ec8a63",
+          "provider_id": "gen-1792720025-fyE36quDMsrAQUs8H7Xx",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2871,
+            "total_tokens": 5058,
+            "cost": 0.034176,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.034176,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.02871
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2469,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "2bd8330b6c0bbaae",
+      "same_initial_request_except_model": true,
+      "input_sha256": "fce06f392fbe0fbfc91d3214028a5c4017cd557e1cbbe6317f446c6429e61fb7",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/2bd8330b6c0bbaae/cheap_harness/20261023T012115Z-21ec1394/run.json",
+          "sha256": "8af395cc0b252127625e0aa6dc7b3260c86699f8d9b4061db9bfa29f5c2b5126"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/2bd8330b6c0bbaae/expensive_one_prompt/20261023T012115Z-420f0b26/run.json",
+          "sha256": "6bb5b2f603aad82d08db30df90fd5d4433d3b0e5c22e6ec4cbe34a5a288ab445"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/2bd8330b6c0bbaae/cheap_harness/20261023T012115Z-21ec1394/items/2bd8330b6c0bbaae/attempt-001/response.json",
+          "sha256": "1cab15c67d9f8432332bb86854b0849b1a1b2187977327836487a0b52d7425e2",
+          "provider_id": "gen-1792718477-cQirlvE5BIwoqzLeg0tj",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 336,
+            "total_tokens": 2523,
+            "cost": 0.0004413,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0004413,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.000168
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 280,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/2bd8330b6c0bbaae/expensive_one_prompt/20261023T012115Z-420f0b26/items/2bd8330b6c0bbaae/attempt-001/response.json",
+          "sha256": "33570694c8fcd31989c8a3719435b3fc71c57a5e850a5cd95cfbd161b9ee87c2",
+          "provider_id": "gen-1792718477-0KSZQh8xxTc2evdHwAHy",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 159,
+            "total_tokens": 2346,
+            "cost": 0.007056,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.007056,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00159
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 103,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "3376e6b0a71b3a98",
+      "same_initial_request_except_model": true,
+      "input_sha256": "975c6c24bbbf7cc5f31eda9e71b2216b29b0ddda53c6dfcd0770227aa4387760",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/run.json",
+          "sha256": "9873a400619dd912d2eb19073e827a0607fd1bc88b69c1aa60eab3d313f8f63e"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/expensive_one_prompt/20261023T013008Z-435de3b5/run.json",
+          "sha256": "37d7f94ce3f83ec260a9948e0077ee7ac93644440f7786634256bc8e90a0ba3b"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-001/response.json",
+          "sha256": "00daf0d158a4968ab145c2db5ca3ffb09a67f750bc95450d819023fe4175d564",
+          "provider_id": "gen-1792719010-kqktpLVMIk25rt5SjIkK",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 5883,
+            "total_tokens": 8070,
+            "cost": 0.0032148,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0032148,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0029415
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 5153,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-002/response.json",
+          "sha256": "9fd00cde1eb91d6bdc122157a0ed002b3e8f4c2fcc84ee53a31a4b884bd2d8a8",
+          "provider_id": "gen-1792719065-g2sXmj46AjppwTIiJOJv",
+          "usage": {
+            "prompt_tokens": 6457,
+            "completion_tokens": 2792,
+            "total_tokens": 9249,
+            "cost": 0.00195189,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4270,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00195189,
+              "upstream_inference_prompt_cost": 0.00055589,
+              "upstream_inference_completions_cost": 0.001396
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2070,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-003/response.json",
+          "sha256": "5679ff4824eb7d395145da8cd723d6e0c8113b2a75d0d94d46670da9dccff9a2",
+          "provider_id": "gen-1792719093-gFtUCGY5UAhcv7lCGLvk",
+          "usage": {
+            "prompt_tokens": 7385,
+            "completion_tokens": 3140,
+            "total_tokens": 10525,
+            "cost": 0.00224189,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5198,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00224189,
+              "upstream_inference_prompt_cost": 0.00067189,
+              "upstream_inference_completions_cost": 0.00157
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2387,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-004/response.json",
+          "sha256": "709dfa180134b94ff2e84c5f3b3c164126413e17b240924b6d75c4631695aceb",
+          "provider_id": "gen-1792719124-cyqBrXjF2rJVlhoIkAt9",
+          "usage": {
+            "prompt_tokens": 8354,
+            "completion_tokens": 3748,
+            "total_tokens": 12102,
+            "cost": 0.002667015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 6167,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002667015,
+              "upstream_inference_prompt_cost": 0.000793015,
+              "upstream_inference_completions_cost": 0.001874
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3028,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/cheap_harness/20261023T013008Z-7b535774/items/3376e6b0a71b3a98/attempt-005/response.json",
+          "sha256": "70c210b191367df3e3e1088a28a5bb4bc357a999df291b9d6c534c882c1dd0d0",
+          "provider_id": "gen-1792719159-13pXjEpuiU4o8i0mqSWy",
+          "usage": {
+            "prompt_tokens": 8340,
+            "completion_tokens": 4065,
+            "total_tokens": 12405,
+            "cost": 0.002823765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 6153,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002823765,
+              "upstream_inference_prompt_cost": 0.000791265,
+              "upstream_inference_completions_cost": 0.0020325
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3319,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/3376e6b0a71b3a98/expensive_one_prompt/20261023T013008Z-435de3b5/items/3376e6b0a71b3a98/attempt-001/response.json",
+          "sha256": "8855e9538a28e7311fe4569bf108f8af7f0f07bdd30c19b4d42d427aeca53b73",
+          "provider_id": "gen-1792719010-NKjlMnf3sZihgUxBUQcS",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4448,
+            "total_tokens": 6635,
+            "cost": 0.049946,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.049946,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.04448
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3624,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "824ea4712581cf17",
+      "same_initial_request_except_model": true,
+      "input_sha256": "dac7137446d5910430890754631e2090f7e48317917c90f8d131d323ebd5488d",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/824ea4712581cf17/cheap_harness/20261023T014500Z-bf682b94/run.json",
+          "sha256": "c773a8fedc8ef03d58170d4d071b69bc54727fa12a3234fda2a45e2d9f7cd8f9"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/824ea4712581cf17/expensive_one_prompt/20261023T014500Z-6b146e30/run.json",
+          "sha256": "57fbfd052534852faf45700aca9c96a517fec81b7c723935b4700cdf364346b1"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/824ea4712581cf17/cheap_harness/20261023T014500Z-bf682b94/items/824ea4712581cf17/attempt-001/response.json",
+          "sha256": "9a2dc1585db24a82f1103cda6f75b570e85eb1c7b8e41c313ff2cedc900d06a3",
+          "provider_id": "gen-1792720140-NP6eIr0Zn3LvzwRGKMIB",
+          "usage": {
+            "prompt_tokens": 2185,
+            "completion_tokens": 899,
+            "total_tokens": 3084,
+            "cost": 0.00072255,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2182,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00072255,
+              "upstream_inference_prompt_cost": 0.00027305,
+              "upstream_inference_completions_cost": 0.0004495
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 776,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/824ea4712581cf17/expensive_one_prompt/20261023T014500Z-6b146e30/items/824ea4712581cf17/attempt-001/response.json",
+          "sha256": "de62c5d74e9b8e71513a6cae3f26da5c16c95e817959c8f0a90daa22585c39a2",
+          "provider_id": "gen-1792720173-sWHHGnXJqQQhinClW7I9",
+          "usage": {
+            "prompt_tokens": 2185,
+            "completion_tokens": 670,
+            "total_tokens": 2855,
+            "cost": 0.012161,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2182,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.012161,
+              "upstream_inference_prompt_cost": 0.005461,
+              "upstream_inference_completions_cost": 0.0067
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 552,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "8340c60a461b7253",
+      "same_initial_request_except_model": true,
+      "input_sha256": "53f96059738b645c7701f8278f4ab178d0720c2138c5917bea5dfa81f2160129",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8340c60a461b7253/cheap_harness/20261023T013733Z-73bf0cbf/run.json",
+          "sha256": "bca99742a840922cc951b2b4012cd5aea6b1dfa35e58cab035ef5b587744d973"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8340c60a461b7253/expensive_one_prompt/20261023T013733Z-6c0146ec/run.json",
+          "sha256": "0386f101d68b43f048338f60f2319e2d9e669a49fcbedac17988e444c6db04a6"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8340c60a461b7253/cheap_harness/20261023T013733Z-73bf0cbf/items/8340c60a461b7253/attempt-001/response.json",
+          "sha256": "286027c3b75178a40d732a4ac6c28524ebde5d7180092d46d18a8080012b9a1d",
+          "provider_id": "gen-1792719616-Jj1lQnlTH7gKYVVTvWMn",
+          "usage": {
+            "prompt_tokens": 2179,
+            "completion_tokens": 2477,
+            "total_tokens": 4656,
+            "cost": 0.0015108,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2176,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0015108,
+              "upstream_inference_prompt_cost": 0.0002723,
+              "upstream_inference_completions_cost": 0.0012385
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2152,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8340c60a461b7253/expensive_one_prompt/20261023T013733Z-6c0146ec/items/8340c60a461b7253/attempt-001/response.json",
+          "sha256": "163cc517f4b28a395cc1cc8271d178c1be7d90198a2b4526eb6938275d4e53ba",
+          "provider_id": "gen-1792719626-ZW1DUEvppL0fxwdUwrx3",
+          "usage": {
+            "prompt_tokens": 2179,
+            "completion_tokens": 1071,
+            "total_tokens": 3250,
+            "cost": 0.016156,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2176,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.016156,
+              "upstream_inference_prompt_cost": 0.005446,
+              "upstream_inference_completions_cost": 0.01071
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 836,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "8b1771a9fe4ffd63",
+      "same_initial_request_except_model": true,
+      "input_sha256": "0a8816cfa9ce56d5add5cbe38ca92f549ed957b600d0d8fdfa7fb80a24fa6110",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/cheap_harness/20261023T013732Z-127e7c6f/run.json",
+          "sha256": "730fc10c9f688adbc4f08fbde3b922f45cc483448afc95b66148b120d8bca4dd"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/expensive_one_prompt/20261023T013732Z-22bcb753/run.json",
+          "sha256": "d6c40fd08df4a19737c9b092b496b5b849c17ae48d92b718f6ff9952fae430e7"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/cheap_harness/20261023T013732Z-127e7c6f/items/8b1771a9fe4ffd63/attempt-001/response.json",
+          "sha256": "787613b489660c865e79555707b4e469bc92a9ec54272ad1aab397498698fe60",
+          "provider_id": "gen-1792719462-ECMIOevN5OAotVI0OTwb",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4309,
+            "total_tokens": 6496,
+            "cost": 0.0024278,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0024278,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0021545
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4085,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/cheap_harness/20261023T013732Z-127e7c6f/items/8b1771a9fe4ffd63/attempt-002/response.json",
+          "sha256": "fc13ee9e09734fac18f36131faa5d80f78b4ab02b90693fa07c61abe2d644387",
+          "provider_id": "gen-1792719502-PcWDrNiUKojYbVzNIJ16",
+          "usage": {
+            "prompt_tokens": 5473,
+            "completion_tokens": 3057,
+            "total_tokens": 8530,
+            "cost": 0.00196139,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3286,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00196139,
+              "upstream_inference_prompt_cost": 0.00043289,
+              "upstream_inference_completions_cost": 0.0015285
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2742,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8b1771a9fe4ffd63/expensive_one_prompt/20261023T013732Z-22bcb753/items/8b1771a9fe4ffd63/attempt-001/response.json",
+          "sha256": "1d6b9248e1829433a650a9895a0371f97ba6c82f39dda1c1126f62dddd89b593",
+          "provider_id": "gen-1792719463-YY4RXNrZdAWggOwl7maa",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 1926,
+            "total_tokens": 4113,
+            "cost": 0.024726,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.024726,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.01926
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1600,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "8ee25e42f2289c86",
+      "same_initial_request_except_model": true,
+      "input_sha256": "fd5413d7f66a46b7dbfe8172265ea045184957201052d3b1d2c92fdecbf2b323",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8ee25e42f2289c86/cheap_harness/20261023T014459Z-dc74240f/run.json",
+          "sha256": "096606ed431f169bc64515cba73f6896e0d09552e720c75d357095efdaf79b6f"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8ee25e42f2289c86/expensive_one_prompt/20261023T014459Z-40b6a9aa/run.json",
+          "sha256": "d39381889e7fee6d1a37cf549d79e134e2d6a7e6da7d22618c231feb514239e3"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8ee25e42f2289c86/cheap_harness/20261023T014459Z-dc74240f/items/8ee25e42f2289c86/attempt-001/response.json",
+          "sha256": "c5d7793c740a895dcd4497c51c4781143e568b7921bf007f74348c9172bae0ee",
+          "provider_id": "gen-1792719945-JzDPy5csuTA88AdNsPDe",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 243,
+            "total_tokens": 2430,
+            "cost": 0.0003948,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0003948,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0001215
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 190,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/8ee25e42f2289c86/expensive_one_prompt/20261023T014459Z-40b6a9aa/items/8ee25e42f2289c86/attempt-001/response.json",
+          "sha256": "dae6684f85c79e126d526437689b1418e4c86066c5777522773ee12100fd52ea",
+          "provider_id": "gen-1792719946-KBniheUYW6vG4TUZI7ix",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 185,
+            "total_tokens": 2372,
+            "cost": 0.007316,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.007316,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00185
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 123,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "a1a9b84d5aaa6a8d",
+      "same_initial_request_except_model": true,
+      "input_sha256": "43d21124610606793d247a5ecb32feeae987b8d4e1ab4d0ab7d841135e730e4e",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a1a9b84d5aaa6a8d/cheap_harness/20261023T013732Z-4535a56a/run.json",
+          "sha256": "257858752fc7add6a8ca28690b251eb457c794505c08107f3174444e5903892f"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a1a9b84d5aaa6a8d/expensive_one_prompt/20261023T013732Z-34a235b9/run.json",
+          "sha256": "92b5b394bf57a837c3b76213e0f45fd01915e399bbd194ffa2937c0974b75c54"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a1a9b84d5aaa6a8d/cheap_harness/20261023T013732Z-4535a56a/items/a1a9b84d5aaa6a8d/attempt-001/response.json",
+          "sha256": "3415d8900b37ef65b237082b8e0acd44d929d90548010c49abc953e8b971b522",
+          "provider_id": "gen-1792719455-ppSYLL8HKGitWh8Vpwu6",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 235,
+            "total_tokens": 2422,
+            "cost": 0.0003908,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0003908,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0001175
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 187,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a1a9b84d5aaa6a8d/expensive_one_prompt/20261023T013732Z-34a235b9/items/a1a9b84d5aaa6a8d/attempt-001/response.json",
+          "sha256": "31cd4e5d8ac2daa92a9ca5adaf95247b65648524ea82d58d4c90675263393d35",
+          "provider_id": "gen-1792719455-m04fIJt6O0qWTyA5ixon",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 139,
+            "total_tokens": 2326,
+            "cost": 0.006856,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.006856,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00139
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 83,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "a978d5400272f027",
+      "same_initial_request_except_model": true,
+      "input_sha256": "20cfe67d86b8e5cded7a3b887581271be7ffde61fa622d763403b0b969ed0a97",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a978d5400272f027/cheap_harness/20261023T013734Z-3177c369/run.json",
+          "sha256": "8af5eb1a79ebd2db9b1e5b7b8d5458520d409dc64a85d2a996e91530dfb53211"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a978d5400272f027/expensive_one_prompt/20261023T013734Z-9c1b0716/run.json",
+          "sha256": "2381fb960ab613702a073b96b801fda6b651b3970ad8850ea5566251247ed8a5"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a978d5400272f027/cheap_harness/20261023T013734Z-3177c369/items/a978d5400272f027/attempt-001/response.json",
+          "sha256": "c9f604ccb9789f96b53d74657ba76ea41999cdd5406970daa63ba73c0147e5be",
+          "provider_id": "gen-1792719646-VmkUXo6HUrxp4Z16V1vq",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 1031,
+            "total_tokens": 3218,
+            "cost": 0.0007888,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0007888,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0005155
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 893,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/a978d5400272f027/expensive_one_prompt/20261023T013734Z-9c1b0716/items/a978d5400272f027/attempt-001/response.json",
+          "sha256": "3cd29b5196015fd7edc3b44452fb2101b0e2671732be0a170199a049624aa654",
+          "provider_id": "gen-1792719661-p9BdlE2eYxKIKpUbSwuw",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 383,
+            "total_tokens": 2570,
+            "cost": 0.009296,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.009296,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00383
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 257,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "b1c579bb63128696",
+      "same_initial_request_except_model": true,
+      "input_sha256": "c88db67515235d32fee3651350cff1f7a3fcfaebfbad7f2468f38101182e5313",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/b1c579bb63128696/cheap_harness/20261023T013733Z-bea41a68/run.json",
+          "sha256": "c57ae9506efadd2d5d7156a68a8f1f85782ac6352d7a27e787348cd7a20a7422"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/b1c579bb63128696/expensive_one_prompt/20261023T013733Z-b8368f65/run.json",
+          "sha256": "c77467729bdc1a8bcc4c34e917556eb4c7070c5adb6e58f67d0a6030680302f7"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/b1c579bb63128696/cheap_harness/20261023T013733Z-bea41a68/items/b1c579bb63128696/attempt-001/response.json",
+          "sha256": "05c103040ccf4a884cdbdebe3529dddd3462d3ca45f563ad875dd6de2ac6b33a",
+          "provider_id": "gen-1792719530-5BKRLXDczHVPq3yl2HMy",
+          "usage": {
+            "prompt_tokens": 2179,
+            "completion_tokens": 1736,
+            "total_tokens": 3915,
+            "cost": 0.0011403,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2176,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0011403,
+              "upstream_inference_prompt_cost": 0.0002723,
+              "upstream_inference_completions_cost": 0.000868
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1552,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/b1c579bb63128696/expensive_one_prompt/20261023T013733Z-b8368f65/items/b1c579bb63128696/attempt-001/response.json",
+          "sha256": "33a10e613031dca77fc91b91060cbda9c6ada5b86f6bacb756a812852bc5ff1f",
+          "provider_id": "gen-1792719531-MZH20TYfZ4W6utue43oe",
+          "usage": {
+            "prompt_tokens": 2179,
+            "completion_tokens": 1080,
+            "total_tokens": 3259,
+            "cost": 0.016246,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2176,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.016246,
+              "upstream_inference_prompt_cost": 0.005446,
+              "upstream_inference_completions_cost": 0.0108
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 846,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "bc69e26be07daf52",
+      "same_initial_request_except_model": true,
+      "input_sha256": "13a66d84486379fce2078cd9f297ff1cb0c6452b38acaf963fef4baad1195a2c",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/cheap_harness/20261023T013346Z-d374018b/run.json",
+          "sha256": "802f229a49dd02b66dcc0fa3fbe792df9b32385a254658c3ccafabf87ebc8ad2"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/expensive_one_prompt/20261023T013346Z-6989983a/run.json",
+          "sha256": "9261a9f2b9929f060f20b5b5881929dbf949af9b59ccb6b2a2115f61528926a3"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/cheap_harness/20261023T013346Z-d374018b/items/bc69e26be07daf52/attempt-001/response.json",
+          "sha256": "21343ae3a6d3ca085aa58c77719aa0a7a1973c1af2ecc7d61baaa586919f9c7f",
+          "provider_id": "gen-1792719263-6Wsq7gcnyfu7UWCfCHJx",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 1385,
+            "total_tokens": 3572,
+            "cost": 0.0009658,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0009658,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0006925
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1267,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/bc69e26be07daf52/expensive_one_prompt/20261023T013346Z-6989983a/items/bc69e26be07daf52/attempt-001/response.json",
+          "sha256": "0b91b18a74a538a21fba32ab8d27124fb41e923fdd73ef9a5077534e48454169",
+          "provider_id": "gen-1792719280-uLQ614duhbUn5U24QfQQ",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 488,
+            "total_tokens": 2675,
+            "cost": 0.010346,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.010346,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00488
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 353,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "f2bb8530e68b55fd",
+      "same_initial_request_except_model": true,
+      "input_sha256": "618b9806e19af1580b9c1c9ff499ca79b25456ca6afdb1e0ff6d8917614c003a",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/f2bb8530e68b55fd/cheap_harness/20261023T014458Z-4cd63a63/run.json",
+          "sha256": "d0ac4d0b192dd46fbb0da0a062fa17a8629a663e55ae54e35a4a31dcdb0dcb7d"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/f2bb8530e68b55fd/expensive_one_prompt/20261023T014458Z-09aec576/run.json",
+          "sha256": "dd1d0265d597e130117236643bcb2c3eddeabf94ad52fc14d7514075c147fe60"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/f2bb8530e68b55fd/cheap_harness/20261023T014458Z-4cd63a63/items/f2bb8530e68b55fd/attempt-001/response.json",
+          "sha256": "5011fc730fadc3870bdf8a27ddf49a8114d1d93c5f0d2f7d4ce8221a6d8684d8",
+          "provider_id": "gen-1792719901-XCrRyMVtYNjD9tJ8faPx",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 1461,
+            "total_tokens": 3648,
+            "cost": 0.0010038,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0010038,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0007305
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1257,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/f2bb8530e68b55fd/expensive_one_prompt/20261023T014458Z-09aec576/items/f2bb8530e68b55fd/attempt-001/response.json",
+          "sha256": "7b63208ef24d4c251ce34af6287bf4725c7f2c75e5e0b1b02cc56bf170a39097",
+          "provider_id": "gen-1792719901-WifxtflhA4lAL7hG1zLM",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 418,
+            "total_tokens": 2605,
+            "cost": 0.009646,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.009646,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00418
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 230,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "fcca9059a93b8cb3",
+      "same_initial_request_except_model": true,
+      "input_sha256": "81621914fccf34523bd1276eef1e42df39e1ffd5da0538c627484a67be5849fb",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fcca9059a93b8cb3/cheap_harness/20261023T014458Z-25895717/run.json",
+          "sha256": "dfbc8258b946c803f5972eac1d10ca10304d87a08f11d6b50439dd8368b16baa"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fcca9059a93b8cb3/expensive_one_prompt/20261023T014458Z-029c4fd1/run.json",
+          "sha256": "10bc99a263ddbfcbd2724807d063714d18befb159dba13fd18a633d0e414c981"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fcca9059a93b8cb3/cheap_harness/20261023T014458Z-25895717/items/fcca9059a93b8cb3/attempt-001/response.json",
+          "sha256": "951a4e9ec2f59bdf2d50df0edaf6bb13fb2410832ec0aa97ecfb754bfcbd6410",
+          "provider_id": "gen-1792719912-WFgaA2P0Su9Vvd2doU5L",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2157,
+            "total_tokens": 4344,
+            "cost": 0.0013518,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0013518,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0010785
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1900,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fcca9059a93b8cb3/expensive_one_prompt/20261023T014458Z-029c4fd1/items/fcca9059a93b8cb3/attempt-001/response.json",
+          "sha256": "b938a5cfbdf0a119f53820c4c34f6416d896cf65635923191e16649f6e8961fe",
+          "provider_id": "gen-1792719919-dgI8fahG35zcyRP5Jfsq",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 734,
+            "total_tokens": 2921,
+            "cost": 0.012806,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.012806,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.00734
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 451,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "deepcad",
+      "id": "fe06896782f584a6",
+      "same_initial_request_except_model": true,
+      "input_sha256": "bf1fade56911e4d1d7d7980ae030121ed6a8625aa75b0626c560762de7c6beef",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a/run.json",
+          "sha256": "bdf8663313f5564f5721d8346c99e74dd276b32c62f02470a41d052ed3cfc589"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/expensive_one_prompt/20261023T013346Z-7c2738d7/run.json",
+          "sha256": "b0c131d290bb1646f5367973712c7cdf3fa9b6dd546bfe189ace1f488d4fd9e5"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a/items/fe06896782f584a6/attempt-001/response.json",
+          "sha256": "5dc93d107ea1232f94c7b94660f68539fac32de28c85978f858041ff70d3c4ea",
+          "provider_id": "gen-1792719229-PJ2ppL3Y9h5rJww3fCMt",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3117,
+            "total_tokens": 5304,
+            "cost": 0.0018318,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0018318,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0015585
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2734,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a/items/fe06896782f584a6/attempt-002/response.json",
+          "sha256": "d9eb509fddaa30a1b7e452132b75141ab60eb5747416c34233e3f6890ce1e06e",
+          "provider_id": "gen-1792719260-nggiVQuN7CeqDjiQgaO0",
+          "usage": {
+            "prompt_tokens": 5775,
+            "completion_tokens": 2074,
+            "total_tokens": 7849,
+            "cost": 0.00150764,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3588,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00150764,
+              "upstream_inference_prompt_cost": 0.00047064,
+              "upstream_inference_completions_cost": 0.001037
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1723,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a/items/fe06896782f584a6/attempt-003/response.json",
+          "sha256": "386cbe25746e277e5d56ba4ffff207d85410a9ffb2a5c9a4f54a627c681417aa",
+          "provider_id": "gen-1792719284-gqne6HA0Hob306ykkRrA",
+          "usage": {
+            "prompt_tokens": 6342,
+            "completion_tokens": 2581,
+            "total_tokens": 8923,
+            "cost": 0.001832015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4155,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001832015,
+              "upstream_inference_prompt_cost": 0.000541515,
+              "upstream_inference_completions_cost": 0.0012905
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2272,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a/items/fe06896782f584a6/attempt-004/response.json",
+          "sha256": "641c39a9f2bb96ab2c082ad063fa0f727fe2431d3492f2b304e4055b1892111a",
+          "provider_id": "gen-1792719310-YnOSRtnCykjqP0QGLSnZ",
+          "usage": {
+            "prompt_tokens": 6799,
+            "completion_tokens": 2761,
+            "total_tokens": 9560,
+            "cost": 0.00197914,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4612,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00197914,
+              "upstream_inference_prompt_cost": 0.00059864,
+              "upstream_inference_completions_cost": 0.0013805
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2389,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/cheap_harness/20261023T013346Z-3661470a/items/fe06896782f584a6/attempt-005/response.json",
+          "sha256": "3e5aacbdf1f1c23c88f115bb79c58224b51db210606c61a5f45a0490993e4fc6",
+          "provider_id": "gen-1792719338-f3dkFMsaMYXaZgNAjBD7",
+          "usage": {
+            "prompt_tokens": 6789,
+            "completion_tokens": 3055,
+            "total_tokens": 9844,
+            "cost": 0.00212489,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4602,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00212489,
+              "upstream_inference_prompt_cost": 0.00059739,
+              "upstream_inference_completions_cost": 0.0015275
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2648,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/deepcad/fe06896782f584a6/expensive_one_prompt/20261023T013346Z-7c2738d7/items/fe06896782f584a6/attempt-001/response.json",
+          "sha256": "dc8660dcd36e431ab802e024a054dcce401d7d2ab5b440758631db8051486344",
+          "provider_id": "gen-1792719229-LtPTcfIpnPoEQMFxSRQV",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 1846,
+            "total_tokens": 4033,
+            "cost": 0.023926,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.023926,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.01846
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1552,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_0a7e4d58c1f613",
+      "same_initial_request_except_model": true,
+      "input_sha256": "d4ce26db5a253c2f7597b3221f22af583e74e6b05dd1106f7e104c1af0ffd29a",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f/run.json",
+          "sha256": "82bdb2e21d093e3784ce61e6979c388a8b878f0998d0cf386633e6681442f7da"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/expensive_one_prompt/20261023T013733Z-e25403f5/run.json",
+          "sha256": "5d051ff690b6b787da66827094043d6579086b16d5a266471944a50f9485e0a4"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f/items/indoorcad_0a7e4d58c1f613/attempt-001/response.json",
+          "sha256": "e194e3ca4c83fac3a1eb979e72932fc2830b8483e9ce922253412513153a7603",
+          "provider_id": "gen-1792719551-uGoTpWwUwdoRl7OfZGRS",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4078,
+            "total_tokens": 6265,
+            "cost": 0.0023123,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0023123,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.002039
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3347,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f/items/indoorcad_0a7e4d58c1f613/attempt-002/response.json",
+          "sha256": "9d2a799c863b4a01af756fdd1705d8673a14e2d09cb2f2be33f3c2b1a6ce4613",
+          "provider_id": "gen-1792719590-VBkS61RXqYP53lrfi5Dh",
+          "usage": {
+            "prompt_tokens": 6441,
+            "completion_tokens": 4138,
+            "total_tokens": 10579,
+            "cost": 0.00262289,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4254,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00262289,
+              "upstream_inference_prompt_cost": 0.00055389,
+              "upstream_inference_completions_cost": 0.002069
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3287,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f/items/indoorcad_0a7e4d58c1f613/attempt-003/response.json",
+          "sha256": "8aa3ad603554ad65ee80bb6a07c37c2827925acd3324afbe993059cbca584ce0",
+          "provider_id": "gen-1792719629-OGtNFvjYDTQPsMEXqDeF",
+          "usage": {
+            "prompt_tokens": 7612,
+            "completion_tokens": 3360,
+            "total_tokens": 10972,
+            "cost": 0.002380265,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5425,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002380265,
+              "upstream_inference_prompt_cost": 0.000700265,
+              "upstream_inference_completions_cost": 0.00168
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2569,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f/items/indoorcad_0a7e4d58c1f613/attempt-004/response.json",
+          "sha256": "e0598b66d17acbee68c6e661885fc4688995302719bfd7787c36c695babbbbb3",
+          "provider_id": "gen-1792719660-EVRofXxfQ8HDGz8Msgmi",
+          "usage": {
+            "prompt_tokens": 8620,
+            "completion_tokens": 3105,
+            "total_tokens": 11725,
+            "cost": 0.002378765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 6433,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002378765,
+              "upstream_inference_prompt_cost": 0.000826265,
+              "upstream_inference_completions_cost": 0.0015525
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2270,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/cheap_harness/20261023T013733Z-e42e820f/items/indoorcad_0a7e4d58c1f613/attempt-005/response.json",
+          "sha256": "e37a49c8ccf338965d9c04b1cf73a63cd717128c6bc227a8233e4541961dc5a5",
+          "provider_id": "gen-1792719690-HNZeeCodlhD7wV21LYVn",
+          "usage": {
+            "prompt_tokens": 8725,
+            "completion_tokens": 3639,
+            "total_tokens": 12364,
+            "cost": 0.00265889,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 6538,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00265889,
+              "upstream_inference_prompt_cost": 0.00083939,
+              "upstream_inference_completions_cost": 0.0018195
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2765,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_0a7e4d58c1f613/expensive_one_prompt/20261023T013733Z-e25403f5/items/indoorcad_0a7e4d58c1f613/attempt-001/response.json",
+          "sha256": "731675d09edc9539272bee231a4307dfb55ca5ed0943cf08c8b4fab29d5feca5",
+          "provider_id": "gen-1792719551-deFE69EdobJAILvh1T5t",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4688,
+            "total_tokens": 6875,
+            "cost": 0.052346,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.052346,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.04688
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3930,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_2553762c6e0ff0",
+      "same_initial_request_except_model": true,
+      "input_sha256": "a4f9bd4f108bbf89af961f4a83013951ab7dce510d7139cd7fbf3d4b9b2fa6c9",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/cheap_harness/20261023T014459Z-00705ae9/run.json",
+          "sha256": "6f96d0065f218b26ac5689b5671ff9208aa6de74cd0289f0b9cd5b217a2a634e"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/expensive_one_prompt/20261023T014500Z-cde15091/run.json",
+          "sha256": "a0e5516590e26fd20f0777c3655e2c31d918b14d6672caad0fa1e48be140c53c"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/cheap_harness/20261023T014459Z-00705ae9/items/indoorcad_2553762c6e0ff0/attempt-001/response.json",
+          "sha256": "84f753b9e4f82ec9cf2faeef35bd6313ce07d697a4ce42c9c6b0de3255d93857",
+          "provider_id": "gen-1792720067-1A6RP2hmfjW4WsnadrfW",
+          "usage": {
+            "prompt_tokens": 2185,
+            "completion_tokens": 4669,
+            "total_tokens": 6854,
+            "cost": 0.00260755,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2182,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00260755,
+              "upstream_inference_prompt_cost": 0.00027305,
+              "upstream_inference_completions_cost": 0.0023345
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3094,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/cheap_harness/20261023T014459Z-00705ae9/items/indoorcad_2553762c6e0ff0/attempt-002/response.json",
+          "sha256": "8907a9fba018ac9d4451456e8e056dc769eb4a966cb4d22b3811fbc5d2a4db90",
+          "provider_id": "gen-1792720111-AqYQ0ubUeGsN9jAoefJr",
+          "usage": {
+            "prompt_tokens": 8079,
+            "completion_tokens": 3486,
+            "total_tokens": 11565,
+            "cost": 0.00250187,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2182,
+              "cache_write_tokens": 5894,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00250187,
+              "upstream_inference_prompt_cost": 0.00075887,
+              "upstream_inference_completions_cost": 0.001743
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1836,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/cheap_harness/20261023T014459Z-00705ae9/items/indoorcad_2553762c6e0ff0/attempt-003/response.json",
+          "sha256": "d626b7f8d0776e46e0eaf73f6633fc528e0c79545ec50c4e793b089f1e7e9d8f",
+          "provider_id": "gen-1792720143-s11z8Vt4jxe8bPnHem04",
+          "usage": {
+            "prompt_tokens": 9947,
+            "completion_tokens": 2929,
+            "total_tokens": 12876,
+            "cost": 0.00245687,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2182,
+              "cache_write_tokens": 7762,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00245687,
+              "upstream_inference_prompt_cost": 0.00099237,
+              "upstream_inference_completions_cost": 0.0014645
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1440,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/cheap_harness/20261023T014459Z-00705ae9/items/indoorcad_2553762c6e0ff0/attempt-004/response.json",
+          "sha256": "3e7fa246656929565673375e29b7e85d82dbabea3f2d7005b2cdd17a080ceea3",
+          "provider_id": "gen-1792720167-uqGWOhoZTdquHax3f4P7",
+          "usage": {
+            "prompt_tokens": 11654,
+            "completion_tokens": 2818,
+            "total_tokens": 14472,
+            "cost": 0.002614745,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2182,
+              "cache_write_tokens": 9469,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002614745,
+              "upstream_inference_prompt_cost": 0.001205745,
+              "upstream_inference_completions_cost": 0.001409
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1277,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2553762c6e0ff0/expensive_one_prompt/20261023T014500Z-cde15091/items/indoorcad_2553762c6e0ff0/attempt-001/response.json",
+          "sha256": "20408c99bc30367596c3d856554bcd1e6c538dda6d9c61ccc78f2ad0abe747e3",
+          "provider_id": "gen-1792720128-iGwy7dOjAnrDwlN8zMuY",
+          "usage": {
+            "prompt_tokens": 2185,
+            "completion_tokens": 3791,
+            "total_tokens": 5976,
+            "cost": 0.043371,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2182,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.043371,
+              "upstream_inference_prompt_cost": 0.005461,
+              "upstream_inference_completions_cost": 0.03791
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1898,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_2d1ec9288139ae",
+      "same_initial_request_except_model": true,
+      "input_sha256": "2ebeb174bf8d1923569c86e46bb2a20df64ebe991e7875861ec823faaf26c0f2",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8/run.json",
+          "sha256": "b36920d931c927571e298ab6a4cc94a295705e364379c43c63c8ecf625f900f0"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/expensive_one_prompt/20261023T014458Z-72a8217f/run.json",
+          "sha256": "a91bfabd49c92ea81276b93fec591d8c0c0c4f8d7add55e1d46295373b64cb39"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8/items/indoorcad_2d1ec9288139ae/attempt-001/response.json",
+          "sha256": "12a1f29b3b9fcfb7a941f905e4264b35123fbd05cd7f6b57d58236e8d77df653",
+          "provider_id": "gen-1792719902-IA8saB8bF1v0v5253Tkx",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3881,
+            "total_tokens": 6068,
+            "cost": 0.0022138,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0022138,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0019405
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3220,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8/items/indoorcad_2d1ec9288139ae/attempt-002/response.json",
+          "sha256": "0d90d61bd56dd337d52c9a2aa119d7f91f1fd1fd4e5efa87dcdc8c96e30838a8",
+          "provider_id": "gen-1792720357-BKsNhRbI6ydhD3sz8e6K",
+          "usage": {
+            "prompt_tokens": 2931,
+            "completion_tokens": 2105,
+            "total_tokens": 5036,
+            "cost": 0.00116764,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 744,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00116764,
+              "upstream_inference_prompt_cost": 0.00011514,
+              "upstream_inference_completions_cost": 0.0010525
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1440,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8/items/indoorcad_2d1ec9288139ae/attempt-003/response.json",
+          "sha256": "2e6c5692288bcfd704b1f6556e4920bc813ef95e8e6963d6d85cd1506003b305",
+          "provider_id": "gen-1792720381-9mzZe4AP7YdIJgzabABN",
+          "usage": {
+            "prompt_tokens": 3679,
+            "completion_tokens": 1247,
+            "total_tokens": 4926,
+            "cost": 0.00074658,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2928,
+              "cache_write_tokens": 748,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00074658,
+              "upstream_inference_prompt_cost": 0.00012308,
+              "upstream_inference_completions_cost": 0.0006235
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 991,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8/items/indoorcad_2d1ec9288139ae/attempt-004/response.json",
+          "sha256": "7bd7ae2b91d54caae339e53a480af8a66c27541cc018f029c94999e0c12e42f2",
+          "provider_id": "gen-1792720406-bfWqEeChD6seX2e9dpht",
+          "usage": {
+            "prompt_tokens": 7026,
+            "completion_tokens": 3060,
+            "total_tokens": 10086,
+            "cost": 0.001985435,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 3676,
+              "cache_write_tokens": 3347,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001985435,
+              "upstream_inference_prompt_cost": 0.000455435,
+              "upstream_inference_completions_cost": 0.00153
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2790,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/cheap_harness/20261023T014458Z-9e39a8f8/items/indoorcad_2d1ec9288139ae/attempt-005/response.json",
+          "sha256": "ec38a65422e22b4bff43e29e7b8a50792df4d6ebd0b2c6ef8d3d12f83f69b38f",
+          "provider_id": "gen-1792720445-TBboak7ssjYMzTL5gs1d",
+          "usage": {
+            "prompt_tokens": 6636,
+            "completion_tokens": 2282,
+            "total_tokens": 8918,
+            "cost": 0.001719265,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4449,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001719265,
+              "upstream_inference_prompt_cost": 0.000578265,
+              "upstream_inference_completions_cost": 0.001141
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2055,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_2d1ec9288139ae/expensive_one_prompt/20261023T014458Z-72a8217f/items/indoorcad_2d1ec9288139ae/attempt-001/response.json",
+          "sha256": "edc87c35ce0606e622149e3279e7212a0f73818ee9146fbcc658e6aac7767e9e",
+          "provider_id": "gen-1792719902-p08nhVUlMrXLFbV86zMO",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2623,
+            "total_tokens": 4810,
+            "cost": 0.031696,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.031696,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.02623
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1914,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_307532cfedaede",
+      "same_initial_request_except_model": true,
+      "input_sha256": "c434873f5fdb98a4c7bcfc80eb3ce8101228f682d444ce6658d876d91b5f20e4",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168/run.json",
+          "sha256": "dabc89030afc377ce9ef0b4471ff22e34975c376f24f62fe1f2db6bda444fee8"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/expensive_one_prompt/20261023T014459Z-adae722d/run.json",
+          "sha256": "3585e5744ccac1e4eb05bcdd38a7f6f6488367066427d148abc1643a4506cfcb"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168/items/indoorcad_307532cfedaede/attempt-001/response.json",
+          "sha256": "5418c0d96a5e2b93824c53cb3efd23c4bba2006c2aebc423234002404ffe3c99",
+          "provider_id": "gen-1792719954-eyyEOABk6GZqWzZglw1R",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4937,
+            "total_tokens": 7124,
+            "cost": 0.0027418,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0027418,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0024685
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3775,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168/items/indoorcad_307532cfedaede/attempt-002/response.json",
+          "sha256": "dd358a3c93118809d3948113a3cbe9a835354a77c7e3272a5545ec7bc812b941",
+          "provider_id": "gen-1792720001-1X8NYUYI1LmufBQgsN81",
+          "usage": {
+            "prompt_tokens": 7285,
+            "completion_tokens": 4675,
+            "total_tokens": 11960,
+            "cost": 0.00299689,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5098,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00299689,
+              "upstream_inference_prompt_cost": 0.00065939,
+              "upstream_inference_completions_cost": 0.0023375
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3624,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168/items/indoorcad_307532cfedaede/attempt-003/response.json",
+          "sha256": "8a9496840c2f72d6f26ee8e7692fa39bd4df8c14cad69dcb4b0c3248d97cbb2b",
+          "provider_id": "gen-1792720047-iE3h4OX8mPsfZvP96Zev",
+          "usage": {
+            "prompt_tokens": 8448,
+            "completion_tokens": 5852,
+            "total_tokens": 14300,
+            "cost": 0.003730765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 6261,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.003730765,
+              "upstream_inference_prompt_cost": 0.000804765,
+              "upstream_inference_completions_cost": 0.002926
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4870,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168/items/indoorcad_307532cfedaede/attempt-004/response.json",
+          "sha256": "32f33d6f7fb4dd5879f49bf7bef620b0f61a233d0b0f9881a3f24e9ebfc02279",
+          "provider_id": "gen-1792720103-Hva1ce1CWw1UDu7JKY1b",
+          "usage": {
+            "prompt_tokens": 9645,
+            "completion_tokens": 4883,
+            "total_tokens": 14528,
+            "cost": 0.00339589,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 7458,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00339589,
+              "upstream_inference_prompt_cost": 0.00095439,
+              "upstream_inference_completions_cost": 0.0024415
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3880,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/cheap_harness/20261023T014459Z-81ba6168/items/indoorcad_307532cfedaede/attempt-005/response.json",
+          "sha256": "a91149a1bbcd0e79b7c782f360afba52c9a457aec4b4545d765c0e901bff26a4",
+          "provider_id": "gen-1792720147-8wwNSnmlS1aaisY1SPIq",
+          "usage": {
+            "prompt_tokens": 9440,
+            "completion_tokens": 3858,
+            "total_tokens": 13298,
+            "cost": 0.002857765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 7253,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002857765,
+              "upstream_inference_prompt_cost": 0.000928765,
+              "upstream_inference_completions_cost": 0.001929
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2767,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_307532cfedaede/expensive_one_prompt/20261023T014459Z-adae722d/items/indoorcad_307532cfedaede/attempt-001/response.json",
+          "sha256": "4526657a702581fdb8cff0b4e5ca249d3a428638d846deccfa0003ac41a96494",
+          "provider_id": "gen-1792719955-MoOzWUFXUD7KyKwix61m",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 5078,
+            "total_tokens": 7265,
+            "cost": 0.056246,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.056246,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.05078
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3624,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_56c740edad3c68",
+      "same_initial_request_except_model": true,
+      "input_sha256": "e3d9bb5a49c55c28fd6b45a5df67ad6d6523948f214c82c18b04bea2411c35a8",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7/run.json",
+          "sha256": "511f7c04f1a856e3d917938a4c89973cf28337789dd0d5994dc2866db0011e1b"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/expensive_one_prompt/20261023T013733Z-9706c1ee/run.json",
+          "sha256": "40d9489cd31a29877c4253cd5a1a18812ae5a8516088c2fbe937a0fba2674cc6"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7/items/indoorcad_56c740edad3c68/attempt-001/response.json",
+          "sha256": "b055491cb917f2e5df019016c3f1778673e6e32e5f6b6db41153f30d9185a196",
+          "provider_id": "gen-1792719484-ZlwScqN138RJMLT4kt2q",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3392,
+            "total_tokens": 5579,
+            "cost": 0.0019693,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0019693,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.001696
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3106,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7/items/indoorcad_56c740edad3c68/attempt-002/response.json",
+          "sha256": "6c6f5e9919ee07aa404d1863b54e9a32fdcbeee8ce637ebf482406fe300b3ce4",
+          "provider_id": "gen-1792719517-86Rv4dkc9uP72rHNt753",
+          "usage": {
+            "prompt_tokens": 5588,
+            "completion_tokens": 2982,
+            "total_tokens": 8570,
+            "cost": 0.001938265,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3401,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001938265,
+              "upstream_inference_prompt_cost": 0.000447265,
+              "upstream_inference_completions_cost": 0.001491
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2604,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7/items/indoorcad_56c740edad3c68/attempt-003/response.json",
+          "sha256": "87ce8a360b636f6847d8d7a419e84b4ce42f89df6232f282432a5cb99ce8c867",
+          "provider_id": "gen-1792719544-4NRZF0fxrh34noGFCQOq",
+          "usage": {
+            "prompt_tokens": 6184,
+            "completion_tokens": 3376,
+            "total_tokens": 9560,
+            "cost": 0.002209765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3997,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002209765,
+              "upstream_inference_prompt_cost": 0.000521765,
+              "upstream_inference_completions_cost": 0.001688
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3106,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7/items/indoorcad_56c740edad3c68/attempt-004/response.json",
+          "sha256": "420282848b4e21d4f3a8292df2f3a6ee53a0342e7949d4c8c70e63969aeac837",
+          "provider_id": "gen-1792719577-wLYOe1XyWIYYmKbY0bwT",
+          "usage": {
+            "prompt_tokens": 6669,
+            "completion_tokens": 2068,
+            "total_tokens": 8737,
+            "cost": 0.00161639,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4482,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00161639,
+              "upstream_inference_prompt_cost": 0.00058239,
+              "upstream_inference_completions_cost": 0.001034
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1715,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/cheap_harness/20261023T013733Z-e32d1da7/items/indoorcad_56c740edad3c68/attempt-005/response.json",
+          "sha256": "791430ed0953037aae317619cd59eff1b6068064af4a5dea72e320d1472765e4",
+          "provider_id": "gen-1792719598-poVOYNE72zEY9oYKZa4z",
+          "usage": {
+            "prompt_tokens": 6801,
+            "completion_tokens": 2800,
+            "total_tokens": 9601,
+            "cost": 0.00199889,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4614,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00199889,
+              "upstream_inference_prompt_cost": 0.00059889,
+              "upstream_inference_completions_cost": 0.0014
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2479,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_56c740edad3c68/expensive_one_prompt/20261023T013733Z-9706c1ee/items/indoorcad_56c740edad3c68/attempt-001/response.json",
+          "sha256": "d370fe70b2380164befefdd2a56232aad7ddefff4e8348729461b29214125888",
+          "provider_id": "gen-1792719489-IxElYclRXz6CYKpkHDHl",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2845,
+            "total_tokens": 5032,
+            "cost": 0.033916,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.033916,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.02845
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2454,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_6de14bb6a45df0",
+      "same_initial_request_except_model": true,
+      "input_sha256": "cdd337414954dee11d810b1cfad84bb44758010bf370464fd4e9af4e7f8ed407",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e/run.json",
+          "sha256": "e68cdf5dc10c9c7384cbdf0f55327489ccf155f675aeea18447de89f6cbddfe4"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/expensive_one_prompt/20261023T013732Z-31cc69e9/run.json",
+          "sha256": "5f6f5f36a6aa31e7bc43153560e790dfa1345376c87b703ab63ac7273e252313"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e/items/indoorcad_6de14bb6a45df0/attempt-001/response.json",
+          "sha256": "5cd066a19947a2e1d06243fabb302910719da3756d1292a8e44941025a90caec",
+          "provider_id": "gen-1792719455-5V2anHG523NOJOKxtfAp",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3245,
+            "total_tokens": 5432,
+            "cost": 0.0018958,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0018958,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0016225
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2802,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e/items/indoorcad_6de14bb6a45df0/attempt-002/response.json",
+          "sha256": "2e155b0dbab71f4073fcf3edb792fd3ab48f8227445e8f3a0d8663fc1bda6948",
+          "provider_id": "gen-1792719486-QcBu9ZlgNdLCxc913Fou",
+          "usage": {
+            "prompt_tokens": 5899,
+            "completion_tokens": 3971,
+            "total_tokens": 9870,
+            "cost": 0.00247164,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3712,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00247164,
+              "upstream_inference_prompt_cost": 0.00048614,
+              "upstream_inference_completions_cost": 0.0019855
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3517,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e/items/indoorcad_6de14bb6a45df0/attempt-003/response.json",
+          "sha256": "be58d19a339ea309a919a873c840b12d2f041e85e529acd9331008d8d1195bac",
+          "provider_id": "gen-1792719523-udO2jGiOCrkUWFLaKRFD",
+          "usage": {
+            "prompt_tokens": 6569,
+            "completion_tokens": 4457,
+            "total_tokens": 11026,
+            "cost": 0.00279839,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4382,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00279839,
+              "upstream_inference_prompt_cost": 0.00056989,
+              "upstream_inference_completions_cost": 0.0022285
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4003,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e/items/indoorcad_6de14bb6a45df0/attempt-004/response.json",
+          "sha256": "e15120b9e5ba7bade0c177fd9ddd1c1861a398a32143f807e867ede9bf97be33",
+          "provider_id": "gen-1792719562-9qyKplxnfld28iade9Rm",
+          "usage": {
+            "prompt_tokens": 7245,
+            "completion_tokens": 3747,
+            "total_tokens": 10992,
+            "cost": 0.00252789,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5058,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00252789,
+              "upstream_inference_prompt_cost": 0.00065439,
+              "upstream_inference_completions_cost": 0.0018735
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3261,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/cheap_harness/20261023T013732Z-967ee04e/items/indoorcad_6de14bb6a45df0/attempt-005/response.json",
+          "sha256": "38ac4bbd1db3f054d59852c5a33fcf1174e9cecc45a8e7e135b58e7f1d7cddea",
+          "provider_id": "gen-1792719599-x2pupDZGjfJyZqDXH8JT",
+          "usage": {
+            "prompt_tokens": 7304,
+            "completion_tokens": 3108,
+            "total_tokens": 10412,
+            "cost": 0.002215765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5117,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002215765,
+              "upstream_inference_prompt_cost": 0.000661765,
+              "upstream_inference_completions_cost": 0.001554
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2588,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_6de14bb6a45df0/expensive_one_prompt/20261023T013732Z-31cc69e9/items/indoorcad_6de14bb6a45df0/attempt-001/response.json",
+          "sha256": "16b98756b58a75ce60c3effdfa80197c3053287f9b5b0d0570c3c0b841493799",
+          "provider_id": "gen-1792719455-7f7NIl0OxIuo8gKNF7F7",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2201,
+            "total_tokens": 4388,
+            "cost": 0.027476,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.027476,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.02201
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1859,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_bb795b17ea76b9",
+      "same_initial_request_except_model": true,
+      "input_sha256": "518f369a0888b7dce41dad56ea678f441dbc6cdfc83864cc3c91727540a88e4d",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125/run.json",
+          "sha256": "c42729afcc183e2d2a51a864e28dc5bf7d92478886e36a0c5375cc4d079a1b16"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/expensive_one_prompt/20261023T012438Z-a1cdf5a3/run.json",
+          "sha256": "971bf735c32aad48643dddeac03203403e6dddf80660e0bf6e3ae18da7065cb9"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125/items/indoorcad_bb795b17ea76b9/attempt-001/response.json",
+          "sha256": "2ea0a0153224685b7227a3994a70444b55733b8e6513cab624a47e7bf3c5d9a6",
+          "provider_id": "gen-1792718691-FmHzpFNnSCwrdddgi0WP",
+          "usage": {
+            "prompt_tokens": 2183,
+            "completion_tokens": 4602,
+            "total_tokens": 6785,
+            "cost": 0.0025738,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2180,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0025738,
+              "upstream_inference_prompt_cost": 0.0002728,
+              "upstream_inference_completions_cost": 0.002301
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3975,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125/items/indoorcad_bb795b17ea76b9/attempt-002/response.json",
+          "sha256": "b87687e46f4c9ef9a4e89ca0939a42f111e0b648c085b3d5350f1cccbc88fa50",
+          "provider_id": "gen-1792718733-0vYhzCKEQBUJ4NwhT8FP",
+          "usage": {
+            "prompt_tokens": 6240,
+            "completion_tokens": 4771,
+            "total_tokens": 11011,
+            "cost": 0.002914725,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 4057,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002914725,
+              "upstream_inference_prompt_cost": 0.000529225,
+              "upstream_inference_completions_cost": 0.0023855
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4246,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125/items/indoorcad_bb795b17ea76b9/attempt-003/response.json",
+          "sha256": "dc4bb31a54a1127dbb3183c28e5b6def88775ba3c74c8dd845fb234892d946a6",
+          "provider_id": "gen-1792718776-472IdVKq9CUco7bgfljJ",
+          "usage": {
+            "prompt_tokens": 6881,
+            "completion_tokens": 4580,
+            "total_tokens": 11461,
+            "cost": 0.00289935,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 4698,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00289935,
+              "upstream_inference_prompt_cost": 0.00060935,
+              "upstream_inference_completions_cost": 0.00229
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3984,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125/items/indoorcad_bb795b17ea76b9/attempt-004/response.json",
+          "sha256": "380407545d68a0112ace850d4abafba5b28ec0f1e5f8143caf336b7622b5e8d1",
+          "provider_id": "gen-1792718818-sn17yV5aBZDk6QxCaAg4",
+          "usage": {
+            "prompt_tokens": 7692,
+            "completion_tokens": 4406,
+            "total_tokens": 12098,
+            "cost": 0.002913725,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 5509,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002913725,
+              "upstream_inference_prompt_cost": 0.000710725,
+              "upstream_inference_completions_cost": 0.002203
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3886,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/cheap_harness/20261023T012438Z-5e994125/items/indoorcad_bb795b17ea76b9/attempt-005/response.json",
+          "sha256": "47b5e2d806b14b2011ac7a10251398dc2dde7deb69b7b1b433bbf1d2812771a7",
+          "provider_id": "gen-1792718857-kpPYwo3pJ75pdLbJSWHO",
+          "usage": {
+            "prompt_tokens": 7645,
+            "completion_tokens": 3500,
+            "total_tokens": 11145,
+            "cost": 0.00245485,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 5462,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00245485,
+              "upstream_inference_prompt_cost": 0.00070485,
+              "upstream_inference_completions_cost": 0.00175
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2946,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bb795b17ea76b9/expensive_one_prompt/20261023T012438Z-a1cdf5a3/items/indoorcad_bb795b17ea76b9/attempt-001/response.json",
+          "sha256": "8b8eb143b6eee132b1ec3382213c376b349758d61eb65ab0d814c408f5b613f8",
+          "provider_id": "gen-1792718702-3NfVjNKcwFptz0kfHcnq",
+          "usage": {
+            "prompt_tokens": 2183,
+            "completion_tokens": 2215,
+            "total_tokens": 4398,
+            "cost": 0.027606,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2180,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.027606,
+              "upstream_inference_prompt_cost": 0.005456,
+              "upstream_inference_completions_cost": 0.02215
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1881,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_bbc1675e07ca30",
+      "same_initial_request_except_model": true,
+      "input_sha256": "949545893ef1683618dd80783e3a2233fdf1fe7c3a2ef82f5c954cbe37e00782",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e/run.json",
+          "sha256": "afb9129f11c845736b0a7a2bd6ec417c8a961889720d49267d232024eda8ab2b"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/expensive_one_prompt/20261023T014459Z-425b97bb/run.json",
+          "sha256": "a316240a3010dea7ac30cc5cf16ee159e47f5926588b35fc025e2bef051b144c"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e/items/indoorcad_bbc1675e07ca30/attempt-001/response.json",
+          "sha256": "7521738aca6fa519fd220b6ecf5e8fd70292666ec197e91b95a101696cc33b3f",
+          "provider_id": "gen-1792719934-FGcnm9AvXPE311893eW3",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4542,
+            "total_tokens": 6729,
+            "cost": 0.0025443,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0025443,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.002271
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4027,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e/items/indoorcad_bbc1675e07ca30/attempt-002/response.json",
+          "sha256": "841d7e0440da1a7ee44ebbbc5fa0a3644064d1dfb9a2c842a3c0f3ae8ecb8bde",
+          "provider_id": "gen-1792719983-8Mtfzl8jANEgMikWTyFk",
+          "usage": {
+            "prompt_tokens": 6029,
+            "completion_tokens": 3454,
+            "total_tokens": 9483,
+            "cost": 0.00222939,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3842,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00222939,
+              "upstream_inference_prompt_cost": 0.00050239,
+              "upstream_inference_completions_cost": 0.001727
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2941,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e/items/indoorcad_bbc1675e07ca30/attempt-003/response.json",
+          "sha256": "e69940a8962f8c064a8da6e605781eea40ba61105788118fd1ed36a70b9977bf",
+          "provider_id": "gen-1792720023-aZVuEgl8KOE4dVj7evFg",
+          "usage": {
+            "prompt_tokens": 6758,
+            "completion_tokens": 3808,
+            "total_tokens": 10566,
+            "cost": 0.002497515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4571,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002497515,
+              "upstream_inference_prompt_cost": 0.000593515,
+              "upstream_inference_completions_cost": 0.001904
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3392,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e/items/indoorcad_bbc1675e07ca30/attempt-004/response.json",
+          "sha256": "0061f9e7cc7ad733f7a215157fd1572792ffe17fb1c7318d661942467bfb6e24",
+          "provider_id": "gen-1792720066-iJQKjvjRBnnZynPRxy09",
+          "usage": {
+            "prompt_tokens": 7390,
+            "completion_tokens": 3406,
+            "total_tokens": 10796,
+            "cost": 0.002375515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5203,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002375515,
+              "upstream_inference_prompt_cost": 0.000672515,
+              "upstream_inference_completions_cost": 0.001703
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2995,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/cheap_harness/20261023T014459Z-38fd306e/items/indoorcad_bbc1675e07ca30/attempt-005/response.json",
+          "sha256": "1967e270f51b3c404f7bd86f8563abb6515fa92596f856383cc0f761e352c3ac",
+          "provider_id": "gen-1792720102-T5q8gw4wG7RlMvYhRzgX",
+          "usage": {
+            "prompt_tokens": 7287,
+            "completion_tokens": 3170,
+            "total_tokens": 10457,
+            "cost": 0.00224464,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5100,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00224464,
+              "upstream_inference_prompt_cost": 0.00065964,
+              "upstream_inference_completions_cost": 0.001585
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2704,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bbc1675e07ca30/expensive_one_prompt/20261023T014459Z-425b97bb/items/indoorcad_bbc1675e07ca30/attempt-001/response.json",
+          "sha256": "7b425753f7e957f98193cd7fece7121cefc3080f1f1da8d148554dd2977833a4",
+          "provider_id": "gen-1792719936-jw4PhYUp2kX7Sv5450OL",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3100,
+            "total_tokens": 5287,
+            "cost": 0.036466,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.036466,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.031
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2466,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_bc313e18aa95b3",
+      "same_initial_request_except_model": true,
+      "input_sha256": "dd3271453f684c8d24c06ae980dcc9b71d064674d38de8a2fd9f6f7d71686099",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/cheap_harness/20261023T013009Z-6e3286d4/run.json",
+          "sha256": "2cf5305c58f99e2cdd8b663d8afc870d09dc4f7145f4e308fdb5d03ae761f532"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/expensive_one_prompt/20261023T013009Z-8dd0f0da/run.json",
+          "sha256": "1d841142b00b2c0e327d41f9b5488443223e299cd26d38ccafd650fc1ca41cb1"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/cheap_harness/20261023T013009Z-6e3286d4/items/indoorcad_bc313e18aa95b3/attempt-001/response.json",
+          "sha256": "0cb9403276320e0221f0a0d63d84577e781f5e66d01f233f07944c6c9c8de551",
+          "provider_id": "gen-1792719011-iscjoLMFpRqFK0AsowT3",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3279,
+            "total_tokens": 5466,
+            "cost": 0.0019128,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0019128,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0016395
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2721,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/cheap_harness/20261023T013009Z-6e3286d4/items/indoorcad_bc313e18aa95b3/attempt-002/response.json",
+          "sha256": "31909b2527de4c015f600ceea48afa931bcd64268e125e05e35224ad99984448",
+          "provider_id": "gen-1792719048-L8WlAK1N13y0KegGqrvK",
+          "usage": {
+            "prompt_tokens": 6100,
+            "completion_tokens": 3470,
+            "total_tokens": 9570,
+            "cost": 0.002246265,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3913,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002246265,
+              "upstream_inference_prompt_cost": 0.000511265,
+              "upstream_inference_completions_cost": 0.001735
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2579,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/cheap_harness/20261023T013009Z-6e3286d4/items/indoorcad_bc313e18aa95b3/attempt-003/response.json",
+          "sha256": "ade3357a84ca9cd3f078ba7a37bf543be659193d1903fc7744ddc94802c64f57",
+          "provider_id": "gen-1792719080-DZBh4F0cfP4dUbZFJJyv",
+          "usage": {
+            "prompt_tokens": 7131,
+            "completion_tokens": 2542,
+            "total_tokens": 9673,
+            "cost": 0.00191114,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4944,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00191114,
+              "upstream_inference_prompt_cost": 0.00064014,
+              "upstream_inference_completions_cost": 0.001271
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1900,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/cheap_harness/20261023T013009Z-6e3286d4/items/indoorcad_bc313e18aa95b3/attempt-004/response.json",
+          "sha256": "8376d097a0ee2d04ed9d30734b5d151df936049f5b4ce6199bf9283a6e84f44f",
+          "provider_id": "gen-1792719104-Yz604mFI2fD0pll5PHF3",
+          "usage": {
+            "prompt_tokens": 7913,
+            "completion_tokens": 2917,
+            "total_tokens": 10830,
+            "cost": 0.00219639,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5726,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00219639,
+              "upstream_inference_prompt_cost": 0.00073789,
+              "upstream_inference_completions_cost": 0.0014585
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2070,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_bc313e18aa95b3/expensive_one_prompt/20261023T013009Z-8dd0f0da/items/indoorcad_bc313e18aa95b3/attempt-001/response.json",
+          "sha256": "a9568fc0021da03c25422324c5891fed01d0bcc9b17089398d412c98a8a1a765",
+          "provider_id": "gen-1792719011-WhDAUCfyjfvrAYYBbrwT",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3599,
+            "total_tokens": 5786,
+            "cost": 0.041456,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.041456,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.03599
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2897,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_c120864ce3d53c",
+      "same_initial_request_except_model": true,
+      "input_sha256": "641602d424ff51766993e6953ac656da63d4a02f5891df22b35afe85b6f71ca0",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2/run.json",
+          "sha256": "c91b44d30f3fda3f482b2041e8e797053d0db930665e0205c6369af859db93b4"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/expensive_one_prompt/20261023T013346Z-670c39ea/run.json",
+          "sha256": "b0b1d504e77dddac5261b235051f360f30659f3444ad11537dc891654b6870a6"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2/items/indoorcad_c120864ce3d53c/attempt-001/response.json",
+          "sha256": "76725c7a0d83b3c8bcdd3c6d13d01cc5942a1d9a56c6f23affee21c979a68add",
+          "provider_id": "gen-1792719229-lpfDonovMY2wo0sms2uW",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4354,
+            "total_tokens": 6541,
+            "cost": 0.0024503,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0024503,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.002177
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3650,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2/items/indoorcad_c120864ce3d53c/attempt-002/response.json",
+          "sha256": "4e0e6d5f32cbd969e26f51d5a6e27d59ed2e0940ad4add57eefc5f5573a850fc",
+          "provider_id": "gen-1792719281-9mbSoeO1E6YzqhgEWcqO",
+          "usage": {
+            "prompt_tokens": 6394,
+            "completion_tokens": 2629,
+            "total_tokens": 9023,
+            "cost": 0.001862515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4207,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001862515,
+              "upstream_inference_prompt_cost": 0.000548015,
+              "upstream_inference_completions_cost": 0.0013145
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1914,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2/items/indoorcad_c120864ce3d53c/attempt-003/response.json",
+          "sha256": "8ab89a5858bceaeb8ae59b92b496cad0e77b1a1a4e7773d8fc13435c0e568957",
+          "provider_id": "gen-1792719309-mEmob21dAnOmjFCUN4kX",
+          "usage": {
+            "prompt_tokens": 7284,
+            "completion_tokens": 2153,
+            "total_tokens": 9437,
+            "cost": 0.001735765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5097,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001735765,
+              "upstream_inference_prompt_cost": 0.000659265,
+              "upstream_inference_completions_cost": 0.0010765
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1552,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2/items/indoorcad_c120864ce3d53c/attempt-004/response.json",
+          "sha256": "426f519292b2b4e8253b95de0c97a65d0090e67cf739310f350f4f39bcef49a7",
+          "provider_id": "gen-1792719344-AWEDZLmF5wPo12WoZZ4V",
+          "usage": {
+            "prompt_tokens": 8006,
+            "completion_tokens": 2905,
+            "total_tokens": 10911,
+            "cost": 0.002202015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5819,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002202015,
+              "upstream_inference_prompt_cost": 0.000749515,
+              "upstream_inference_completions_cost": 0.0014525
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2247,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/cheap_harness/20261023T013346Z-e1aac8f2/items/indoorcad_c120864ce3d53c/attempt-005/response.json",
+          "sha256": "d9d5789488e60d8e15f28408efb008883f73689d91d3d57f183909fa841c5b9d",
+          "provider_id": "gen-1792719394-ZRLNEyrd5XBvEyDCieL9",
+          "usage": {
+            "prompt_tokens": 8008,
+            "completion_tokens": 2688,
+            "total_tokens": 10696,
+            "cost": 0.002093765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5821,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002093765,
+              "upstream_inference_prompt_cost": 0.000749765,
+              "upstream_inference_completions_cost": 0.001344
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2070,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_c120864ce3d53c/expensive_one_prompt/20261023T013346Z-670c39ea/items/indoorcad_c120864ce3d53c/attempt-001/response.json",
+          "sha256": "ecbc5f1077f57b321f92e010efd076d4cf09913237bde297eafe4f4fb5bcbaaf",
+          "provider_id": "gen-1792719229-h3YkpMhNQOOpHsqcM8e3",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4460,
+            "total_tokens": 6647,
+            "cost": 0.050066,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.050066,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.0446
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3684,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_cd093c25223f9d",
+      "same_initial_request_except_model": true,
+      "input_sha256": "65a443a15dca6598a2ed4dc0ffde6d4510ec618610646f0da831186b3d729140",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f/run.json",
+          "sha256": "bdab33fe7b101d6bd92d1069db63e1d42dc8151369d913871f666a6d68dd4f38"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/expensive_one_prompt/20261023T013734Z-f71dcb21/run.json",
+          "sha256": "e7b5ef105b13514b289b4eed6566bb546fa0112f2b769f7ca7197c74f13b064c"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f/items/indoorcad_cd093c25223f9d/attempt-001/response.json",
+          "sha256": "84c127f65ad728e0bc8ba67ee649ef2bdb4aa3c457db328a7c71293b9ce1d501",
+          "provider_id": "gen-1792719629-6ycc0H1pqkHI1XEikTsh",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4121,
+            "total_tokens": 6308,
+            "cost": 0.0023338,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0023338,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0020605
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3651,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f/items/indoorcad_cd093c25223f9d/attempt-002/response.json",
+          "sha256": "094691211f2b024b8bae68504b83bb0876a0c47ae7ac30a51c410f0854edb7ab",
+          "provider_id": "gen-1792719677-QR1RJfnPm4qeB592fWYW",
+          "usage": {
+            "prompt_tokens": 5938,
+            "completion_tokens": 2500,
+            "total_tokens": 8438,
+            "cost": 0.001741015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3751,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001741015,
+              "upstream_inference_prompt_cost": 0.000491015,
+              "upstream_inference_completions_cost": 0.00125
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2062,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f/items/indoorcad_cd093c25223f9d/attempt-003/response.json",
+          "sha256": "04615cb277d6bb4b59355e4e81968a212494790a3d16c5ef7e15410a9824ce48",
+          "provider_id": "gen-1792719711-WLrfVZzbZU012wErD5ld",
+          "usage": {
+            "prompt_tokens": 6560,
+            "completion_tokens": 2230,
+            "total_tokens": 8790,
+            "cost": 0.001683765,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4373,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001683765,
+              "upstream_inference_prompt_cost": 0.000568765,
+              "upstream_inference_completions_cost": 0.001115
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1780,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f/items/indoorcad_cd093c25223f9d/attempt-004/response.json",
+          "sha256": "757cb9cfd2a7248cb8182f82ac2fe32306b0cd7c89fb15d936c0223cf583a58b",
+          "provider_id": "gen-1792719743-EcVAJ9QsBmPnUQeuTYdj",
+          "usage": {
+            "prompt_tokens": 7238,
+            "completion_tokens": 3069,
+            "total_tokens": 10307,
+            "cost": 0.002188015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5051,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002188015,
+              "upstream_inference_prompt_cost": 0.000653515,
+              "upstream_inference_completions_cost": 0.0015345
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2570,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/cheap_harness/20261023T013734Z-efa8a19f/items/indoorcad_cd093c25223f9d/attempt-005/response.json",
+          "sha256": "8bc4e1a948afb2b9600368ec2ab1217ea474b7db7950cacd95234f968bdffde6",
+          "provider_id": "gen-1792719779-QZ4Ay0lAzC5sDbpBZPZk",
+          "usage": {
+            "prompt_tokens": 7270,
+            "completion_tokens": 2713,
+            "total_tokens": 9983,
+            "cost": 0.002014015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5083,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002014015,
+              "upstream_inference_prompt_cost": 0.000657515,
+              "upstream_inference_completions_cost": 0.0013565
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2227,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_cd093c25223f9d/expensive_one_prompt/20261023T013734Z-f71dcb21/items/indoorcad_cd093c25223f9d/attempt-001/response.json",
+          "sha256": "c8cb824ec966d2ab6498714bf258b3bb88728f2d534afcf9df90513f3f0d2293",
+          "provider_id": "gen-1792719641-gmPO3XZBSFkMZN42SSdy",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3992,
+            "total_tokens": 6179,
+            "cost": 0.045386,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.045386,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.03992
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3161,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "indoorcad_d01348b6804e1b",
+      "same_initial_request_except_model": true,
+      "input_sha256": "11d7d340938095fc679cfa0c5974e412ca1c8d2261e039447518811ebeeb056d",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4/run.json",
+          "sha256": "cd91a1bbffe0545245517c87cd530edf128a2992f072902d075bf9d8ec4238a5"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/expensive_one_prompt/20261023T012115Z-86a25233/run.json",
+          "sha256": "8f834ba346d1335a6f10032002d7cd9c2a096e457798167fbda2cd4634b70d3a"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4/items/indoorcad_d01348b6804e1b/attempt-001/response.json",
+          "sha256": "0caa7c0796a0da1867df1228dfa178e3c15b1e435a1e2b01bc6198facbfe2e0f",
+          "provider_id": "gen-1792718486-dZ6bB4NzR9DK6avVIUAw",
+          "usage": {
+            "prompt_tokens": 2183,
+            "completion_tokens": 4963,
+            "total_tokens": 7146,
+            "cost": 0.0027543,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2180,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0027543,
+              "upstream_inference_prompt_cost": 0.0002728,
+              "upstream_inference_completions_cost": 0.0024815
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4142,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4/items/indoorcad_d01348b6804e1b/attempt-002/response.json",
+          "sha256": "5f4135cf99dfb7deac95200ad850e495cec0d28b47b3865c9e7953abc4b25b1c",
+          "provider_id": "gen-1792718533-yrDQhIWbQKhmLzUvkZqi",
+          "usage": {
+            "prompt_tokens": 6593,
+            "completion_tokens": 3871,
+            "total_tokens": 10464,
+            "cost": 0.00250885,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 4410,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00250885,
+              "upstream_inference_prompt_cost": 0.00057335,
+              "upstream_inference_completions_cost": 0.0019355
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3231,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4/items/indoorcad_d01348b6804e1b/attempt-003/response.json",
+          "sha256": "5cdc6b2b38400c076ea2a6dd7e12f10ed279149aed9bc2c90617bb38d6df87f6",
+          "provider_id": "gen-1792718565-JbjBpifcvZ7Y4hXNd3Hy",
+          "usage": {
+            "prompt_tokens": 7374,
+            "completion_tokens": 3784,
+            "total_tokens": 11158,
+            "cost": 0.002562975,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 5191,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002562975,
+              "upstream_inference_prompt_cost": 0.000670975,
+              "upstream_inference_completions_cost": 0.001892
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3098,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4/items/indoorcad_d01348b6804e1b/attempt-004/response.json",
+          "sha256": "1ce6a10911d8044bdbf6c24ec88b41bcb2b5266cdd87c9be68cde250005a9e19",
+          "provider_id": "gen-1792718598-r2boVM35M2DS8do1ijvI",
+          "usage": {
+            "prompt_tokens": 8201,
+            "completion_tokens": 3976,
+            "total_tokens": 12177,
+            "cost": 0.00276235,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 6018,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00276235,
+              "upstream_inference_prompt_cost": 0.00077435,
+              "upstream_inference_completions_cost": 0.001988
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3106,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/cheap_harness/20261023T012115Z-65a7d1f4/items/indoorcad_d01348b6804e1b/attempt-005/response.json",
+          "sha256": "db1bd53547dfefacb761f24fe3f4ad2957922ea5c3d6a427b50ed910ee8515bf",
+          "provider_id": "gen-1792718637-dchv8VlzMGmAcTeC8bPp",
+          "usage": {
+            "prompt_tokens": 8291,
+            "completion_tokens": 4199,
+            "total_tokens": 12490,
+            "cost": 0.0028851,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2180,
+              "cache_write_tokens": 6108,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0028851,
+              "upstream_inference_prompt_cost": 0.0007856,
+              "upstream_inference_completions_cost": 0.0020995
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3425,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/indoorcad_d01348b6804e1b/expensive_one_prompt/20261023T012115Z-86a25233/items/indoorcad_d01348b6804e1b/attempt-001/response.json",
+          "sha256": "11a7ac00a98eff640dd12a662f75520a8608525cfab2b86e73288bc49c82bea7",
+          "provider_id": "gen-1792718487-6PHw8oJdI8NDrVjgsQpw",
+          "usage": {
+            "prompt_tokens": 2183,
+            "completion_tokens": 5205,
+            "total_tokens": 7388,
+            "cost": 0.057506,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2180,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.057506,
+              "upstream_inference_prompt_cost": 0.005456,
+              "upstream_inference_completions_cost": 0.05205
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 4555,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "polyhaven_carved_wooden_elephant",
+      "same_initial_request_except_model": true,
+      "input_sha256": "c4d5dab4703da50ff0f9ceb77d3c14dc4b3059e71c8d9e08d702cb7335f4c3ca",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/cheap_harness/20261023T014500Z-3a9350e7/run.json",
+          "sha256": "438e27617a2c8249968f2d28614eba83199174c4b114e0635b9b446711640ebc"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/expensive_one_prompt/20261023T014500Z-9055a7b3/run.json",
+          "sha256": "273e978aab1aa89f7fdf4f4c2754729b5dd21e0cd278f48d94611de4846f2848"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/cheap_harness/20261023T014500Z-3a9350e7/items/polyhaven_carved_wooden_elephant/attempt-001/response.json",
+          "sha256": "3c7b7269316387757b9671d1aafb6380cef498bc4016426124038ede2860e5da",
+          "provider_id": "gen-1792720184-peXUa1bQKRgU3TPcDbUH",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4851,
+            "total_tokens": 7038,
+            "cost": 0.0026988,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0026988,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.0024255
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3595,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/cheap_harness/20261023T014500Z-3a9350e7/items/polyhaven_carved_wooden_elephant/attempt-002/response.json",
+          "sha256": "0a3c51110a90385bb39cf60e66ec2b44f50acb41633f81635459dcce8ec01142",
+          "provider_id": "gen-1792720227-2NxGDOyrq04OCYJ8MAUq",
+          "usage": {
+            "prompt_tokens": 7450,
+            "completion_tokens": 3115,
+            "total_tokens": 10565,
+            "cost": 0.002237515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5263,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002237515,
+              "upstream_inference_prompt_cost": 0.000680015,
+              "upstream_inference_completions_cost": 0.0015575
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1811,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/cheap_harness/20261023T014500Z-3a9350e7/items/polyhaven_carved_wooden_elephant/attempt-003/response.json",
+          "sha256": "5a93b14744f30a92bd81cc13dbec55c160be4d95c62cf78c062cd555ffef0496",
+          "provider_id": "gen-1792720257-8Zqill3AjY4qNrBlcIEp",
+          "usage": {
+            "prompt_tokens": 8970,
+            "completion_tokens": 3344,
+            "total_tokens": 12314,
+            "cost": 0.002542015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 6783,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002542015,
+              "upstream_inference_prompt_cost": 0.000870015,
+              "upstream_inference_completions_cost": 0.001672
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1971,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/cheap_harness/20261023T014500Z-3a9350e7/items/polyhaven_carved_wooden_elephant/attempt-004/response.json",
+          "sha256": "816787ed97c51f6874a9d020f3390b5294177cc763e54b8b62583b5d5a30fd97",
+          "provider_id": "gen-1792720287-UfX1Z3UzME95CJykTEcR",
+          "usage": {
+            "prompt_tokens": 10483,
+            "completion_tokens": 3193,
+            "total_tokens": 13676,
+            "cost": 0.00265564,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 8296,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00265564,
+              "upstream_inference_prompt_cost": 0.00105914,
+              "upstream_inference_completions_cost": 0.0015965
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1836,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_carved_wooden_elephant/expensive_one_prompt/20261023T014500Z-9055a7b3/items/polyhaven_carved_wooden_elephant/attempt-001/response.json",
+          "sha256": "ce41d015788289eb084db7c429273e7aeccc7fd2debabcdd98c4c48e587e4c86",
+          "provider_id": "gen-1792720186-Y5ubh2QuH0sGgpY0eznh",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3825,
+            "total_tokens": 6012,
+            "cost": 0.043716,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.043716,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.03825
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2452,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "polyhaven_planter_pot_clay",
+      "same_initial_request_except_model": true,
+      "input_sha256": "ffa6714e3403d4b05236cdd7a8831f5bfb735fae6d5431f61ee779e9d747f43d",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d/run.json",
+          "sha256": "8e411ae9e2cddfbb186fbb99dbdb29b40463b04e4012cac94529c612a80d413a"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/expensive_one_prompt/20261023T013734Z-1af1ccdb/run.json",
+          "sha256": "1313ad3903554f1b583befba11d024a3aa459f1f4995cb52697eb13cc739f091"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d/items/polyhaven_planter_pot_clay/attempt-001/response.json",
+          "sha256": "0fa02ee0075ad5e882e779c45477eceb409cef3bb7f68bbc22d95b54eb9505b1",
+          "provider_id": "gen-1792719672-bTg8fzYnia1eMyhAhm7i",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 3206,
+            "total_tokens": 5393,
+            "cost": 0.0018763,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0018763,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.001603
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2760,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d/items/polyhaven_planter_pot_clay/attempt-002/response.json",
+          "sha256": "9255646e363313bb51f8dba24df3826c0541c087c2ca50a28927411de0eae727",
+          "provider_id": "gen-1792719705-uGZy1Whw9fHljGAs3xQg",
+          "usage": {
+            "prompt_tokens": 5913,
+            "completion_tokens": 2157,
+            "total_tokens": 8070,
+            "cost": 0.00156639,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 3726,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00156639,
+              "upstream_inference_prompt_cost": 0.00048789,
+              "upstream_inference_completions_cost": 0.0010785
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1692,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d/items/polyhaven_planter_pot_clay/attempt-003/response.json",
+          "sha256": "19e34a3f7ed3d1f34e5682025c3921c54eb711845405be9b0f7ccf0519c94076",
+          "provider_id": "gen-1792719728-cOcIh17qQLWdfnSRtVgx",
+          "usage": {
+            "prompt_tokens": 6594,
+            "completion_tokens": 2761,
+            "total_tokens": 9355,
+            "cost": 0.001953515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4407,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.001953515,
+              "upstream_inference_prompt_cost": 0.000573015,
+              "upstream_inference_completions_cost": 0.0013805
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2329,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d/items/polyhaven_planter_pot_clay/attempt-004/response.json",
+          "sha256": "54be6588e6f52aa20050ce255d0ebb55a12435755e7d7d608107e67f75ad0ad9",
+          "provider_id": "gen-1792719757-D3mtApD6tNCV2auido8e",
+          "usage": {
+            "prompt_tokens": 7229,
+            "completion_tokens": 3205,
+            "total_tokens": 10434,
+            "cost": 0.00225489,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5042,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00225489,
+              "upstream_inference_prompt_cost": 0.00065239,
+              "upstream_inference_completions_cost": 0.0016025
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2750,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/cheap_harness/20261023T013734Z-1f535b0d/items/polyhaven_planter_pot_clay/attempt-005/response.json",
+          "sha256": "15dbdc3c3f1e33e1ef491204f2cc7bf18434589e7b219eac8242f0cf5bb2dc14",
+          "provider_id": "gen-1792719791-1Jpp525bNOD49hNInZrw",
+          "usage": {
+            "prompt_tokens": 7259,
+            "completion_tokens": 2950,
+            "total_tokens": 10209,
+            "cost": 0.00213114,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5072,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00213114,
+              "upstream_inference_prompt_cost": 0.00065614,
+              "upstream_inference_completions_cost": 0.001475
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2462,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_planter_pot_clay/expensive_one_prompt/20261023T013734Z-1af1ccdb/items/polyhaven_planter_pot_clay/attempt-001/response.json",
+          "sha256": "b5fc5d99f0e410bbfeae8894128454449736af90881544aa12681d0a9f210838",
+          "provider_id": "gen-1792719705-x76akbXJ3G1kDwVkfWil",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 2325,
+            "total_tokens": 4512,
+            "cost": 0.028716,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.028716,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.02325
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1780,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "domain": "interior300",
+      "id": "polyhaven_plastic_monobloc_chair_01",
+      "same_initial_request_except_model": true,
+      "input_sha256": "b4a968676758ff4a4184ddfd10d48ca9cf06648b5f241fb93a40a362646761c2",
+      "run_sha256": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695/run.json",
+          "sha256": "e80036d7ef6b8d4a401d5fb5fe6d49719b5728eacf23d78992bfc047cbe50e26"
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/expensive_one_prompt/20261023T013347Z-4b7a57a7/run.json",
+          "sha256": "b919d9fa7c86f925849cd9856cd5b603896eb6831e5fbbd29eb72b832081ef34"
+        }
+      ],
+      "responses": [
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695/items/polyhaven_plastic_monobloc_chair_01/attempt-001/response.json",
+          "sha256": "005abad97499b54ceedecab7107acda5ca777257b312a95f6e51dc370bb4bc2c",
+          "provider_id": "gen-1792719291-G21VYZiK17Or2ay0eIgi",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 5920,
+            "total_tokens": 8107,
+            "cost": 0.0032333,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.0032333,
+              "upstream_inference_prompt_cost": 0.0002733,
+              "upstream_inference_completions_cost": 0.00296
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 5011,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695/items/polyhaven_plastic_monobloc_chair_01/attempt-002/response.json",
+          "sha256": "dc4ea4268224994618e15efe0a3db772de54444c560c9179a92cb4493d196e8b",
+          "provider_id": "gen-1792719342-YKpd772UEevFzQUX0jCR",
+          "usage": {
+            "prompt_tokens": 6795,
+            "completion_tokens": 3061,
+            "total_tokens": 9856,
+            "cost": 0.00212864,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 4608,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.00212864,
+              "upstream_inference_prompt_cost": 0.00059814,
+              "upstream_inference_completions_cost": 0.0015305
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1968,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695/items/polyhaven_plastic_monobloc_chair_01/attempt-003/response.json",
+          "sha256": "264e4b92ba9f57dcf024424a96c7ae3a2f6c95e3c69c7e26ea51dc32023ce27d",
+          "provider_id": "gen-1792719370-iU0IIfTsYDqO8RO81vHN",
+          "usage": {
+            "prompt_tokens": 8106,
+            "completion_tokens": 2942,
+            "total_tokens": 11048,
+            "cost": 0.002233015,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 5919,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002233015,
+              "upstream_inference_prompt_cost": 0.000762015,
+              "upstream_inference_completions_cost": 0.001471
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2020,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695/items/polyhaven_plastic_monobloc_chair_01/attempt-004/response.json",
+          "sha256": "8f534f3031d84a51506484ea6ab085048be885f527e93ccf2cce9b95ea7e79d1",
+          "provider_id": "gen-1792719399-9cF6CWQ5FbJ5SHied8gR",
+          "usage": {
+            "prompt_tokens": 9246,
+            "completion_tokens": 2604,
+            "total_tokens": 11850,
+            "cost": 0.002206515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 7059,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002206515,
+              "upstream_inference_prompt_cost": 0.000904515,
+              "upstream_inference_completions_cost": 0.001302
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1598,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/cheap_harness/20261023T013347Z-82baf695/items/polyhaven_plastic_monobloc_chair_01/attempt-005/response.json",
+          "sha256": "05ad50d94d9cecafb28402f8794fde87fad2705db7ccb2396a7c04af5090a527",
+          "provider_id": "gen-1792719426-MxJLFJbI8DSalTzAUHyP",
+          "usage": {
+            "prompt_tokens": 9434,
+            "completion_tokens": 3069,
+            "total_tokens": 12503,
+            "cost": 0.002462515,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 2184,
+              "cache_write_tokens": 7247,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.002462515,
+              "upstream_inference_prompt_cost": 0.000928015,
+              "upstream_inference_completions_cost": 0.0015345
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1975,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        },
+        {
+          "path": "output/benchmarks/20261023/runs/interior300/polyhaven_plastic_monobloc_chair_01/expensive_one_prompt/20261023T013347Z-4b7a57a7/items/polyhaven_plastic_monobloc_chair_01/attempt-001/response.json",
+          "sha256": "5fdc55d2b0d425dd6ff78a511cddcae71087a05560fc5579b058697a6fde1855",
+          "provider_id": "gen-1792719302-h2eGAdJ0CuNEGUIoN948",
+          "usage": {
+            "prompt_tokens": 2187,
+            "completion_tokens": 4521,
+            "total_tokens": 6708,
+            "cost": 0.050676,
+            "is_byok": false,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 2184,
+              "audio_tokens": 0,
+              "video_tokens": 0
+            },
+            "cost_details": {
+              "upstream_inference_cost": 0.050676,
+              "upstream_inference_prompt_cost": 0.005466,
+              "upstream_inference_completions_cost": 0.04521
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2726,
+              "image_tokens": 0,
+              "audio_tokens": 0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

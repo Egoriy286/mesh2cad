@@ -1,0 +1,12 @@
+{
+  "physical_cost_usd": 0.6941051050000002,
+  "saved_response_cost_usd": 0.6915194649999998,
+  "unattributed_billed_usd": 0.0025856400000003887,
+  "ledger_conservative_upper_bound_usd": 0.7508398650000001,
+  "provider_usage_delta_usd": 0.6941051050000002,
+  "token_usage_complete": false,
+  "transport_errors": 6,
+  "http_requests": 324,
+  "responses": 318,
+  "scope": "API key usage delta over the experiment window; the unallocated difference cannot be assigned to individual STL inputs"
+}
